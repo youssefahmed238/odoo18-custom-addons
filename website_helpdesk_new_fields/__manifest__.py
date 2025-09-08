@@ -4,7 +4,9 @@
     'category': 'Website',
     'version': '18.0.0.1.0',
     'depends': ['website', 'website_helpdesk'],
-    'data': [],
+    'data': [
+        'views/helpdesk_templates_inherit.xml',
+    ],
     'installable': True,
     'application': False,
     'auto_install': True,
