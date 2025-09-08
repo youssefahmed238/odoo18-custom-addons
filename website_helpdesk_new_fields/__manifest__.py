@@ -7,6 +7,11 @@
     'data': [
         'views/helpdesk_templates_inherit.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'website_helpdesk_new_fields/static/src/js/handel_website_helpdesk_new_fields.js',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': True,
