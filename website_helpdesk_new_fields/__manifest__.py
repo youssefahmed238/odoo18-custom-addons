@@ -3,9 +3,10 @@
     'author': 'Youssef',
     'category': 'Website',
     'version': '18.0.0.1.0',
-    'depends': ['website', 'website_helpdesk'],
+    'depends': ['website', 'website_helpdesk', 'vit_facility_management_config'],
     'data': [
-        'views/helpdesk_templates_inherit.xml',
+        'views/website_helpdesk_template_inherit.xml',
+        'views/helpdesk_ticket_view.xml',
     ],
     'assets': {
         'web.assets_frontend': [
