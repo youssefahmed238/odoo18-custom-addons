@@ -6,25 +6,42 @@ import { rpc } from "@web/core/network/rpc";
 publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
     selector: '#helpdesk_ticket_form',
     events: {
-        'click #helpdesk_asset': '_onAssetClick',
+        'change #helpdesk_project': '_onProjectChange',
     },
 
     start: async function () {
+        this.projectSelect = $('#helpdesk_project');
         this.assetSelect = $('#helpdesk_asset');
         this.locationSelect = $('#helpdesk_location');
 
+        this.projects = [];
         this.assets = [];
         this.locations = [];
 
-        await this._getAssets();
-        await this._getLocations();
+        await this._getProjects();
 
-        this._setLocationForAsset(this.assetSelect.val());
+        await this._getAssets(this.projectSelect.val());
+        await this._getLocations(this.projectSelect.val());
     },
 
-    _getAssets: async function () {
+    _getProjects: async function () {
         try {
-            this.assets = await rpc('/project_task_assets/get_assets', {});
+            this.projects = await rpc('/project_task_projects/get_projects', {});
+            this.projectSelect.empty();
+
+            for (const project of this.projects) {
+                this.projectSelect.append(new Option(project.name, project.id));
+            }
+
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+            this.projectSelect.empty().append(new Option('Error loading projects', ''));
+        }
+    },
+
+    _getAssets: async function (projectId) {
+        try {
+            this.assets = await rpc('/project_task_assets/get_assets', { project_id: projectId });
             this.assetSelect.empty();
 
             for (const asset of this.assets) {
@@ -37,9 +54,9 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         }
     },
 
-    _getLocations: async function () {
+    _getLocations: async function (projectId) {
         try {
-            this.locations = await rpc('/project_task_locations/get_locations', {});
+            this.locations = await rpc('/project_task_locations/get_locations', { project_id: projectId });
             this.locationSelect.empty();
 
             for (const location of this.locations) {
@@ -52,15 +69,10 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         }
     },
 
-    _onAssetClick: function () {
-        const selectedAssetId = this.assetSelect.val();
-        this._setLocationForAsset(selectedAssetId);
-    },
+    _onProjectChange: async function () {
+        const selectedProjectId = this.projectSelect.val();
 
-    _setLocationForAsset: function (assetId) {
-        const selectedAsset = this.assets.find(asset => asset.id == assetId);
-        if (selectedAsset && selectedAsset.location_id) {
-            this.locationSelect.val(selectedAsset.location_id);
-        }
+        await this._getAssets(selectedProjectId);
+        await this._getLocations(selectedProjectId);
     },
 });

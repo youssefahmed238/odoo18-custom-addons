@@ -6,12 +6,20 @@ from odoo.addons.website.controllers.form import WebsiteForm
 class WebsiteHelpdeskFormController(WebsiteForm):
 
     def extract_data(self, model, values):
+        """ Override the extract_data method to include additional fields """
+
+        project_id = values.pop('project_task_id', None)
         asset_id = values.pop('asset_id', None)
         location_id = values.pop('location_id', None)
 
         data = super(WebsiteHelpdeskFormController, self).extract_data(model, values)
 
         if model.model == 'helpdesk.ticket':
+            if project_id:
+                try:
+                    data['record']['project_task_id'] = int(project_id)
+                except (ValueError, TypeError):
+                    pass
             if asset_id:
                 try:
                     data['record']['asset_id'] = int(asset_id)
