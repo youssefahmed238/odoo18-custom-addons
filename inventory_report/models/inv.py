@@ -38,6 +38,7 @@ class StockReport(models.Model):
             'target': 'new',
             'context': {
                 'default_inventory_datetime': fields.Datetime.now(),
+                'active_model': 'product.product',
             },
         }
 
@@ -214,10 +215,10 @@ class StockLocationAdd(models.Model):
 
 
 class StockQuantityHistory(models.TransientModel):
-    _name = 'stock.quantity.history'
+    _inherit = 'stock.quantity.history'
     _description = 'Stock Quantity History'
 
-    inventory_datetime = fields.Datetime('Inventory at Date', default=fields.Datetime.now)
+    # inventory_datetime = fields.Datetime('Inventory at Date', default=fields.Datetime.now)
 
     def open_at_date(self):
         tree_view_id = self.env.ref('stock.view_stock_product_tree').id
