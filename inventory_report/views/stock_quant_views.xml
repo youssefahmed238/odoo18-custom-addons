@@ -63,7 +63,7 @@
                         <field name="tracking" invisible="1"/>
                         <field name="product_id" readonly="0" options="{'no_create': True}"/>
                         <field name="location_id" readonly="0" options="{'no_create': True}"/>
-                        <field name="lot_id" groups="stock.group_production_lot "
+                        <field name="lot_id" groups="stock.group_production_lot"
                                readonly="'tracking' not in  ['serial', 'lot']"
                                required="'tracking' != 'none' "
                                context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
@@ -91,14 +91,14 @@
     </field>
 </record>
 
-    <record model="ir.ui.view" id="view_stock_quant_tree_editable_2">
-        <field name="name">stock.quant.tree.editable</field>
+    <record model="ir.ui.view" id="view_stock_quant_list_editable_2">
+        <field name="name">stock.quant.list.editable</field>
         <field name="model">stock.quant</field>
 <!--        <field eval="3" name="priority"/>-->
         <field name="arch" type="xml">
 
-            <tree editable="bottom"
-                  create="1" edit="1" js_class="singleton_list"
+            <list editable="bottom"
+                  create="1" edit="1"
                   sample="1">
                 <header>
                    <button name="action_inventory_at_date" string="Inventory at Date &amp; Location" type="object" class="btn-primary ms-1" display="always"/>
@@ -137,21 +137,23 @@
                 <field name="available_quantity" optional="show"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id'  optional="show" />
-            </tree>
+            </list>
         </field>
     </record>
-    <record model="ir.ui.view" id="view_stock_quant_tree_2">
-        <field name="name">stock.quant.tree</field>
+    <record model="ir.ui.view" id="view_stock_quant_list_2">
+        <field name="name">stock.quant.list</field>
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Inventory Valuation" js_class="inventory_report_list"
+            <list string="Inventory Valuation"
                   create="0" delete="0">
                 <field name="product_id" invisible="context.get('single_product', False)"/>
                 <field name="location_id" invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"
                        invisible="context.get('hide_lot', False)"/>
                 <field name="vendor"/>
+                <field name="pro_cost"/>
+                <field name="pro_price"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="available_quantity"/>
@@ -159,7 +161,7 @@
                 <field name="quantity" string="On Hand Quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -236,28 +238,28 @@
                     </group>
                     <separator string="Content"/>
                     <field name="quant_ids">
-                        <tree>
+                        <list>
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
                             <field name="product_uom_id" groups="uom.group_uom"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="view_quant_package_tree_2">
-        <field name="name">stock.quant.package.tree</field>
+    <record model="ir.ui.view" id="view_quant_package_list_2">
+        <field name="name">stock.quant.package.list</field>
         <field name="model">stock.quant.package</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Package" sample="1">
+            <list string="Package" sample="1">
                 <field name="display_name"/>
                 <field name="package_type_id"/>
                 <field name="location_id" options="{'no_create': True}"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record model="ir.ui.view" id="view_quant_package_kanban_2">
@@ -285,14 +287,14 @@
             </kanban>
         </field>
     </record>
-    <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable_2">
-        <field name="name">stock.quant.inventory.tree.editable</field>
+    <record model="ir.ui.view" id="view_stock_quant_list_inventory_editable_2">
+        <field name="name">stock.quant.inventory.list.editable</field>
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id"
+            <list default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id"
                   decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1"
-                  js_class="singleton_list" sample="1">
+                  sample="1">
                 <header>
                     <button name="stock.action_stock_inventory_adjustement_name" groups="stock.group_stock_manager"
                             type="action" string="Apply"/>
@@ -353,14 +355,14 @@
                         invisible="'inventory_quantity_set' == False "
                         type="object" string="Clear"
                         class="btn text-warning" icon="fa-times"/>
-            </tree>
+            </list>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_stock_quant_tree_editable_inherit_2">
-        <field name="name">stock.quant.tree.editable.inherit2</field>
+    <record model="ir.ui.view" id="view_stock_quant_list_editable_inherit_2">
+        <field name="name">stock.quant.list.editable.inherit2</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="inventory_report.view_stock_quant_tree_editable_2"></field>
+        <field name="inherit_id" ref="inventory_report.view_stock_quant_list_editable_2"></field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom_id']" position="after">
                 <field name="currency_id" invisible="1"/>
@@ -373,7 +375,7 @@
         <field name="name">Inventory</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="state">code</field>
-        <field name="binding_view_types">tree</field>
+        <field name="binding_view_types">list</field>
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = model.with_context(
@@ -413,10 +415,10 @@
     <!--    </record>-->
 
 
-    <!--    <record model="ir.ui.view" id="view_stock_quant_tree_editable_inherit">-->
-    <!--        <field name="name">stock.quant.tree.editable.inherit</field>-->
+    <!--    <record model="ir.ui.view" id="view_stock_quant_list_editable_inherit">-->
+    <!--        <field name="name">stock.quant.list.editable.inherit</field>-->
     <!--        <field name="model">stock.quant</field>-->
-    <!--        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"></field>-->
+    <!--        <field name="inherit_id" ref="stock.view_stock_quant_list_editable"></field>-->
     <!--        <field name="arch" type="xml">-->
     <!--            <xpath expr="//field[@name='lot_id']" position="after">-->
     <!--                <field name="vendor"/>-->
@@ -443,8 +445,8 @@
     </record>
 
 
-    <record id="view_move_line_tree_inherit" model="ir.ui.view">
-        <field name="name">stock.move.line.tree.inherit</field>
+    <record id="view_move_line_list_inherit" model="ir.ui.view">
+        <field name="name">stock.move.line.list.inherit</field>
         <field name="model">stock.move.line</field>
         <field name="inherit_id" ref="stock.view_move_line_tree"/>
         <field name="arch" type="xml">
@@ -454,8 +456,8 @@
         </field>
     </record>
 
-    <record id="view_product_product_tree_inherit_total_value" model="ir.ui.view">
-        <field name="name">product.product.tree.inherit.total.value</field>
+    <record id="view_product_product_list_inherit_total_value" model="ir.ui.view">
+        <field name="name">product.product.list.inherit.total.value</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="stock.view_stock_product_tree"/>
         <field name="arch" type="xml">
@@ -469,12 +471,12 @@
 
 
 
-<!--    <record id="view_stock_quant_tree_inherit_custom" model="ir.ui.view">-->
-<!--    <field name="name">stock.quant.tree.inherit.custom</field>-->
+<!--    <record id="view_stock_quant_list_inherit_custom" model="ir.ui.view">-->
+<!--    <field name="name">stock.quant.list.inherit.custom</field>-->
 <!--    <field name="model">stock.quant</field>-->
-<!--    <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>-->
+<!--    <field name="inherit_id" ref="stock.view_stock_quant_list_editable"/>-->
 <!--    <field name="arch" type="xml">-->
-<!--        <xpath expr="//tree/header" position="inside">-->
+<!--        <xpath expr="//list/header" position="inside">-->
 <!--            <button nam="action_inventory_at_date"-->
 <!--                    string="Inventory at Date"-->
 <!--                    type="object"-->

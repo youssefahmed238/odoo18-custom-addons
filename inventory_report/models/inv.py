@@ -6,10 +6,11 @@ from odoo.tools.float_utils import float_is_zero
 from odoo.osv import expression
 from odoo.tools.misc import format_datetime
 
+
 class StockReport(models.Model):
     _inherit = 'stock.quant'
     vendor = fields.Many2one('res.partner', string="Vendor", compute="_compute_get_vendor", store=True)
-    pro_cost = fields.Float(string="Cost", related="product_id.standard_price", store=True)
+    pro_cost = fields.Float(string="Cost", compute="_compute_pro_cost", store=True)
     pro_price = fields.Float(string="Price", related="product_id.lst_price", store=True)
     value = fields.Monetary('Value', store=True, readonly=True, compute='_compute_value_2',
                             groups='inventory_report.group_stock_manager')
@@ -20,6 +21,7 @@ class StockReport(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
+
     @api.model
     def action_set_inventory_quantity_to_zero(self):
         for quant in self:
@@ -30,7 +32,7 @@ class StockReport(models.Model):
     def action_inventory_at_date(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Inventory at Date',
+            'name': 'Inventory at Date and location',
             'res_model': 'stock.quantity.history',
             'view_mode': 'form',
             'target': 'new',
@@ -39,8 +41,13 @@ class StockReport(models.Model):
             },
         }
 
-
-
+    @api.depends('product_id')
+    def _compute_pro_cost(self):
+        for record in self:
+            if record.product_id:
+                record.pro_cost = record.product_id.standard_price
+            else:
+                record.pro_cost = 0.0
 
     # dddddddddddddddddddddddddddddddddddddddddddd
     class ProductCategory2(models.Model):
@@ -76,7 +83,7 @@ class StockReport(models.Model):
                     (quant.owner_id and quant.owner_id != quant.company_id.partner_id):
                 quant.value = 0
                 continue
-            if quant.product_id.cost_method == 'fifo':
+            if quant.product_id.categ_id.property_cost_method == 'fifo':
                 quantity = quant.product_id.with_company(quant.company_id).quantity_svl
                 if float_is_zero(quantity, precision_rounding=quant.product_id.uom_id.rounding):
                     quant.value = 0.0
@@ -85,10 +92,6 @@ class StockReport(models.Model):
                 quant.value = quant.quantity * average_cost
             else:
                 quant.value = quant.quantity * quant.product_id.with_company(quant.company_id).standard_price
-
-    from odoo import models, fields, api
-
-
 
     @api.depends('product_id')
     def _compute_get_vendor(self):
@@ -117,7 +120,6 @@ class StockReport(models.Model):
         ctx.pop('group_by', None)
         action = {
             'name': _('Stock On Hand'),
-            'view_type': 'tree',
             'view_mode': 'list,form',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
@@ -135,10 +137,10 @@ class StockReport(models.Model):
             action['id'] = target_action.id
 
         form_view = self.env.ref('inventory_report.view_stock_quant_form_editable_2').id
-        if self.env.context.get('inventory_mode') and self.user_has_groups('stock.group_stock_manager'):
-            action['view_id'] = self.env.ref('inventory_report.view_stock_quant_tree_editable_2').id
+        if self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_manager'):
+            action['view_id'] = self.env.ref('inventory_report.view_stock_quant_list_editable_2').id
         else:
-            action['view_id'] = self.env.ref('inventory_report.view_stock_quant_tree_2').id
+            action['view_id'] = self.env.ref('inventory_report.view_stock_quant_list_2').id
         action.update({
             'views': [
                 (action['view_id'], 'list'),
@@ -147,7 +149,7 @@ class StockReport(models.Model):
         })
         if extend:
             action.update({
-                'view_mode': 'tree,form,pivot,graph',
+                'view_mode': 'list,form,pivot,graph',
                 'views': [
                     (action['view_id'], 'list'),
                     (form_view, 'form'),
@@ -163,6 +165,21 @@ class StockReport(models.Model):
         self = self.with_context(search_default_internal_loc=1)
         self = self._set_view_context()
         return self._get_quants_action_2(extend=True)
+
+
+class ProductCategory2(models.Model):
+    _inherit = 'product.category'
+
+    property_cost_method = fields.Selection([
+        ('standard', 'Standard Price'),
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')], string="Costing Method",
+        company_dependent=True, copy=True, required=True,
+        default='standard',
+        help="""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
+        """)
 
 
 class StockMoveReport(models.Model):
@@ -195,6 +212,7 @@ class StockLocationAdd(models.Model):
             return True
         return False
 
+
 class StockQuantityHistory(models.TransientModel):
     _name = 'stock.quantity.history'
     _description = 'Stock Quantity History'
@@ -207,7 +225,7 @@ class StockQuantityHistory(models.TransientModel):
 
         inventory_date = self.inventory_datetime
 
-        products = self.env['product.product'].search([('type', '=', 'product')])
+        products = self.env['product.product'].search([('type', '=', 'consu')])
         context_at_date = dict(self.env.context, to_date=inventory_date)
 
         products_with_qty = products.with_context(context_at_date).filtered(lambda p: p.qty_available != 0)
@@ -216,8 +234,8 @@ class StockQuantityHistory(models.TransientModel):
 
         return {
             'type': 'ir.actions.act_window',
-            'views': [(tree_view_id, 'tree'), (form_view_id, 'form')],
-            'view_mode': 'tree,form',
+            'views': [(tree_view_id, 'list'), (form_view_id, 'form')],
+            'view_mode': 'list,form',
             'name': _('Products'),
             'res_model': 'product.product',
             'domain': [('id', 'in', product_ids)],
@@ -243,12 +261,12 @@ class StockQuantityHistory(models.TransientModel):
 class ProductProductAdd(models.Model):
     _inherit = 'product.product'
 
-    total_value = (fields.Float(
+    total_value = fields.Float(
         string='Total Value',
         compute='_compute_total_value',
         store=False,
         readonly=True
-    ))
+    )
 
     @api.depends('qty_available', 'standard_price')
     def _compute_total_value(self):
@@ -268,9 +286,3 @@ class ProductProductAdd(models.Model):
     #             product.total_value = qty * price
     #         else:
     #             product.total_value = 0.0
-
-
-
-
-
-

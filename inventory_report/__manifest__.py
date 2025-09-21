@@ -3,7 +3,7 @@
 
 {
     'name': 'Inventory Report 2',
-    'version': '17.0.0.1.0',
+    'version': '18.0.0.1.0',
     'summary': 'Manage stock ',
     'description': "",
     'author': 'Mohamed Salem',
