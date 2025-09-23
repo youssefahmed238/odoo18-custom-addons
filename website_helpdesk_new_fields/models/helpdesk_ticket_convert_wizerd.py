@@ -31,7 +31,7 @@ class HelpdeskTicketConvertWizard(models.TransientModel):
 
     def action_convert(self):
         """ Override to skip deactivating the helpdesk ticket after conversion. """
-        
+
         tickets_to_convert = self._get_tickets_to_convert()
 
         created_tasks = self.env['project.task'].with_context(mail_create_nolog=True).create(

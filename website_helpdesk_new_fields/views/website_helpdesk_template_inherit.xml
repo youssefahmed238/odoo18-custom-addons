@@ -120,22 +120,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Asset -->
-                                    <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_custom"
-                                         data-type="many2one" data-name="asset_id">
-                                        <div class="row s_col_no_resize s_col_no_bgcolor">
-                                            <label class="col-form-label col-sm-auto s_website_form_label"
-                                                   style="width: 200px" for="helpdesk_asset">
-                                                <span class="s_website_form_label_content">Asset</span>
-                                            </label>
-                                            <div class="col-sm">
-                                                <select class="form-select s_website_form_input" name="asset_id"
-                                                        id="helpdesk_asset">
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <!-- Location -->
                                     <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_custom"
                                          data-type="many2one" data-name="location_id">
@@ -147,6 +131,22 @@
                                             <div class="col-sm">
                                                 <select class="form-select s_website_form_input" name="location_id"
                                                         id="helpdesk_location">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Asset -->
+                                    <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_custom"
+                                         data-type="many2one" data-name="asset_id" style="display: none;">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label"
+                                                   style="width: 200px" for="helpdesk_asset">
+                                                <span class="s_website_form_label_content">Asset</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <select class="form-select s_website_form_input" name="asset_id"
+                                                        id="helpdesk_asset">
                                                 </select>
                                             </div>
                                         </div>

@@ -7,6 +7,7 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
     selector: '#helpdesk_ticket_form',
     events: {
         'change #helpdesk_project': '_onProjectChange',
+        'change #helpdesk_location': '_onLocationChange',
     },
 
     start: async function () {
@@ -14,13 +15,15 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         this.assetSelect = $('#helpdesk_asset');
         this.locationSelect = $('#helpdesk_location');
 
+        this.assetField = this.assetSelect.closest('.s_website_form_field');
+
         this.projects = [];
         this.assets = [];
         this.locations = [];
 
-        await this._getProjects();
+        this.removeLocationEmptyOption = false;
 
-        await this._getAssets(this.projectSelect.val());
+        await this._getProjects();
         await this._getLocations(this.projectSelect.val());
     },
 
@@ -39,9 +42,9 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         }
     },
 
-    _getAssets: async function (projectId) {
+    _getAssets: async function (projectId, locationId) {
         try {
-            this.assets = await rpc('/project_task_assets/get_assets', { project_id: projectId });
+            this.assets = await rpc('/project_task_assets/get_assets', { project_id: projectId, location_id: locationId });
             this.assetSelect.empty();
 
             for (const asset of this.assets) {
@@ -59,6 +62,9 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
             this.locations = await rpc('/project_task_locations/get_locations', { project_id: projectId });
             this.locationSelect.empty();
 
+            this.locationSelect.append(new Option('', ''));
+            this.removeLocationEmptyOption = true;
+
             for (const location of this.locations) {
                 this.locationSelect.append(new Option(location.name, location.id));
             }
@@ -72,7 +78,25 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
     _onProjectChange: async function () {
         const selectedProjectId = this.projectSelect.val();
 
-        await this._getAssets(selectedProjectId);
+        this.assetField.hide();
+
         await this._getLocations(selectedProjectId);
+    },
+
+    _onLocationChange: function () {
+        const selectedLocationId = this.locationSelect.val();
+
+        if (this.removeLocationEmptyOption) {
+            this.locationSelect.find('option[value=""]').remove();
+            this.removeLocationEmptyOption = false;
+        }
+
+        this._getAssets(this.projectSelect.val(), selectedLocationId);
+
+        if (selectedLocationId) {
+            this.assetField.show();
+        } else {
+            this.assetField.hide();
+        }
     },
 });
