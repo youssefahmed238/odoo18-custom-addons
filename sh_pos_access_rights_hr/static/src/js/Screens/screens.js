@@ -1,238 +1,113 @@
-odoo.define("sh_pos_access_rights_hr.screens", function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    const CashierName = require("point_of_sale.CashierName");
-    const Registries = require("point_of_sale.Registries");
-    const ActionpadWidget = require("point_of_sale.ActionpadWidget");
-    const ProductScreen = require("point_of_sale.ProductScreen");
-    const PaymentScreen = require("point_of_sale.PaymentScreen");
-    const NumpadWidget = require("point_of_sale.NumpadWidget");
-    const TicketScreen = require('point_of_sale.TicketScreen')
-    const NumberBuffer = require("point_of_sale.NumberBuffer");
-    const { onMounted, onPatched, useRef } = owl;
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
+import { patch } from "@web/core/utils/patch";
+import { onMounted, onPatched } from "@odoo/owl";
 
-    const ShProductScreen = (ProductScreen) =>
-        class extends ProductScreen {
-            async _updateSelectedOrderline(event) {
-                var self = this;
+// ------------------- Helpers -------------------
 
-                var is_Backspace = false
-                const selectedLine = this.currentOrder.get_selected_orderline();
-                
-                if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].hr_group_disable_remove) {
-                    if (selectedLine && event.detail.key === 'Backspace') {
-                        is_Backspace = true
-                    }
-                }else{
-                    is_Backspace = false
-                }
-                
-                if(is_Backspace){
-                    return false
-                }
-              
-                super._updateSelectedOrderline(event);
+function applyEmployeePermission(buttons, shouldDisable, cssClass) {
+    if (!buttons) return;
+
+    buttons.forEach(btn => {
+        if (shouldDisable) {
+            if (cssClass) {
+                btn.disabled = true;
+                btn.classList.add(cssClass);
+            } else {
+                btn.style.display = "none";
             }
-
-            onMounted() {
-                var self = this;
-                super.onMounted()
-                var cashier_id = this.env.pos.get_cashier().id
-                if (this.env.pos.config.module_pos_hr && this.env.pos.config.employee_ids && this.env.pos.config.employee_ids.length > 0 && cashier_id) {
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_select_customer) {
-                        $(".set-partner").prop("disabled", true);
-                        $(".set-partner").addClass("sh_disabled");
-                    } else {
-                        $(".set-partner").prop("disabled", false);
-                        $(".set-partner").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].disable_payment_id) {
-                        $(".pay").prop("disabled", true);
-                        $(".pay").addClass("sh_disabled");
-                    } else {
-                        $(".pay").prop("disabled", false);
-                        $(".pay").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_qty) {
-                        $($(".mode-button")[0]).prop("disabled", true);
-                        $($(".mode-button")[0]).addClass("sh_disabled_qty");
-                    } else {
-                        $($(".mode-button")[0]).prop("disabled", false);
-                        $($(".mode-button")[0]).removeClass("sh_disabled_qty");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_price) {
-                        $($(".mode-button")[2]).prop("disabled", true);
-                        $($(".mode-button")[2]).addClass("sh_disabled_qty");
-                    } else {
-                        $($(".mode-button")[2]).prop("disabled", false);
-                        $($(".mode-button")[2]).removeClass("sh_disabled_qty");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_discount) {
-                        $($(".mode-button")[1]).prop("disabled", true);
-                        $($(".mode-button")[1]).addClass("sh_disabled_qty");
-                    } else {
-                        $($(".mode-button")[1]).prop("disabled", false);
-                        $($(".mode-button")[1]).removeClass("sh_disabled_qty");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_plus_minus) {
-                        $(".numpad-minus").prop("disabled", true);
-                        $(".numpad-minus").addClass("sh_disabled");
-                    } else {
-                        $(".numpad-minus").prop("disabled", false);
-                        $(".numpad-minus").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_numpad) {
-                        $(".number-char").prop("disabled", true);
-                        $(".number-char").addClass("sh_disabled");
-                    } else {
-                        $(".number-char").prop("disabled", false);
-                        $(".number-char").removeClass("sh_disabled");
-                    }
-                }
-            }
-        };
-    Registries.Component.extend(ProductScreen, ShProductScreen);
-
-    const SHPaymentScreen = (PaymentScreen) =>
-        class extends PaymentScreen {
-            onMounted() {
-                
-                var self = this;
-                var cashier_id = this.env.pos.get_cashier().id
-                if (this.env.pos.config.module_pos_hr && this.env.pos.config.employee_ids && this.env.pos.config.employee_ids.length > 0 && cashier_id) {
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_select_customer) {
-                        $(".partner-button").prop("disabled", true);
-                        $(".partner-button").addClass("sh_disabled");
-                    } else {
-                        $(".partner-button").prop("disabled", false);
-                        $(".partner-button").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_plus_minus) {
-                        $(".numpad-minus").prop("disabled", true);
-                        $(".numpad-minus").addClass("sh_disabled");
-                    } else {
-                        $(".numpad-minus").prop("disabled", false);
-                        $(".numpad-minus").removeClass("sh_disabled");
-                    }
-                }
-            }
-        };
-    Registries.Component.extend(PaymentScreen, SHPaymentScreen);
-
-    const ShCashierName = (CashierName) =>
-        class extends CashierName {
-            get username() {
-                const cashier = this.env.pos.get_cashier();
-                var self = this;
-                if (this.env.pos.config.module_pos_hr && this.env.pos.config.employee_ids && this.env.pos.config.employee_ids.length > 0 && cashier.id) {
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_select_customer) {
-                        $(".set-partner").prop("disabled", true);
-                        $(".set-partner").addClass("sh_disabled");
-                        $(".partner-button").prop("disabled", true);
-                        $(".partner-button").addClass("sh_disabled");
-                    } else {
-                        $(".set-partner").prop("disabled", false);
-                        $(".set-partner").removeClass("sh_disabled");
-                        $(".partner-button").prop("disabled", false);
-                        $(".partner-button").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].disable_payment_id) {
-                        $(".pay").prop("disabled", true);
-                        $(".pay").addClass("sh_disabled");
-                    } else {
-                        $(".pay").prop("disabled", false);
-                        $(".pay").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_qty) {
-                        $($(".mode-button")[0]).prop("disabled", true);
-                        $($(".mode-button")[0]).addClass("sh_disabled_qty");
-                    } else {
-                        $($(".mode-button")[0]).prop("disabled", false);
-                        $($(".mode-button")[0]).removeClass("sh_disabled_qty");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_price) {
-                        $($(".mode-button")[2]).prop("disabled", true);
-                        $($(".mode-button")[2]).addClass("sh_disabled_qty");
-                    } else {
-                        $($(".mode-button")[2]).prop("disabled", false);
-                        $($(".mode-button")[2]).removeClass("sh_disabled_qty");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_discount) {
-                        $($(".mode-button")[1]).prop("disabled", true);
-                        $($(".mode-button")[1]).addClass("sh_disabled_qty");
-                    } else {
-                        $($(".mode-button")[1]).prop("disabled", false);
-                        $($(".mode-button")[1]).removeClass("sh_disabled_qty");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_plus_minus) {
-                        $(".numpad-minus").prop("disabled", true);
-                        $(".numpad-minus").addClass("sh_disabled");
-                    } else {
-                        $(".numpad-minus").prop("disabled", false);
-                        $(".numpad-minus").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].group_disable_numpad) {
-                        $(".number-char").prop("disabled", true);
-                        $(".number-char").addClass("sh_disabled");
-                    } else {
-                        $(".number-char").prop("disabled", false);
-                        $(".number-char").removeClass("sh_disabled");
-                    }
-                    if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].hr_group_disable_remove) {
-                        $(".numpad-backspace").prop("disabled", true);
-                        $(".numpad-backspace").addClass("sh_disabled")
-                    } else {
-
-                        $(".numpad-backspace").prop("disabled", false);
-                        $(".numpad-backspace").removeClass("sh_disabled")
-                    }
-                }
-                if (cashier) {
-                    return cashier.name;
-                } else {
-                    return "";
-                }
-
-                return username;
-            }
-        };
-
-    Registries.Component.extend(CashierName, ShCashierName);
-
-
-    const ShTicketScreen = (TicketScreen) =>
-        class extends TicketScreen {
-            onMounted() {
-                super.onMounted()
-                var self = this;
-                if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].hr_group_disable_hide_orders) {
-                    $('button.highlight').hide()
-                    $('.delete-button').hide()
-                } else {
-                    $('button.highlight').show()
-                    $('.delete-button').show()
-                }
-                if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].hr_group_remove_delete_button) {
-                    // $('button.highlight').hide()
-                    $('.delete-button').hide()
-                } else {
-                    // $('button.highlight').show()
-                    $('.delete-button').show()
-                }
-                if (self.env.pos.db.employee_by_id && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id] && self.env.pos.db.employee_by_id[self.env.pos.get_cashier().id].hr_group_disable_remove) {
-                    $(".numpad-backspace").prop("disabled", true);
-                    $(".numpad-backspace").addClass("sh_disabled")
-                } else {
-                    $(".numpad-backspace").prop("disabled", false);
-                    $(".numpad-backspace").removeClass("sh_disabled")
-                }
+        } else {
+            if (cssClass) {
+                btn.disabled = false;
+                btn.classList.remove(cssClass);
+            } else {
+                btn.style.display = "";
             }
         }
-    Registries.Component.extend(TicketScreen, ShTicketScreen);
+    });
+}
 
-    return {
-        NumpadWidget,
-        ActionpadWidget,
-        TicketScreen,
-    };
+function getCurrentEmployee(pos) {
+    if (!pos || !pos.db || !pos.db.employee_by_id) return null;
+    const cashier_id = pos?.get_cashier?.()?.id;
+    if (!cashier_id) return null;
+    return pos.db.employee_by_id?.[cashier_id] || null;
+}
+
+function getNumpadButtonByValue(value) {
+    return Array.from(document.querySelectorAll(".numpad-button")).filter(btn => btn.value === value);
+}
+
+function getNumpadButtons(excludeValues = []) {
+    return Array.from(document.querySelectorAll(".numpad-button")).filter(btn => !excludeValues.includes(btn.value));
+}
+
+// ------------------- Apply all employee permissions -------------------
+function applyEmployeeToAll(employee) {
+    if (!employee) return;
+
+    const buttonMap = [
+        { selector: ".set-partner, .partner-button", field: "group_select_customer", class: "sh_disabled" },
+        { selector: ".pay", field: "disable_payment_id", class: "sh_disabled" },
+        { selector: ".list-plus-btn", field: "hr_group_disable_hide_orders", class: "sh_disabled" },
+        { selector: ".delete-button", field: "hr_group_remove_delete_button" },
+        { selector: getNumpadButtonByValue("Qty"), field: "group_disable_qty", class: "sh_disabled_qty" },
+        { selector: getNumpadButtonByValue("%"), field: "group_disable_discount", class: "sh_disabled_qty" },
+        { selector: getNumpadButtonByValue("Price"), field: "group_disable_price", class: "sh_disabled_qty" },
+        { selector: getNumpadButtonByValue("+/-"), field: "group_disable_plus_minus", class: "sh_disabled" },
+        { selector: getNumpadButtons(["Qty","%","Price","+/-","⌫"]), field: "group_disable_numpad", class: "sh_disabled" },
+        { selector: getNumpadButtonByValue("⌫"), field: "hr_group_disable_remove", class: "sh_disabled" },
+    ];
+
+    buttonMap.forEach(item => {
+        let buttons = Array.isArray(item.selector) ? item.selector : Array.from(document.querySelectorAll(item.selector));
+        applyEmployeePermission(buttons, employee[item.field], item.class);
+    });
+}
+
+// ------------------- Generic function for Screens -------------------
+function updatePermissionsForCurrentScreen(screen) {
+    if (!screen || !screen.pos) return;
+    const employee = getCurrentEmployee(screen.pos);
+    applyEmployeeToAll(employee);
+}
+
+// ------------------- ProductScreen -------------------
+patch(ProductScreen.prototype, {
+    setup() {
+        super.setup();
+        onMounted(() => updatePermissionsForCurrentScreen(this));
+        onPatched(() => updatePermissionsForCurrentScreen(this));
+    }
+});
+
+// ------------------- PaymentScreen -------------------
+patch(PaymentScreen.prototype, {
+    setup() {
+        super.setup();
+        onMounted(() => updatePermissionsForCurrentScreen(this));
+        onPatched(() => updatePermissionsForCurrentScreen(this));
+    }
+});
+
+// ------------------- TicketScreen -------------------
+patch(TicketScreen.prototype, {
+    setup() {
+        super.setup();
+        onMounted(() => updatePermissionsForCurrentScreen(this));
+        onPatched(() => updatePermissionsForCurrentScreen(this));
+    }
+});
+
+// ------------------- CashierName -------------------
+patch(CashierName.prototype, {
+    get username() {
+        const cashier = this.pos?.get_cashier?.();
+        setTimeout(() => updatePermissionsForCurrentScreen(this), 50);
+        return cashier ? cashier.name : "";
+    }
 });
