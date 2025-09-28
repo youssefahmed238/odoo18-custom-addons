@@ -1,0 +1,56 @@
+# -*- coding: utf-8 -*-
+# Copyright (C) Softhealer Technologies.
+
+from odoo import fields, models, api
+
+
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+
+    disable_payment_id = fields.Boolean(string="POS - Disable Payment")
+    group_select_customer = fields.Boolean(string='POS - Disable Customer Selection')
+    group_disable_discount = fields.Boolean(string='POS - Disable Discount Button')
+    group_disable_qty = fields.Boolean(string='POS - Disable Qty Button')
+    group_disable_price = fields.Boolean(string='POS - Disable Price Button')
+    group_disable_plus_minus = fields.Boolean(string='POS - Disable Plus-Minus')
+    group_disable_numpad = fields.Boolean(string='POS - Disable Numpad')
+    hr_group_disable_hide_orders = fields.Boolean(string='POS - Disable New Orders')
+    hr_group_disable_remove = fields.Boolean(string='POS - Disable Remove Button')
+    hr_group_remove_delete_button = fields.Boolean(string='POS - Disable Delete Orders')
+
+    @api.model
+    def _load_pos_data(self, response):
+        fields_to_load = [
+            'id', 'name', 'disable_payment_id', 'group_select_customer',
+            'group_disable_discount', 'group_disable_qty', 'group_disable_price',
+            'group_disable_plus_minus', 'group_disable_numpad',
+            'hr_group_disable_hide_orders', 'hr_group_disable_remove',
+            'hr_group_remove_delete_button'
+        ]
+        domain = [('active', '=', True)]
+        employees = self.search_read(domain, fields_to_load)
+        return {
+            'data': employees,
+            'fields': fields_to_load
+        }
+
+
+class HrEmployeePublicInherit(models.Model):
+    _inherit = "hr.employee.public"
+
+    disable_payment_id = fields.Boolean(string="POS - Disable Payment ", related='employee_id.disable_payment_id')
+    group_select_customer = fields.Boolean(string='POS - Disable Customer Selection ',
+                                           related='employee_id.group_select_customer')
+    group_disable_discount = fields.Boolean(string='POS - Disable Discount Button ',
+                                            related='employee_id.group_disable_discount')
+    group_disable_qty = fields.Boolean(string='POS - Disable Qty Button ', related='employee_id.group_disable_qty')
+    group_disable_price = fields.Boolean(string='POS - Disable Price Button ',
+                                         related='employee_id.group_disable_price')
+    group_disable_plus_minus = fields.Boolean(string='POS - Disable Plus-Minus ',
+                                              related='employee_id.group_disable_plus_minus')
+    group_disable_numpad = fields.Boolean(string='POS - Disable Numpad ', related='employee_id.group_disable_numpad')
+    hr_group_disable_hide_orders = fields.Boolean(string='POS - Disable New/Delete Orders',
+                                                  related='employee_id.hr_group_disable_hide_orders')
+    hr_group_remove_delete_button = fields.Boolean(related='employee_id.hr_group_remove_delete_button')
+    hr_group_disable_remove = fields.Boolean(string='POS - Disable Remove Button',
+                                             related='employee_id.hr_group_disable_remove')

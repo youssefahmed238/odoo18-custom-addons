@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="sh_view_pos_config_form_inh">
+        <field name="name">hr.employee.form.view.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='hr_settings']" position="after">
+                <page name="access_rights" string="Access Rights">
+                    <group>
+                        <group>
+                            <field name="disable_payment_id" />
+                            
+                            <field name="group_select_customer" />
+                            
+                            <field name="group_disable_plus_minus" />
+                            
+                            <field name="group_disable_numpad" />
+                            
+                            <field name="hr_group_disable_hide_orders" />
+
+                            <field name="hr_group_remove_delete_button" />
+                        </group>
+                        <group>
+                            <field name="group_disable_qty" />
+                            
+                            <field name="group_disable_discount" />
+                            
+                            <field name="group_disable_price" />
+                            
+                            <field name="hr_group_disable_remove" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
