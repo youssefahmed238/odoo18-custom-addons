@@ -1,0 +1,76 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sh_pos_access_rights_hr
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-05 07:27+0000\n"
+"PO-Revision-Date: 2021-06-05 07:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sh_pos_access_rights_hr
+#: model_terms:ir.ui.view,arch_db:sh_pos_access_rights_hr.sh_view_pos_config_form_inh
+msgid "Access Rights"
+msgstr "Des droits d'accès"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__display_name
+msgid "Display Name"
+msgstr "Afficher un nom"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model,name:sh_pos_access_rights_hr.model_hr_employee
+msgid "Employee"
+msgstr "Employé"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__id
+msgid "ID"
+msgstr "identifiant"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification sur"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__group_select_customer
+msgid "POS - Disable Customer Selection"
+msgstr "POS - Désactiver la sélection du client"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__group_disable_discount
+msgid "POS - Disable Discount Button"
+msgstr "POS - Désactiver le bouton de remise"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__group_disable_numpad
+msgid "POS - Disable Numpad"
+msgstr "POS - Désactiver Numpad"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__disable_payment_id
+msgid "POS - Disable Payment"
+msgstr "POS - Désactiver le paiement"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__group_disable_plus_minus
+msgid "POS - Disable Plus-Minus"
+msgstr "POS - Désactiver Plus-Minus"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__group_disable_price
+msgid "POS - Disable Price Button"
+msgstr "POS - Bouton de prix désactivé"
+
+#. module: sh_pos_access_rights_hr
+#: model:ir.model.fields,field_description:sh_pos_access_rights_hr.field_hr_employee__group_disable_qty
+msgid "POS - Disable Qty Button"
+msgstr "POS - Bouton QTY DISABLE"
