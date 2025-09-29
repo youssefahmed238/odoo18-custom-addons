@@ -5,6 +5,7 @@
     "depends": ["sale_management", "purchase"],
     "data": [
         "views/sale_order_view_inherit.xml",
+        "views/purchase_order_view_inherit.xml",
     ],
     "application": False,
     "installable": True,
