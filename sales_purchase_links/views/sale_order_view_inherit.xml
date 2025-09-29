@@ -8,8 +8,7 @@
         <field name="arch" type="xml">
 
             <!-- Add a smart button to form view related purchase orders -->
-            <xpath expr="//form/sheet//div[@name='button_box']" position="after">
-                <div class="oe_button_box" name="button_box">
+            <xpath expr="//form/sheet//div[@name='button_box']" position="inside">
                     <button name="action_view_purchase_orders"
                             type="object"
                             class="oe_stat_button"
@@ -17,7 +16,6 @@
                             invisible="purchase_order_count == 0">
                         <field name="purchase_order_count" widget="statinfo"/>
                     </button>
-                </div>
             </xpath>
 
             <!-- Add a button to create RFQ from Sale Order form view -->
