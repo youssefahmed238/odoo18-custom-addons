@@ -7,8 +7,9 @@
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
 
-            <!-- Add a smart button to link the lead to Request for Quotation (RFQ) -->
+            <!-- Add two smart buttons to link the lead to Purchase orders -->
             <xpath expr="//button[@name='action_schedule_meeting']" position="after">
+
                 <button name="action_view_rfqs"
                         type="object"
                         string="RFQs"
@@ -16,13 +17,28 @@
                         icon="fa-shopping-cart">
                     <field name="rfq_order_count" widget="statinfo"/>
                 </button>
+
+                <button class="oe_stat_button"
+                        name="action_view_purchase_orders"
+                        type="object"
+                        invisible="purchase_order_count == 0"
+                        icon="fa-credit-card">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Purchase Orders</span>
+                        <span class="o_stat_value">
+                            <field name="purchase_order_total" widget="monetary"
+                                   options="{'currency_field': 'company_currency'}"/>
+                        </span>
+                    </div>
+                </button>
+
             </xpath>
 
             <!-- Add a button to create a Request for Quotation (RFQ) -->
             <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
                 <button name="action_create_rfq"
                         type="object"
-                        string="Create RFQ"
+                        string="New RFQ"
                         class="oe_highlight"/>
             </xpath>
 
