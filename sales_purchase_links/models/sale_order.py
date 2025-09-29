@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
     def action_view_purchase_orders(self):
         self.ensure_one()
 
-        return {
+        action = {
             'type': 'ir.actions.act_window',
             'name': 'Purchase Orders',
             'res_model': 'purchase.order',
@@ -32,6 +32,17 @@ class SaleOrder(models.Model):
             'domain': [('source_sale_order_id', '=', self.id)],
             'context': {'default_source_sale_order_id': self.id},
         }
+
+        purchase_orders = self.env['purchase.order'].search([
+            ('source_sale_order_id', '=', self.id)
+        ])
+
+        if len(purchase_orders) == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = purchase_orders.id
+            action['views'] = [(False, 'form')]
+
+        return action
 
     def action_create_rfq(self):
         self.ensure_one()

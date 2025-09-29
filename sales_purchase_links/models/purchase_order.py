@@ -24,7 +24,7 @@ class PurchaseOrder(models.Model):
     def action_view_sale_orders(self):
         self.ensure_one()
 
-        return {
+        action = {
             'type': 'ir.actions.act_window',
             'name': 'Sale Orders',
             'res_model': 'sale.order',
@@ -32,6 +32,17 @@ class PurchaseOrder(models.Model):
             'domain': [('source_purchase_order_id', '=', self.id)],
             'context': {'default_source_purchase_order_id': self.id},
         }
+
+        sale_orders = self.env['sale.order'].search([
+            ('source_purchase_order_id', '=', self.id)
+        ])
+
+        if len(sale_orders) == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = sale_orders.id
+            action['views'] = [(False, 'form')]
+
+        return action
 
     def action_create_quotation(self):
         return {
