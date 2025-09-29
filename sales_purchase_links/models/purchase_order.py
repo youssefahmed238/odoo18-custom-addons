@@ -16,4 +16,8 @@ class PurchaseOrder(models.Model):
             'res_model': 'sale.order',
             'view_mode': 'form',
             'target': 'current',
+            'context': {
+                'default_source_purchase_order_id': self.id,
+                'default_origin': self.name,
+            }
         }
