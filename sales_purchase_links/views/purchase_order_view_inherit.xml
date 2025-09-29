@@ -7,17 +7,6 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
 
-            <!-- Add a smart button to form view related sale orders -->
-            <xpath expr="//form/sheet//div[@name='button_box']" position="inside">
-                    <button name="action_view_sale_orders"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-usd"
-                            invisible="sale_count == 0">
-                        <field name="sale_count" widget="statinfo"/>
-                    </button>
-            </xpath>
-
             <!-- Add a button to create Quotation from Purchase Order form view -->
             <xpath expr="//form/header" position="inside">
                 <button name="action_create_quotation"
