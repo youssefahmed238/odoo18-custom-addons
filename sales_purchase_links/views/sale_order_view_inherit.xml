@@ -13,8 +13,8 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-credit-card"
-                            invisible="purchase_order_count == 0">
-                        <field name="purchase_order_count" widget="statinfo"/>
+                            invisible="purchase_count == 0">
+                        <field name="purchase_count" widget="statinfo"/>
                     </button>
             </xpath>
 

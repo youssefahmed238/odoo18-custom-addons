@@ -10,14 +10,14 @@ class PurchaseOrder(models.Model):
         readonly=True,
     )
 
-    sale_order_count = fields.Integer(
+    sale_count = fields.Integer(
         string="Sales",
-        compute="_compute_sale_order_count"
+        compute="_compute_sale_count"
     )
 
-    def _compute_sale_order_count(self):
+    def _compute_sale_count(self):
         for order in self:
-            order.sale_order_count = self.env['sale.order'].search_count([
+            order.sale_count = self.env['sale.order'].search_count([
                 ('source_purchase_order_id', '=', order.id)
             ])
 
