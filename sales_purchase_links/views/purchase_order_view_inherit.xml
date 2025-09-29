@@ -11,6 +11,10 @@
                         type="object"
                         string="Create Quotation"/>
             </xpath>
+
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="source_sale_order_id" readonly="1" invisible="not source_sale_order_id"/>
+            </xpath>
         </field>
     </record>
 

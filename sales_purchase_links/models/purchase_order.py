@@ -1,8 +1,14 @@
-from odoo import models
+from odoo import models, fields
 
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+
+    source_sale_order_id = fields.Many2one(
+        comodel_name="sale.order",
+        string="Source Sale Order",
+        readonly=True,
+    )
 
     def action_create_quotation(self):
         return {
