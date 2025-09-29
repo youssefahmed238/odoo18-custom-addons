@@ -14,11 +14,8 @@ class SaleOrder(models.Model):
     def _compute_purchase_order_count(self):
         """Override the standard method to include both direct and dropship purchase orders"""
         for order in self:
-            # Get dropship purchase orders (need actual records for deduplication)
             purchase_orders_dropship = order.order_line.purchase_line_ids.order_id
 
-            # Use search_count for direct purchases, but we need to combine with dropship
-            # so we still need the actual records for deduplication
             purchase_orders_direct = self.env['purchase.order'].search([
                 ('source_sale_order_id', '=', order.id)
             ])
