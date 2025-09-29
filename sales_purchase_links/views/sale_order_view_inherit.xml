@@ -7,6 +7,17 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
+            <!-- Add a smart button to form view related purchase orders -->
+            <xpath expr="//form/sheet//div[@name='button_box']" position="inside">
+                    <button name="action_view_purchase_orders"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-credit-card"
+                            invisible="purchase_count == 0">
+                        <field name="purchase_count" widget="statinfo"/>
+                    </button>
+            </xpath>
+
             <!-- Add a button to create RFQ from Sale Order form view -->
             <xpath expr="//form/header" position="inside">
                 <button name="action_create_rfq"
