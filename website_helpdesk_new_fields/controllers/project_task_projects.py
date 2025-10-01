@@ -9,9 +9,7 @@ class ProjectTaskProjectsController(http.Controller):
         user_partner = request.env.user.partner_id
 
         projects = request.env['project.project'].sudo().search([
-            '|',
-            ('partner_id', '=', user_partner.id),
-            ('collaborator_ids.partner_id', '=', user_partner.id),
+            ('partner_id', '=', user_partner.id)
         ])
 
         project_list = [{

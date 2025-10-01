@@ -6,14 +6,14 @@ import { rpc } from "@web/core/network/rpc";
 publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
     selector: '#helpdesk_ticket_form',
     events: {
-        'change #helpdesk_project': '_onProjectChange',
-        'change #helpdesk_location': '_onLocationChange',
+        'change select[name="project_task_id"]': '_onProjectChange',
+        'change select[name="location_id"]': '_onLocationChange',
     },
 
     start: async function () {
-        this.projectSelect = $('#helpdesk_project');
-        this.assetSelect = $('#helpdesk_asset');
-        this.locationSelect = $('#helpdesk_location');
+        this.projectSelect = this.$el.find('select[name="project_task_id"]');
+        this.assetSelect = this.$el.find('select[name="asset_id"]');
+        this.locationSelect = this.$el.find('select[name="location_id"]');
 
         this.assetField = this.assetSelect.closest('.s_website_form_field');
 
