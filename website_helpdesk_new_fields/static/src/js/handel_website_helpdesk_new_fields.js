@@ -15,6 +15,10 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         this.assetSelect = this.$el.find('select[name="asset_id"]');
         this.locationSelect = this.$el.find('select[name="location_id"]');
 
+        this.projectSelect.empty();
+        this.locationSelect.empty();
+        this.assetSelect.empty();
+
         this.assetField = this.assetSelect.closest('.s_website_form_field');
 
         this.projects = [];
@@ -24,13 +28,16 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         this.removeLocationEmptyOption = false;
 
         await this._getProjects();
-        await this._getLocations(this.projectSelect.val());
+
+        const initialProjectId = this.projectSelect.val();
+        if (initialProjectId) {
+            await this._getLocations(initialProjectId);
+        }
     },
 
     _getProjects: async function () {
         try {
             this.projects = await rpc('/project_task_projects/get_projects', {});
-            this.projectSelect.empty();
 
             for (const project of this.projects) {
                 this.projectSelect.append(new Option(project.name, project.id));
@@ -42,25 +49,9 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         }
     },
 
-    _getAssets: async function (projectId, locationId) {
-        try {
-            this.assets = await rpc('/project_task_assets/get_assets', { project_id: projectId, location_id: locationId });
-            this.assetSelect.empty();
-
-            for (const asset of this.assets) {
-                this.assetSelect.append(new Option(asset.name, asset.id));
-            }
-
-        } catch (error) {
-            console.error("Error fetching assets:", error);
-            this.assetSelect.empty().append(new Option('Error loading assets', ''));
-        }
-    },
-
     _getLocations: async function (projectId) {
         try {
             this.locations = await rpc('/project_task_locations/get_locations', { project_id: projectId });
-            this.locationSelect.empty();
 
             this.locationSelect.append(new Option('', ''));
             this.removeLocationEmptyOption = true;
@@ -75,11 +66,26 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         }
     },
 
+    _getAssets: async function (projectId, locationId) {
+        try {
+            this.assets = await rpc('/project_task_assets/get_assets', { project_id: projectId, location_id: locationId });
+
+            for (const asset of this.assets) {
+                this.assetSelect.append(new Option(asset.name, asset.id));
+            }
+
+        } catch (error) {
+            console.error("Error fetching assets:", error);
+            this.assetSelect.empty().append(new Option('Error loading assets', ''));
+        }
+    },
+
     _onProjectChange: async function () {
         const selectedProjectId = this.projectSelect.val();
 
         this.assetField.hide();
 
+        this.locationSelect.empty();
         await this._getLocations(selectedProjectId);
     },
 
@@ -91,6 +97,7 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
             this.removeLocationEmptyOption = false;
         }
 
+        this.assetSelect.empty();
         this._getAssets(this.projectSelect.val(), selectedLocationId);
 
         if (selectedLocationId) {
