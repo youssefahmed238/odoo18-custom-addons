@@ -19,20 +19,19 @@ class HrEmployee(models.Model):
     hr_group_remove_delete_button = fields.Boolean(string='POS - Disable Delete Orders')
 
     @api.model
-    def _load_pos_data(self, response):
-        fields_to_load = [
-            'id', 'name', 'disable_payment_id', 'group_select_customer',
+    def _load_pos_data_fields(self, config_id):
+        result = super(HrEmployee, self)._load_pos_data_fields(config_id)
+
+        custom_fields = [
+            'disable_payment_id', 'group_select_customer',
             'group_disable_discount', 'group_disable_qty', 'group_disable_price',
             'group_disable_plus_minus', 'group_disable_numpad',
             'hr_group_disable_hide_orders', 'hr_group_disable_remove',
             'hr_group_remove_delete_button'
         ]
-        domain = [('active', '=', True)]
-        employees = self.search_read(domain, fields_to_load)
-        return {
-            'data': employees,
-            'fields': fields_to_load
-        }
+
+        result.extend(custom_fields)
+        return result
 
 
 class HrEmployeePublicInherit(models.Model):
