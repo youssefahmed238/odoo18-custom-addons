@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add a button to create RFQ from Sale Order form view -->
+            <xpath expr="//form/header" position="inside">
+                <button name="action_create_rfq"
+                        type="object"
+                        string="Create RFQ"/>
+            </xpath>
+
+            <!-- Display the linked purchase order in the sale order form view -->
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="source_purchase_order_id" readonly="1" invisible="not source_purchase_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
