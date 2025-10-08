@@ -31,6 +31,24 @@
                        required="is_source_petty"/>
             </xpath>
 
+            <!-- Customer Bank Account -->
+            <xpath expr="(//field[@name='partner_bank_id'])[1]" position="attributes">
+                <attribute name="invisible">not show_partner_bank_account or partner_type != 'customer' or is_internal_transfer or payment_type == 'inbound'</attribute>
+                <attribute name="required">require_partner_bank_account and not is_internal_transfer</attribute>
+            </xpath>
+
+            <!-- Vendor Bank Account -->
+            <xpath expr="(//field[@name='partner_bank_id'])[2]" position="attributes">
+                <attribute name="invisible">not show_partner_bank_account or partner_type != 'supplier' or is_internal_transfer or payment_type == 'inbound'</attribute>
+                <attribute name="required">require_partner_bank_account and not is_internal_transfer</attribute>
+            </xpath>
+
+            <!-- Company Bank Account -->
+            <xpath expr="(//field[@name='partner_bank_id'])[3]" position="attributes">
+                <attribute name="invisible">not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'</attribute>
+                <attribute name="required">require_partner_bank_account and not is_internal_transfer</attribute>
+            </xpath>
+
             <!-- Add destination journal fields -->
             <xpath expr="//group[@name='group2']" position="inside">
                 <field name="destination_journal_id" placeholder="e.g. Cash"
@@ -40,7 +58,7 @@
 
                 <field name="destination_petty_employee_id"
                        readonly="state != 'draft'"
-                       invisible="not is_destination_petty"
+                       invisible="not is_destination_petty or not is_internal_transfer"
                        required="is_destination_petty"/>
             </xpath>
 
