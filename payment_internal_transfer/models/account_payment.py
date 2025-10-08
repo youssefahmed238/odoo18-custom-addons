@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class AccountPayment(models.Model):
@@ -24,3 +25,9 @@ class AccountPayment(models.Model):
     def _compute_is_internal_transfer(self):
         for payment in self:
             payment.is_internal_transfer = payment.journal_id.is_petty
+
+    @api.constrains('amount', 'is_internal_transfer')
+    def _check_amount(self):
+        for payment in self:
+            if payment.is_internal_transfer and payment.amount == 0:
+                raise ValidationError(_("The amount must be greater than zero for internal transfers."))
