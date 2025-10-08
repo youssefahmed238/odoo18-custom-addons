@@ -3,7 +3,7 @@
     "author": "Youssef",
     "version": "18.0.0.1.0",
     "category": "Accounting",
-    "depends": ["account"],
+    "depends": ["account", "hr"],
     "data": [
         "views/account_payment_view.xml",
         "views/account_journal_view.xml",

@@ -23,6 +23,27 @@
                 <attribute name="invisible">partner_type != 'customer' or is_internal_transfer</attribute>
             </xpath>
 
+            <!-- Add source petty employee field -->
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="source_petty_employee_id"
+                       readonly="state != 'draft'"
+                       invisible="not is_source_petty"
+                       required="is_source_petty"/>
+            </xpath>
+
+            <!-- Add destination journal fields -->
+            <xpath expr="//group[@name='group2']" position="inside">
+                <field name="destination_journal_id" placeholder="e.g. Cash"
+                       context="{'default_partner_id': partner_id}"
+                       invisible="not is_internal_transfer" readonly="state != 'draft'"
+                       required="is_internal_transfer and state == 'draft'"/>
+
+                <field name="destination_petty_employee_id"
+                       readonly="state != 'draft'"
+                       invisible="not is_destination_petty"
+                       required="is_destination_petty"/>
+            </xpath>
+
         </field>
     </record>
 
