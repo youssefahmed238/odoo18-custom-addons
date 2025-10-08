@@ -1,0 +1,15 @@
+<odoo>
+
+    <!-- Inherit the account.journal form view to add the is_petty checkbox -->
+    <record id="view_account_journal_form_internal_transfer" model="ir.ui.view">
+        <field name="name">account.journal.form.internal.transfer</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="is_petty"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
