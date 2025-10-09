@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class AccountPayment(models.Model):
@@ -31,3 +31,13 @@ class AccountPayment(models.Model):
         for payment in self:
             if payment.is_internal_transfer and payment.amount == 0:
                 raise ValidationError(_("The amount must be greater than zero for internal transfers."))
+
+    def _generate_journal_entry(self, write_off_line_vals=None, force_balance=None, line_ids=None):
+        """ Override to add a check for outstanding_account_id when the payment is an internal transfer. """
+        if self.is_internal_transfer and not self.outstanding_account_id:
+            raise UserError(_(
+                "You can't create a new payment without an outstanding payments/receipts account set either "
+                "on the company or the %(payment_method)s payment method in the %(journal)s journal.",
+                payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
+
+        return super(AccountPayment, self)._generate_journal_entry(write_off_line_vals, force_balance, line_ids)
