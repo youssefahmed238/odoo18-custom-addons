@@ -34,6 +34,7 @@ class AccountPayment(models.Model):
 
     def _generate_journal_entry(self, write_off_line_vals=None, force_balance=None, line_ids=None):
         """ Override to add a check for outstanding_account_id when the payment is an internal transfer. """
+
         if self.is_internal_transfer and not self.outstanding_account_id:
             raise UserError(_(
                 "You can't create a new payment without an outstanding payments/receipts account set either "
@@ -41,3 +42,24 @@ class AccountPayment(models.Model):
                 payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
 
         return super(AccountPayment, self)._generate_journal_entry(write_off_line_vals, force_balance, line_ids)
+
+    @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer', 'destination_journal_id')
+    def _compute_destination_account_id(self):
+        """ Override to set the destination account for internal transfers. """
+        for pay in self:
+            if pay.is_internal_transfer:
+                pay.destination_account_id = pay.destination_journal_id.company_id.transfer_account_id
+            else:
+                super(AccountPayment, pay)._compute_destination_account_id()
+
+    @api.depends('is_internal_transfer')
+    def _compute_partner_id(self):
+        """ Override to set the partner for internal transfers. """
+        for pay in self:
+            print("pay.is_internal_transfer", pay.is_internal_transfer)
+            if pay.is_internal_transfer:
+                pay.partner_id = pay.journal_id.company_id.partner_id
+            elif pay.partner_id == pay.journal_id.company_id.partner_id:
+                pay.partner_id = False
+            else:
+                pay.partner_id = pay.partner_id
