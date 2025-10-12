@@ -1,0 +1,24 @@
+<odoo>
+
+    <!-- Hide delivery address div directly -->
+    <template id="hide_delivery_address_div" inherit_id="website_sale.delivery_address_row" name="Hide Delivery Address Div">
+        <xpath expr="//div[@id='delivery_address_row']" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+    </template>
+
+    <!-- Hide billing address div directly -->
+    <template id="hide_billing_address_div" inherit_id="website_sale.billing_address_row" name="Hide Billing Address Div">
+        <xpath expr="//div[@id='billing_address_row']" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+    </template>
+
+    <!-- Hide address confirmation on payment page -->
+    <template id="hide_address_on_payment" inherit_id="website_sale.payment" name="Hide Address on Payment">
+        <xpath expr="//div[@id='address_on_payment']" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+    </template>
+
+</odoo>

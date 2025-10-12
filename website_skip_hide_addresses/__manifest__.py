@@ -11,7 +11,7 @@
     'description': "",
     'depends': ['website_sale'],
     'data': [
-        "templates.xml"
+        'views/hide_addresses.xml',
     ],
     'images': ['static/description/icon.png'],
     'installable': True,
