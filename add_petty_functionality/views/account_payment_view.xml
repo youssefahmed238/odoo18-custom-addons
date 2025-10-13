@@ -1,0 +1,28 @@
+<odoo>
+
+    <record id="view_account_payment_form_internal_transfer" model="ir.ui.view">
+        <field name="name">account.payment.form.internal.transfer</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add source petty employee field -->
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="source_petty_employee_id"
+                       readonly="state != 'draft'"
+                       invisible="not is_source_petty"
+                       required="is_source_petty"/>
+            </xpath>
+
+            <!-- Add destination petty employee field -->
+            <xpath expr="//field[@name='destination_journal_id']" position="after">
+                <field name="destination_petty_employee_id"
+                       readonly="state != 'draft'"
+                       invisible="not is_destination_petty or not is_internal_transfer"
+                       required="is_destination_petty"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

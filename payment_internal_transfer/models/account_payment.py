@@ -16,22 +16,14 @@ class AccountPayment(models.Model):
         check_company=True,
     )
 
-    source_petty_employee_id = fields.Many2one('hr.employee', string='Source Petty Employee')
-    destination_petty_employee_id = fields.Many2one('hr.employee', string='Destination Petty Employee')
-
-    is_source_petty = fields.Boolean(related='journal_id.is_petty')
-    is_destination_petty = fields.Boolean(related='destination_journal_id.is_petty')
-
     @api.constrains('amount', 'is_internal_transfer')
     def _check_amount(self):
         for payment in self:
             if payment.is_internal_transfer and payment.amount == 0:
                 raise ValidationError(_("The amount must be greater than zero for internal transfers."))
 
-    @api.depends('journal_id')
     def _compute_is_internal_transfer(self):
-        for payment in self:
-            payment.is_internal_transfer = payment.journal_id.is_petty
+        pass
 
     @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer', 'destination_journal_id')
     def _compute_destination_account_id(self):
@@ -63,10 +55,10 @@ class AccountPayment(models.Model):
         """ Override to add a check for outstanding_account_id when the payment is an internal transfer. """
 
         if self.is_internal_transfer and not self.outstanding_account_id:
-                raise UserError(_(
-                    "You can't confirm a payment without an outstanding payments/receipts account set either "
-                    "on the company or the %(payment_method)s payment method in the %(journal)s journal.",
-                    payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
+            raise UserError(_(
+                "You can't confirm a payment without an outstanding payments/receipts account set either "
+                "on the company or the %(payment_method)s payment method in the %(journal)s journal.",
+                payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
 
         return super(AccountPayment, self)._generate_journal_entry(write_off_line_vals, force_balance, line_ids)
 
@@ -76,9 +68,6 @@ class AccountPayment(models.Model):
 
         line_vals[0]['name'] = ''.join(x[1] for x in self._get_aml_display_name_list(is_liquidity_line=True))
         line_vals[1]['name'] = ''.join(x[1] for x in self._get_aml_display_name_list())
-
-        if self.is_internal_transfer:
-            line_vals[0]['petty_employee'] = self.source_petty_employee_id.id if self.is_source_petty else False
 
         return line_vals
 
@@ -151,9 +140,7 @@ class AccountPayment(models.Model):
 
             paired_payment = payment.copy({
                 'journal_id': destination_journal.id,
-                'source_petty_employee_id': payment.destination_petty_employee_id.id if payment.is_destination_petty else False,
                 'destination_journal_id': payment.journal_id.id,
-                'destination_petty_employee_id': payment.source_petty_employee_id.id if payment.is_source_petty else False,
                 'payment_type': new_payment_type,
                 'move_id': None,
                 'paired_internal_transfer_payment_id': payment.id,

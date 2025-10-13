@@ -21,9 +21,3 @@ class AccountMove(models.Model):
         for move in self:
             if move.origin_payment_id:
                 move.origin_payment_id.state = 'draft'
-
-
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
-
-    petty_employee = fields.Many2one('hr.employee', string='Petty Employee', stor=True)
