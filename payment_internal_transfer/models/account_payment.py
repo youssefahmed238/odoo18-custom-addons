@@ -46,7 +46,6 @@ class AccountPayment(models.Model):
     def _compute_partner_id(self):
         """ Override to set the partner for internal transfers. """
         for pay in self:
-            print("pay.is_internal_transfer", pay.is_internal_transfer)
             if pay.is_internal_transfer:
                 pay.partner_id = pay.journal_id.company_id.partner_id
             elif pay.partner_id == pay.journal_id.company_id.partner_id:

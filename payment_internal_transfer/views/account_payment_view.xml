@@ -18,9 +18,14 @@
                 </div>
             </xpath>
 
-            <!-- Make the partner_id field invisible when the payment is an internal transfer -->
-            <xpath expr="//field[@name='partner_id']" position="attributes">
+            <!-- Make the customer partner_id field invisible when the payment is an internal transfer -->
+            <xpath expr="//field[@name='partner_id'][1]" position="attributes">
                 <attribute name="invisible">partner_type != 'customer' or is_internal_transfer</attribute>
+            </xpath>
+
+            <!-- Make the vendor partner_id field invisible when the payment is an internal transfer -->
+            <xpath expr="//field[@name='partner_id'][2]" position="attributes">
+                <attribute name="invisible">partner_type != 'supplier' or is_internal_transfer</attribute>
             </xpath>
 
             <!-- Add source petty employee field -->
