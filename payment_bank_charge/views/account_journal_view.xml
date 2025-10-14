@@ -1,0 +1,35 @@
+<odoo>
+    <record id="account_journal_form_inherit" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='bank_account']" position="after">
+                <page string="Payment Bank Charge" name="payment_bank_charge" invisible="type != 'bank'">
+                    <label for="allow_payment_bank_charge" string="Allow Bank Charge" class="col-form-label col-sm-2"
+                           invisible="1"/>
+                    <field name="allow_payment_bank_charge" invisible="1"/>
+                    <group>
+                        <group string="Payment Bank Charge" invisible="not allow_payment_bank_charge">
+                            <field name="allow_on_payment"/>
+                            <field name="payment_bank_charge_account" widget="many2one" invisible="not allow_on_payment"
+                                   required="allow_on_payment"/>
+                            <field name="payment_bank_charge_type" invisible="not allow_on_payment"
+                                   required="allow_on_payment"/>
+                            <field name="payment_bank_charge_percentage" invisible="not allow_on_payment"
+                                   required="allow_on_payment"/>
+                            <field name="payment_taxes_on_bank_charge" invisible="not allow_on_payment"/>
+                            <field name="payment_taxes_on_bank_charge_account_tax"
+                                   invisible="not payment_taxes_on_bank_charge"
+                                   required="payment_taxes_on_bank_charge"/>
+                            <field name="payment_tax_percentage" invisible="1" required="payment_taxes_on_bank_charge"/>
+                            <field name="payment_taxes_on_bank_charge_type"
+                                   invisible="not payment_taxes_on_bank_charge or payment_bank_charge_type == 'mixed'"
+                                   required="payment_taxes_on_bank_charge"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
