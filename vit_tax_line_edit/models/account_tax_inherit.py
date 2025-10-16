@@ -221,6 +221,7 @@ class AccountMove(models.Model):
             base_lines = move.line_ids.filtered(lambda l: not l.tax_line_id and l.name != balance_name)
             print(f" DEBUG: find {len(base_lines)} base line")
 
+            sequence = 1
             for base_line in base_lines:
                 print(" DEBUG: Processing base_line: ", base_line.account_id.name)
                 print(" base_line sequance: ", base_line.sequence)
@@ -228,45 +229,58 @@ class AccountMove(models.Model):
                 print(" =============> DEBUG: unbalanced_moves: ", unbalanced_moves)
 
                 if isinstance(unbalanced_moves, list) and len(unbalanced_moves) == 1:
+                    self._create_balancing_line(move, base_line, balance_name)
 
-                    related_lines = move.line_ids.filtered(
-                        lambda l: l == base_line or l.base_line_id == base_line
-                    )
+                base_line.sequence = sequence
+                sequence += 1
+                
+                if base_line.balance_line_id:
+                    base_line.balance_line_id.sequence = sequence
+                    sequence += 1
 
-                    debit = sum(l.balance for l in related_lines if l.balance > 0)
-                    credit = -sum(l.balance for l in related_lines if l.balance < 0)
-                    diff = round(debit - credit, 2)
+                for tax_line in move.line_ids.filtered(lambda l: l.tax_line_id and l.base_line_id == base_line):
+                    tax_line.sequence = sequence
+                    sequence += 1
 
-                    if base_line.balance_line_id:
+    def _create_balancing_line(self, move, base_line, balance_name):
+        related_lines = move.line_ids.filtered(
+            lambda l: l == base_line or l.base_line_id == base_line
+        )
 
-                        print(" =============> DEBUG: Found existing balance_line_id with balance: ",
-                              base_line.balance_line_id.balance)
-                        print(" =============> DEBUG: Recalculated debit diff: ",
-                              diff)
-                        print(" =============> DEBUG: balance line sequance: ", base_line.balance_line_id.sequence)
-                        if abs(diff) < 0.0001 or abs(base_line.balance_line_id.balance) == abs(diff):
-                            print(" =============> DEBUG: No change needed, skipping...")
-                            continue
+        debit = sum(l.balance for l in related_lines if l.balance > 0)
+        credit = -sum(l.balance for l in related_lines if l.balance < 0)
+        diff = round(debit - credit, 2)
 
-                        print(" =============> DEBUG: Updating existing balancing line to new balance: ", diff)
+        if base_line.balance_line_id:
 
-                        old_line = base_line.balance_line_id
-                        base_line.balance_line_id = False
-                        old_line.unlink()
+            print(" =============> DEBUG: Found existing balance_line_id with balance: ",
+                  base_line.balance_line_id.balance)
+            print(" =============> DEBUG: Recalculated debit diff: ",
+                  diff)
+            print(" =============> DEBUG: balance line sequance: ", base_line.balance_line_id.sequence)
+            if abs(diff) < 0.0001 or abs(base_line.balance_line_id.balance) == abs(diff):
+                print(" =============> DEBUG: No change needed, skipping...")
+                return
 
-                    print(" =============> DEBUG: Creating new balancing line with debit: ", credit - debit)
+            print(" =============> DEBUG: Updating existing balancing line to new balance: ", diff)
 
-                    vals = {
-                        'name': balance_name,
-                        'move_id': move.id,
-                        'account_id': move._get_automatic_balancing_account(),
-                        'currency_id': move.currency_id.id,
-                        'tax_ids': False,
-                        'balance': credit - debit,
-                    }
+            old_line = base_line.balance_line_id
+            base_line.balance_line_id = False
+            old_line.unlink()
 
-                    new_line = self.env['account.move.line'].create(vals)
-                    base_line.balance_line_id = new_line
+        print(" =============> DEBUG: Creating new balancing line with debit: ", credit - debit)
+
+        vals = {
+            'name': balance_name,
+            'move_id': move.id,
+            'account_id': move._get_automatic_balancing_account(),
+            'currency_id': move.currency_id.id,
+            'tax_ids': False,
+            'balance': credit - debit,
+        }
+
+        new_line = self.env['account.move.line'].create(vals)
+        base_line.balance_line_id = new_line
 
 
 class AccountMoveLine(models.Model):
