@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <record id="account_payment_register_wizard_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.wizard.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='amount']" position="after">
+                <label for="bank_amount" string="Bank Amount"
+                       invisible="not apply_bank_amount or payment_type != 'inbound'"/>
+                <field name="bank_amount" readonly="1" invisible="not apply_bank_amount or payment_type != 'inbound'"/>
+                <field name="apply_bank_amount" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//group[@name='group2']" position="after">
+                <label for="bank_charge_amount" string="Bank Charge Amount"
+                       invisible="payment_type != 'outbound' or not apply_bank_amount"/>
+                <field name="bank_charge_amount" invisible="payment_type != 'outbound' or not apply_bank_amount"
+                       required="bank_charge_amount_required"/>
+                <field name="bank_charge_amount_required" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

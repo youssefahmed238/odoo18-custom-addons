@@ -6,6 +6,7 @@
     'depends': ['account'],
     'data': [
         'views/account_journal_view.xml',
+        'views/account_payment_register_wizard_view.xml',
     ],
     'installable': True,
     'application': False,
