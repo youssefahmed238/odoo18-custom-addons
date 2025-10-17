@@ -3,6 +3,9 @@
     'version': '18.0.0.1.0',
     'author': 'Youssef',
     'depends': ['account', 'payment_internal_transfer'],
+    'data': [
+        'views/account_journal_view.xml',
+    ],
     'installable': True,
     'application': False,
     'auto_install': False,

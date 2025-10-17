@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <record id="account_journal_form_inherit" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//notebook/page[@name='page_incoming_payments']" position="before">
+                <page string="Internal Transfer Bank Charge" name="internal_transfer_bank_charge"
+                      invisible="type != 'bank'">
+                    <group>
+                        <label for="allow_on_internal_transfer" string="Allow on Internal Transfer"/>
+                        <field name="allow_on_internal_transfer"/>
+
+                        <group string="Internal Transfer Bank Charge" invisible="not allow_on_internal_transfer">
+
+                            <field name="it_bank_charge_account" widget="many2one"
+                                   required="allow_on_internal_transfer"/>
+
+                            <field name="it_taxes_on_bank_charge"/>
+                            <field name="it_taxes_on_bank_charge_account_tax"
+                                   invisible="not it_taxes_on_bank_charge"
+                                   required="it_taxes_on_bank_charge"/>
+                        </group>
+                    </group>
+
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
