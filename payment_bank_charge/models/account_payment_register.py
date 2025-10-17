@@ -49,6 +49,7 @@ class AccountPaymentRegisterInherit(models.TransientModel):
                         (bank_charge_amount * (self.journal_id.payment_tax_percentage / 100)) * 100) / 100,
                     'payment_taxes_on_bank_charge_type': self.journal_id.payment_taxes_on_bank_charge_type
                 })
+
         return res
 
     def _create_payment_vals_from_wizard(self, batch_result):
