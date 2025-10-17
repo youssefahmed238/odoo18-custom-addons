@@ -5,6 +5,7 @@
     'depends': ['account', 'payment_internal_transfer'],
     'data': [
         'views/account_journal_view.xml',
+        'views/account_payment_view.xml',
     ],
     'installable': True,
     'application': False,

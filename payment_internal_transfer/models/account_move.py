@@ -6,12 +6,12 @@ class AccountMove(models.Model):
 
     def action_post(self):
         """ When posting a journal linked to a payment, also post the linked payment. """
-        if self.env.context.get('from_payment'):
+        if self.env.context.get('skip_payment_post'):
             return super(AccountMove, self).action_post()
         else:
             for move in self:
                 if move.origin_payment_id and move.origin_payment_id.state != 'paid':
-                    move.origin_payment_id.with_context(from_payment=True).action_post()
+                    move.origin_payment_id.with_context(skip_payment_post=True).action_post()
             return None
 
     def button_draft(self):

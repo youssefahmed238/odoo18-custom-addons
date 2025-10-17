@@ -26,7 +26,7 @@ class AccountPaymentInheritForPayment(models.Model):
         store=True,
     )
     expense_sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
-    charge_move_id = fields.Many2one('account.move', string="Charge Move", readonly=True, copy=False)
+    charge_move_id = fields.Many2one("account.move", string="Charge move")
 
     @api.constrains('payment_type', 'is_internal_transfer', 'fixed_bank_charge_amount')
     def payment_type_allow_fixed_amount(self):
@@ -112,7 +112,7 @@ class AccountPaymentInheritForPayment(models.Model):
 
     def action_post(self):
         res = super(AccountPaymentInheritForPayment, self).action_post()
-        if self.env.context.get('from_payment'):
+        if self.env.context.get('skip_payment_post'):
             self.create_taxes_journal()
         return res
 
