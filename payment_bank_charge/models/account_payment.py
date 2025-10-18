@@ -59,7 +59,6 @@ class AccountPaymentInheritForPayment(models.Model):
                 )
                 payment_ref = payment.payment_reference or payment.name
                 sr_currency = self.env['res.currency'].sudo().search([('name', '=', 'SAR')], limit=1)
-                print("sr_currency", sr_currency)
                 # Prepare bank charge move lines
                 bank_charge_vals = {
                     'name': _(f"Bank Charge - {payment_ref or 'N/A'}"),
@@ -103,7 +102,7 @@ class AccountPaymentInheritForPayment(models.Model):
                 move = self.env['account.move'].create(move_dict)
                 # Post the move if it's in draft state
                 if move.state == 'draft':
-                    move.action_post()
+                    move.with_context(skip_payment_post=True).action_post()
                 # Link the move to the payment
                 payment.charge_move_id = move.id if move else None
                 # Add chatter messages
