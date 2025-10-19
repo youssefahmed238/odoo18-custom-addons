@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="asset_report_paper_format" model="report.paperformat">
+        <field name="name">Asset QR Code</field>
+        <field name="format">custom</field>
+        <field name="page_height">20</field>
+        <field name="page_width">20</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+        <field name="display_name">Asset QR Code</field>
+    </record>
+
+
+    <record id="asset_qr_report" model="ir.actions.report">
+        <field name="name">Asset QR code</field>
+        <field name="model">project.task.assets</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">website_helpdesk_new_fields.report_asset_qr_pdf</field>
+        <field name="report_file">website_helpdesk_new_fields.report_asset_qr_pdf</field>
+        <field name="print_report_name">'Asset QR Code - %s' % (object.name)</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="website_helpdesk_new_fields.asset_report_paper_format"/>
+    </record>
+
+    <record id="asset_report_form_inherit" model="ir.ui.view">
+        <field name="name">asset.report.form.inherit</field>
+        <field name="model">project.task.assets</field>
+        <field name="inherit_id" ref="vit_facility_management_config.view_project_task_assets_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <button name="%(website_helpdesk_new_fields.asset_qr_report)d"
+                        string="Print Asset QR"
+                        type="action"
+                        class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="report_asset_qr_pdf">
+        <t t-foreach="docs" t-as="doc">
+            <main>
+                <div class="page" style="padding:0; margin:0; text-align:center;">
+                    <t t-if="doc.asset_qr_image">
+                        <div style="display:flex; justify-content:center; align-items:center; padding:0px; margin:0px;">
+                            <img t-att-src="'data:image/png;base64,%s' % doc.asset_qr_image.decode('utf-8')"
+                                 style="width:72px; height:72px;"/>
+                        </div>
+                    </t>
+                    <p style="font-size:5px; padding:0px; margin:0px;">
+                        <t t-out="doc.name"/>
+                    </p>
+                </div>
+            </main>
+        </t>
+    </template>
+
+</odoo>

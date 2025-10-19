@@ -30,7 +30,6 @@
                                             <label class="col-form-label col-sm-auto s_website_form_label"
                                                    style="width: 200px" for="helpdesk1">
                                                 <span class="s_website_form_label_content">Full Name</span>
-                                                <span class="s_website_form_mark">*</span>
                                             </label>
                                             <div class="col-sm">
                                                 <input type="text" class="form-control s_website_form_input"
@@ -62,7 +61,6 @@
                                             <label class="col-form-label col-sm-auto s_website_form_label "
                                                    style="width: 200px" for="helpdesk3">
                                                 <span class="s_website_form_label_content">Email Address</span>
-                                                <span class="s_website_form_mark">*</span>
                                             </label>
                                             <div class="col-sm">
                                                 <input type="email" class="form-control s_website_form_input"
@@ -72,30 +70,13 @@
                                         </div>
                                     </div>
 
-                                    <!-- Company Name -->
-                                    <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_custom"
-                                         data-type="char" data-name="Field">
-                                        <div class="row s_col_no_resize s_col_no_bgcolor">
-                                            <label class="col-form-label col-sm-auto s_website_form_label"
-                                                   style="width: 200px" for="helpdesk4">
-                                                <span class="s_website_form_label_content">Company Name</span>
-                                            </label>
-                                            <div class="col-sm">
-                                                <input type="text" class="form-control s_website_form_input"
-                                                       name="partner_company_name"
-                                                       data-fill-with="commercial_company_name" id="helpdesk4"/>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Message Subject -->
+                                    <!-- Ticket Title -->
                                     <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_model_required"
                                          data-type="char" data-name="Field">
                                         <div class="row s_col_no_resize s_col_no_bgcolor">
                                             <label class="col-form-label col-sm-auto s_website_form_label "
                                                    style="width: 200px" for="helpdesk5">
-                                                <span class="s_website_form_label_content">Message Subject</span>
-                                                <span class="s_website_form_mark">*</span>
+                                                <span class="s_website_form_label_content">Ticket Title</span>
                                             </label>
                                             <div class="col-sm">
                                                 <input type="text" class="form-control s_website_form_input" name="name"
@@ -152,18 +133,17 @@
                                         </div>
                                     </div>
 
-                                    <!-- Ask Your Question -->
+                                    <!-- Ticket Details -->
                                     <div class="mb-0 py-2 s_website_form_field col-12" data-type="char"
                                          data-name="Field">
                                         <div class="row s_col_no_resize s_col_no_bgcolor">
                                             <label class="col-form-label col-sm-auto s_website_form_label "
                                                    style="width: 200px" for="helpdesk6">
-                                                <span class="s_website_form_label_content">Ask Your Question</span>
-                                                <span class="s_website_form_mark">*</span>
+                                                <span class="s_website_form_label_content">Ticket Details</span>
                                             </label>
                                             <div class="col-sm">
-                                                <textarea type="text" class="form-control s_website_form_input"
-                                                          name="description" required="true" id="helpdesk6" rows="5"/>
+                                                <input type="text" class="form-control s_website_form_input"
+                                                       name="description" required="true" id="helpdesk6" rows="5"/>
                                             </div>
                                         </div>
                                     </div>
@@ -199,6 +179,46 @@
                                         </div>
                                     </div>
 
+                                    <!--  Scan QR Button  -->
+                                    <div class="mb-0 py-2 s_website_form_field col-12">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label"
+                                                   style="width: 200px">
+                                                <span class="s_website_form_label_content">Scan Asset QR</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <button type="button" class="btn btn-secondary" id="scan_qr_btn"
+                                                        data-bs-toggle="modal" data-bs-target="#qrCameraModal">
+                                                    <i class="fa fa-qrcode"/>
+                                                    Scan QR
+                                                </button>
+                                                <input type="hidden" id="qr_result" name="qr_result"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--  Camera Modal  -->
+                                    <div class="modal fade" id="qrCameraModal" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content bg-dark text-center">
+                                                <div class="modal-header border-0">
+                                                    <h5 class="modal-title text-white">Scan QR Code</h5>
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                            data-bs-dismiss="modal" aria-label="Close"/>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <video id="camera_video" autoplay="autoplay"
+                                                           playsinline="playsinline" class="w-100 rounded"/>
+                                                </div>
+                                                <div class="modal-footer border-0">
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                                                            id="close_camera_btn">Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Submit Button -->
                                     <div class="mb-0 py-2 col-12 s_website_form_submit" data-name="Submit Button">
                                         <div style="width: 200px;" class="s_website_form_label"/>
@@ -218,9 +238,63 @@
 
         <!-- Inherit the existing helpdesk team template to replace the ticket submission form -->
         <template id="custom_team" inherit_id="website_helpdesk.team" name="Custom Team Form">
-            <xpath expr="//t[@t-call='#{template_xmlid}']" position="replace">
-                <t t-call="website_helpdesk_new_fields.custom_ticket_submit_form"/>
+            <xpath expr="//div[hasclass('col-md-8') and hasclass('ps-4')]" position="replace">
+                <div class="col-md-8 ps-4">
+                    <t t-call="website_helpdesk_new_fields.custom_ticket_submit_form"/>
+                </div>
             </xpath>
         </template>
+
+        <!-- Inherit the default ticket submit form -->
+        <template id="ticket_submit_form_custom" inherit_id="website_helpdesk.ticket_submit_form" name="Add QR Scanner">
+
+            <!-- Add the Scan QR button before the submit button -->
+            <xpath expr="//div[hasclass('s_website_form_submit')]" position="before">
+                <!-- Scan QR Button -->
+                <div class="mb-0 py-2 s_website_form_field col-12">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                        <label class="col-form-label col-sm-auto s_website_form_label"
+                               style="width: 200px">
+                            <span class="s_website_form_label_content">Scan QR Code</span>
+                        </label>
+                        <div class="col-sm">
+                            <button type="button" class="btn btn-secondary" id="scan_qr_btn"
+                                    data-bs-toggle="modal" data-bs-target="#qrCameraModal">
+                                <i class="fa fa-qrcode"></i>
+                                Scan QR
+                            </button>
+                            <input type="hidden" id="qr_result" name="qr_result"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Add the Camera Modal at the end of the form -->
+            <xpath expr="//form[@id='helpdesk_ticket_form']" position="after">
+                <!-- Camera Modal -->
+                <div class="modal fade" id="qrCameraModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content bg-dark text-center">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title text-white">Scan QR Code</h5>
+                                <button type="button" class="btn-close btn-close-white"
+                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <video id="camera_video" autoplay="autoplay"
+                                       playsinline="playsinline" class="w-100 rounded"></video>
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                                        id="close_camera_btn">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+        </template>
+
     </data>
 </odoo>
