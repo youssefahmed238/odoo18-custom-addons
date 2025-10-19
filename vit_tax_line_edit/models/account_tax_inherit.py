@@ -83,7 +83,25 @@ class AccountTax(models.Model):
         taxes_data = tax_details['taxes_data']
 
         for tax_data in (taxes_data or [None]):
-            grouping_key = grouping_function(base_line, tax_data)
+            if 'currency' not in base_line or not base_line['currency']:
+                base_line['currency'] = self.env.company.currency_id
+
+            if tax_data:
+                if 'currency' not in tax_data or not tax_data['currency']:
+                    tax_data['currency'] = base_line['currency']
+                if 'delta_currency' not in tax_data or not tax_data['delta_currency']:
+                    tax_data['delta_currency'] = base_line['currency']
+
+            defaults = {
+                'price_include': False,
+                'tax_ids': [],
+                'currency': base_line.get('currency'),
+                '__force_unique': str(uuid.uuid4()),
+            }
+
+            grouping_key = grouping_function(base_line, tax_data) or {}
+            for k, v in defaults.items():
+                grouping_key.setdefault(k, v)
 
             if isinstance(grouping_key, dict):
                 grouping_key = dict(grouping_key)
@@ -92,6 +110,12 @@ class AccountTax(models.Model):
 
             already_accounted = grouping_key in values_per_grouping_key
             values = values_per_grouping_key[grouping_key]
+
+            for key in ['target_base_amount', 'target_base_amount_currency',
+                        'target_tax_amount', 'target_tax_amount_currency', 'raw_total_excluded',
+                        'target_total_excluded', 'target_total_excluded_currency', 'raw_total_excluded_currency']:
+                values.setdefault(key, 0.0)
+
             values['grouping_key'] = grouping_key
 
             if not already_accounted:
@@ -233,7 +257,7 @@ class AccountMove(models.Model):
 
                 base_line.sequence = sequence
                 sequence += 1
-                
+
                 if base_line.balance_line_id:
                     base_line.balance_line_id.sequence = sequence
                     sequence += 1
