@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="view_account_journal_form_inherit_tax_line_edit" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.tax.line.edit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="per_line_calc" invisible="type != 'general'"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

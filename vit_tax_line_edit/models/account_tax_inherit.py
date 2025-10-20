@@ -10,16 +10,37 @@ class AccountTax(models.Model):
     _inherit = 'account.tax'
 
     @api.model
+    def _get_move_from_line_dict(self, base_line):
+        """Return account.move record or False. Handles int id, record proxy or dict/value forms."""
+        move_val = base_line.get('record') and base_line['record'].move_id
+        if not move_val:
+            return False
+        try:
+            if hasattr(move_val, 'id'):
+                return move_val
+        except Exception:
+            pass
+        try:
+            move_id = int(move_val)
+            return self.env['account.move'].browse(move_id)
+        except Exception:
+            return self.env['account.move'].browse(move_val)
+
+    @api.model
     def _prepare_base_line_tax_repartition_grouping_key(self, base_line, base_line_grouping_key, tax_data,
                                                         tax_rep_data):
+        move = self._get_move_from_line_dict(base_line)
+        if move and not move.journal_id.per_line_calc:
+            return super(AccountTax, self)._prepare_base_line_tax_repartition_grouping_key(
+                base_line, base_line_grouping_key, tax_data, tax_rep_data
+            )
+
         tax = tax_data['tax']
         tax_rep = tax_rep_data['tax_rep']
 
         unique_key = f"{base_line.get('id', 'no_line')}_{tax.id}_{tax_rep.id}_{uuid.uuid4()}"
 
-        base_line_grouping_key = {
-            **base_line_grouping_key,
-        }
+        base_line_grouping_key = {**base_line_grouping_key}
 
         return {
             **base_line_grouping_key,
@@ -36,11 +57,15 @@ class AccountTax(models.Model):
             'tax_ids': [Command.set(tax_rep_data['taxes'].ids)],
             'tax_tag_ids': [Command.set(tax_rep_data['tax_tags'].ids)],
             '__force_unique': unique_key,
-            'base_line_id': base_line.get('id'),  # 👈 الربط بالـ base line
+            'base_line_id': base_line.get('id'),
         }
 
     @api.model
     def _prepare_tax_line_repartition_grouping_key(self, tax_line):
+        move = self._get_move_from_line_dict(tax_line)
+        if move and not move.journal_id.per_line_calc:
+            return super(AccountTax, self)._prepare_tax_line_repartition_grouping_key(tax_line)
+
         tax_id = tax_line['tax_ids'].ids[0] if tax_line.get('tax_ids') else 'no_tax'
         tax_rep_id = tax_line['tax_repartition_line_id'].id if tax_line.get('tax_repartition_line_id') else 'no_rep'
         base_line_id = tax_line.get('id', 'no_line')
@@ -63,7 +88,9 @@ class AccountTax(models.Model):
     @api.model
     def _aggregate_base_line_tax_details(self, base_line, grouping_function):
         """ Modified: Prevent merging of taxes — each tax line remains unique. """
-        print(" DEBUG: Entered _aggregate_base_line_tax_details for base_line:", base_line.get('id'))
+        move = self._get_move_from_line_dict(base_line)
+        if move and not move.journal_id.per_line_calc:
+            return super(AccountTax, self)._aggregate_base_line_tax_details(base_line, grouping_function)
 
         values_per_grouping_key = defaultdict(lambda: {
             'base_amount_currency': 0.0,
@@ -151,12 +178,16 @@ class AccountTax(models.Model):
             'amount_currency': 0.0,
             'balance': 0.0,
             'name': '',
-            'base_line_id': False,  # 👈 default
+            'base_line_id': False,
         })
 
         base_lines_to_update = []
 
         for base_line in base_lines:
+            move = self._get_move_from_line_dict(base_line)
+            if move and not move.journal_id.per_line_calc:
+                return super(AccountTax, self)._prepare_tax_lines(base_lines, company, tax_lines)
+
             sign = base_line['sign']
             tax_tag_invert = base_line['tax_tag_invert']
             tax_details = base_line['tax_details']
@@ -166,7 +197,7 @@ class AccountTax(models.Model):
                 {
                     'tax_tag_ids': [Command.set(base_line['tax_tag_ids'].ids)],
                     'amount_currency': sign * (
-                            tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']),
+                                tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']),
                     'balance': sign * (tax_details['total_excluded'] + tax_details['delta_total_excluded']),
                 },
             ))
@@ -181,12 +212,9 @@ class AccountTax(models.Model):
                     tax_line['tax_base_amount'] += sign * tax_data['base_amount'] * (-1 if tax_tag_invert else 1)
                     tax_line['amount_currency'] += sign * tax_rep_data['tax_amount_currency']
                     tax_line['balance'] += sign * tax_rep_data['tax_amount']
-                    tax_line['base_line_id'] = base_line.get('id')  # 👈 الربط
+                    tax_line['base_line_id'] = base_line.get('id')
 
-        tax_lines_mapping = {
-            frozendict(key): v
-            for key, v in tax_lines_mapping.items()
-        }
+        tax_lines_mapping = {frozendict(key): v for key, v in tax_lines_mapping.items()}
 
         tax_lines_to_update = []
         tax_lines_to_delete = []
@@ -215,8 +243,9 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     def _get_automatic_balancing_account(self):
-        """Helper: choose which account to use for auto balance"""
         self.ensure_one()
+        if not self.journal_id.per_line_calc:
+            return super(AccountMove, self)._get_automatic_balancing_account()
         return (
                 self.journal_id.default_account_id.id
                 or self.company_id.account_journal_suspense_account_id.id
@@ -228,7 +257,6 @@ class AccountMove(models.Model):
             return bool(move.line_ids.tax_ids)
 
         move_had_tax = {move: has_tax(move) for move in container['records']}
-
         yield  # Execute main logic first
 
         for move in (x for x in container['records'] if x.state != 'posted'):
@@ -242,57 +270,65 @@ class AccountMove(models.Model):
 
             balance_name = _('Automatic Balancing Line')
 
-            base_lines = move.line_ids.filtered(lambda l: not l.tax_line_id and l.name != balance_name)
-            print(f" DEBUG: find {len(base_lines)} base line")
+            if not move.journal_id.per_line_calc:
+                existing_balancing_line = move.line_ids.filtered(lambda line: line.name == balance_name)
+                if existing_balancing_line:
+                    existing_balancing_line.balance = existing_balancing_line.amount_currency = 0.0
 
-            sequence = 1
-            for base_line in base_lines:
-                print(" DEBUG: Processing base_line: ", base_line.account_id.name)
-                print(" base_line sequance: ", base_line.sequence)
+                # Create an automatic balancing line to make sure the entry can be saved/posted.
+                # If such a line already exists, we simply update its amounts.
                 unbalanced_moves = self._get_unbalanced_moves({'records': move})
-                print(" =============> DEBUG: unbalanced_moves: ", unbalanced_moves)
-
                 if isinstance(unbalanced_moves, list) and len(unbalanced_moves) == 1:
-                    self._create_balancing_line(move, base_line, balance_name)
+                    dummy, debit, credit = unbalanced_moves[0]
 
-                base_line.sequence = sequence
-                sequence += 1
+                    vals = {'balance': credit - debit}
+                    if existing_balancing_line:
+                        existing_balancing_line.write(vals)
+                    else:
+                        vals.update({
+                            'name': balance_name,
+                            'move_id': move.id,
+                            'account_id': move._get_automatic_balancing_account(),
+                            'currency_id': move.currency_id.id,
+                            # A balancing line should never have default taxes applied to it, it doesn't work well and wouldn't make much sense.
+                            'tax_ids': False,
+                        })
+                        self.env['account.move.line'].create(vals)
+            else:
 
-                if base_line.balance_line_id:
-                    base_line.balance_line_id.sequence = sequence
+                base_lines = move.line_ids.filtered(lambda l: not l.tax_line_id and l.name != balance_name)
+
+                sequence = 1
+                for base_line in base_lines:
+                    unbalanced_moves = self._get_unbalanced_moves({'records': move})
+
+                    if isinstance(unbalanced_moves, list) and len(unbalanced_moves) == 1:
+                        self._create_balancing_line(move, base_line, balance_name)
+
+                    base_line.sequence = sequence
                     sequence += 1
 
-                for tax_line in move.line_ids.filtered(lambda l: l.tax_line_id and l.base_line_id == base_line):
-                    tax_line.sequence = sequence
-                    sequence += 1
+                    if base_line.balance_line_id:
+                        base_line.balance_line_id.sequence = sequence
+                        sequence += 1
+
+                    for tax_line in move.line_ids.filtered(lambda l: l.tax_line_id and l.base_line_id == base_line):
+                        tax_line.sequence = sequence
+                        sequence += 1
 
     def _create_balancing_line(self, move, base_line, balance_name):
-        related_lines = move.line_ids.filtered(
-            lambda l: l == base_line or l.base_line_id == base_line
-        )
+        related_lines = move.line_ids.filtered(lambda l: l == base_line or l.base_line_id == base_line)
 
         debit = sum(l.balance for l in related_lines if l.balance > 0)
         credit = -sum(l.balance for l in related_lines if l.balance < 0)
         diff = round(debit - credit, 2)
 
         if base_line.balance_line_id:
-
-            print(" =============> DEBUG: Found existing balance_line_id with balance: ",
-                  base_line.balance_line_id.balance)
-            print(" =============> DEBUG: Recalculated debit diff: ",
-                  diff)
-            print(" =============> DEBUG: balance line sequance: ", base_line.balance_line_id.sequence)
             if abs(diff) < 0.0001 or abs(base_line.balance_line_id.balance) == abs(diff):
-                print(" =============> DEBUG: No change needed, skipping...")
                 return
-
-            print(" =============> DEBUG: Updating existing balancing line to new balance: ", diff)
-
             old_line = base_line.balance_line_id
             base_line.balance_line_id = False
             old_line.unlink()
-
-        print(" =============> DEBUG: Creating new balancing line with debit: ", credit - debit)
 
         vals = {
             'name': balance_name,
