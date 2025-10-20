@@ -15,13 +15,13 @@ class ProjectTaskAssets(models.Model):
                 # Build the data string for the QR
                 qr_data = []
                 if rec.asset_code:
-                    qr_data.append(f"ASSET:{rec.asset_code}")
+                    qr_data.append(f"ASSET:{rec.id}")
                 if rec.location_id:
-                    qr_data.append(f"LOCATION:{rec.location_id.display_name}")
+                    qr_data.append(f"LOCATION:{rec.location_id.id}")
                 if rec.project_id:
-                    qr_data.append(f"PROJECT:{rec.project_id.display_name}")
+                    qr_data.append(f"PROJECT:{rec.project_id.id}")
 
-                # Join all parts with a delimiter (//)
+                # Join all parts with a delimiter (||)
                 qr_text = " || ".join(qr_data)
 
                 # Generate the QR code

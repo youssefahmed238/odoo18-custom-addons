@@ -73,9 +73,9 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
                         const code = window.jsQR(imageData.data, imageData.width, imageData.height);
                         if (code) {
                             this.qrResult.val(code.data);
-                            const assetCode = this._parseQRData(code.data)['ASSET']
-                            if (assetCode)
-                                this._getAsset();
+                            const qrData = this._parseQRData(code.data)
+                            if (qrData)
+                                this._getAsset(qrData['PROJECT'], qrData['LOCATION'], qrData['ASSET']);
                             else
                                 alert("No ASSET code found in QR data.");
                             stopCamera();
@@ -165,21 +165,19 @@ publicWidget.registry.WebsiteHelpdeskNewFields = publicWidget.Widget.extend({
         }
     },
 
-    async _getAsset(assetCode) {
+    async _getAsset(projectId, locationId, assetId) {
         try{
-            const asset = await rpc('/project_task_assets/get_asset', { asset_code: assetCode });
-
-            if (this.projectSelect.val() !== String(asset.project_id)) {
-                this.projectSelect.val(String(asset.project_id));
+            if (this.projectSelect.val() !== String(projectId)) {
+                this.projectSelect.val(String(projectId));
                 await this._onProjectChange();
             }
 
-            if (this.locationSelect.val() !== String(asset.location_id)) {
-                this.locationSelect.val(String(asset.location_id));
+            if (this.locationSelect.val() !== String(locationId)) {
+                this.locationSelect.val(String(locationId));
                 this._onLocationChange();
             }
 
-            this.assetSelect.val(String(asset.id));
+            this.assetSelect.val(String(assetId));
 
         } catch (error) {
             console.error("Error fetching asset by code:", error);
