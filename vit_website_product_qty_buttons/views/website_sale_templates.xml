@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="products_item_inherit" inherit_id="website_sale.products_item">
+        <xpath expr="//div[contains(@class, 'o_wsale_product_btn')]" position="inside">
+            <div class="o_wsale_qty_wrapper d-flex align-items-center justify-content-center mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary o_qty_minus">−</button>
+                <input type="number" min="0" value="0" class="o_product_qty form-control mx-1 text-center" style="width:60px;"/>
+                <button type="button" class="btn btn-sm btn-outline-secondary o_qty_plus">+</button>
+            </div>
+        </xpath>
+    </template>
+</odoo>

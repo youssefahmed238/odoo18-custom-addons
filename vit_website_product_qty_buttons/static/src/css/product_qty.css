@@ -1,0 +1,21 @@
+.o_wsale_qty_wrapper {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 4px 8px;
+    background: #fff;
+}
+
+.o_qty_minus, .o_qty_plus {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.o_product_qty {
+    border: none;
+    font-weight: 600;
+}
+/*.o_product_qty[value="0"] {*/
+/*    color: #aaa;*/
+/*}*/
