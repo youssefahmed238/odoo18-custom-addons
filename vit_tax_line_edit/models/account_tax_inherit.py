@@ -196,7 +196,7 @@ class AccountTax(models.Model):
         for base_line in base_lines:
             move = self._get_move_from_line_dict(base_line)
             if move and not move.journal_id.per_line_calc or not move:
-                super(AccountTax, self)._prepare_tax_lines(base_lines, company, tax_lines)
+                return super(AccountTax, self)._prepare_tax_lines(base_lines, company, tax_lines)
 
             sign = base_line['sign']
             tax_tag_invert = base_line['tax_tag_invert']
