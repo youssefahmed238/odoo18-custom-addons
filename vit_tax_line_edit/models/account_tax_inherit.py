@@ -12,7 +12,17 @@ class AccountTax(models.Model):
     @api.model
     def _get_move_from_line_dict(self, base_line):
         """Return account.move record or False. Handles int id, record proxy or dict/value forms."""
-        move_val = base_line.get('record') and base_line['record'].move_id
+        record = base_line.get('record')
+
+        if isinstance(record, models.BaseModel):
+            if record._name == 'account.move.line':
+                return record.move_id
+            elif record._name == 'account.move':
+                return record
+            else:
+                return False
+
+        move_val = record and base_line['record'].move_id
         if not move_val:
             return False
         try:
@@ -30,7 +40,7 @@ class AccountTax(models.Model):
     def _prepare_base_line_tax_repartition_grouping_key(self, base_line, base_line_grouping_key, tax_data,
                                                         tax_rep_data):
         move = self._get_move_from_line_dict(base_line)
-        if move and not move.journal_id.per_line_calc:
+        if move and not move.journal_id.per_line_calc or not move:
             return super(AccountTax, self)._prepare_base_line_tax_repartition_grouping_key(
                 base_line, base_line_grouping_key, tax_data, tax_rep_data
             )
@@ -63,7 +73,7 @@ class AccountTax(models.Model):
     @api.model
     def _prepare_tax_line_repartition_grouping_key(self, tax_line):
         move = self._get_move_from_line_dict(tax_line)
-        if move and not move.journal_id.per_line_calc:
+        if move and not move.journal_id.per_line_calc or not move:
             return super(AccountTax, self)._prepare_tax_line_repartition_grouping_key(tax_line)
 
         tax_id = tax_line['tax_ids'].ids[0] if tax_line.get('tax_ids') else 'no_tax'
@@ -89,7 +99,7 @@ class AccountTax(models.Model):
     def _aggregate_base_line_tax_details(self, base_line, grouping_function):
         """ Modified: Prevent merging of taxes — each tax line remains unique. """
         move = self._get_move_from_line_dict(base_line)
-        if move and not move.journal_id.per_line_calc:
+        if move and not move.journal_id.per_line_calc or not move:
             return super(AccountTax, self)._aggregate_base_line_tax_details(base_line, grouping_function)
 
         values_per_grouping_key = defaultdict(lambda: {
@@ -185,8 +195,8 @@ class AccountTax(models.Model):
 
         for base_line in base_lines:
             move = self._get_move_from_line_dict(base_line)
-            if move and not move.journal_id.per_line_calc:
-                return super(AccountTax, self)._prepare_tax_lines(base_lines, company, tax_lines)
+            if move and not move.journal_id.per_line_calc or not move:
+                super(AccountTax, self)._prepare_tax_lines(base_lines, company, tax_lines)
 
             sign = base_line['sign']
             tax_tag_invert = base_line['tax_tag_invert']
