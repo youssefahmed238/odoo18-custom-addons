@@ -28,15 +28,15 @@ publicWidget.registry.WebsiteProductQtyButtons = publicWidget.Widget.extend({
         try {
             const result = await rpc('/shop/cart/info', {});
             console.log('Cart info loaded:', result);
-            const cartItems = result.cart_items || {};
+            const cartItems = result.cart_items || [];
 
             document.querySelectorAll('.o_wsale_qty_wrapper').forEach((wrapper) => {
                 const pid = parseInt(wrapper.dataset.productId);
                 const input = wrapper.querySelector('.o_product_qty');
                 if (pid) {
-                    for (const key in cartItems) {
-                        if (cartItems[key].product_id === pid) {
-                            input.value = parseInt(cartItems[key].quantity);
+                    for (const item of cartItems) {
+                        if (item.product_id === pid) {
+                            input.value = parseInt(item.quantity);
                             break;
                         }
                     }
