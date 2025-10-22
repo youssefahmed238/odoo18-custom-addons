@@ -14,7 +14,10 @@ class AccountPayment(models.Model):
     def _compute_is_internal_transfer(self):
         """ Override to set internal transfer if the journal is petty. """
         for payment in self:
-            payment.is_internal_transfer = payment.journal_id.is_petty
+            if self._context.get('from_bank_charge_wizard'):
+                payment.is_internal_transfer = False
+            elif not payment.is_internal_transfer:
+                payment.is_internal_transfer = payment.journal_id.is_petty
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
         """ Override to set petty_employee on move lines for internal transfers. """

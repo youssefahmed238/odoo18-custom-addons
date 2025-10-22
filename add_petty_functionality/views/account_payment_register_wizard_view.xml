@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <record id="account_payment_register_wizard_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.wizard.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='payment_date']" position="before">
+                <field name="source_petty_employee_id" invisible="not is_source_petty" required="is_source_petty"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -35,6 +35,7 @@ class AccountPaymentRegisterInherit(models.TransientModel):
             bank_charge_amount = int((self.amount * (
                     self.journal_id.payment_bank_charge_percentage / 100.0)) * 100) / 100 if self.payment_type == 'inbound' else self.bank_charge_amount
             res.update({
+                'is_internal_transfer': False,
                 'is_from_register_wizard': True,
                 'payment_allow_bank_charge': self.apply_bank_amount,
                 'bank_charge_amount': bank_charge_amount,
@@ -54,8 +55,8 @@ class AccountPaymentRegisterInherit(models.TransientModel):
 
     def _create_payment_vals_from_wizard(self, batch_result):
         res = super(AccountPaymentRegisterInherit, self)._create_payment_vals_from_wizard(batch_result)
-        return self.extend_result_for_bank_charge(res)
+        return self.with_context(from_bank_charge_wizard=True).extend_result_for_bank_charge(res)
 
     def _create_payment_vals_from_batch(self, batch_result):
         res = super(AccountPaymentRegisterInherit, self)._create_payment_vals_from_batch(batch_result)
-        return self.extend_result_for_bank_charge(res)
+        return self.with_context(from_bank_charge_wizard=True).extend_result_for_bank_charge(res)
