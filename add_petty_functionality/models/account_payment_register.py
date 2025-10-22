@@ -9,6 +9,13 @@ class AccountPaymentRegisterInherit(models.TransientModel):
     is_source_petty = fields.Boolean(related='journal_id.is_petty')
 
     def extend_result_for_bank_charge(self, res):
+        """ Extend payment vals to include petty employee when created from the register wizard. """
+
+        parent_method = getattr(super(AccountPaymentRegisterInherit, self), "extend_result_for_bank_charge",
+                                None)
+        if parent_method:
+            res = parent_method(res)
+
         res.update({
             'is_internal_transfer': False,
             'is_from_register_wizard': True,

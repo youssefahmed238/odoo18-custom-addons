@@ -30,7 +30,12 @@ class AccountPaymentRegisterInherit(models.TransientModel):
                       "and must be greater than 0."))
 
     def extend_result_for_bank_charge(self, res):
-        # Calculate the bank charge amount based on the context (inbound or outbound)
+
+        parent_method = getattr(super(AccountPaymentRegisterInherit, self), "extend_result_for_bank_charge",
+                                None)
+        if parent_method:
+            res = parent_method(res)
+
         if self.apply_bank_amount:
             bank_charge_amount = int((self.amount * (
                     self.journal_id.payment_bank_charge_percentage / 100.0)) * 100) / 100 if self.payment_type == 'inbound' else self.bank_charge_amount
