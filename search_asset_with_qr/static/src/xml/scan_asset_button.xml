@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Extend the ListView template -->
+    <t t-name="project_task_assets.ListView.AddScanQR" t-inherit="web.ListView" t-inherit-mode="extension">
+
+        <!-- Add Scan button next to SearchBar -->
+        <xpath expr="//SearchBar" position="after">
+            <div class="ms-2 d-inline-block">
+                <button t-if="props.resModel === 'project.task.assets'"
+                        type="button"
+                        class="btn btn-secondary"
+                        id="scan_qr_btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#qrCameraModal"
+                        t-on-click="onScanAsset">
+                    Scan
+                </button>
+                <input type="hidden" id="qr_result" name="qr_result"/>
+            </div>
+        </xpath>
+
+        <!-- Add the Camera Modal at the end of the root -->
+        <xpath expr="//div[@t-ref='root']" position="inside">
+            <div class="modal fade" id="qrCameraModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content bg-dark text-center">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title text-white">Scan QR Code</h5>
+                            <button type="button" class="btn-close btn-close-white"
+                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <video id="camera_video" autoplay="autoplay" playsinline="playsinline" class="w-100 rounded"></video>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-danger"
+                                    data-bs-dismiss="modal" id="close_camera_btn">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+    </t>
+
+</templates>
