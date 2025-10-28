@@ -48,3 +48,4 @@ class PosPayment(models.Model):
                         payment.write({
                             'user_payment_reference': order_data['code']
                         })
+        return True

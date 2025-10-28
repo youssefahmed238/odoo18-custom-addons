@@ -19,63 +19,35 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 ################################################################################
-from odoo import models
+from odoo import models, fields, api
 
 
 class PosSessionLoadFields(models.Model):
     """Inherited model pos session for loading field in pos payment into
        pos session.
         Methods:
-            _pos_ui_models_to_load(self):
-                Supering the method to load model pos payment and res config
-                settings into pos session
-            _loader_params_res_config_settings(self):
-                Loads field is_allow_payment_ref to pos session
-            _get_pos_ui_res_config_settings(self, params):
-                Load res config settings parameters to pos session
-            _loader_params_pos_payment(self):
-                Loads field user_payment_reference to pos session
-            _get_pos_ui_pos_payment(self, params):
-                Load pos payment parameters to pos session."""
+            _compute_is_allow_payment_ref: Compute method to get the config param boolean.
+            _load_pos_data_fields: Load additional fields into POS session data.
+    """
     _inherit = 'pos.session'
 
-    def _pos_ui_models_to_load(self):
-        """ Supering the method to load model pos payment and res config
-            settings into pos session.
-            List: Returns list with model names."""
-        result = super()._pos_ui_models_to_load()
-        result += [
-            'pos.payment',
-            'res.config.settings',
-        ]
+    is_allow_payment_ref = fields.Boolean(string="Allow Payment Reference",
+                                          compute='_compute_is_allow_payment_ref',
+                                          store=False)
+
+    @api.depends_context('uid')
+    def _compute_is_allow_payment_ref(self):
+        value = self.env['ir.config_parameter'].sudo().get_param('pos_reference_for_payment.is_allow_payment_ref',
+                                                                 default=False)
+        for rec in self:
+            rec.is_allow_payment_ref = value == 'True'
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        """Load additional fields into POS session data."""
+        result = super(PosSessionLoadFields, self)._load_pos_data_fields(config_id)
+
+        # Load payment reference configuration
+        result.extend({'is_allow_payment_ref'})
+
         return result
-
-    def _loader_params_res_config_settings(self):
-        """ Loads field is_allow_payment_ref to pos session.
-            dictionary: Returns dictionary of search params with fields."""
-        return {
-            'search_params': {
-                'fields': ['is_allow_payment_ref'],
-            },
-        }
-
-    def _get_pos_ui_res_config_settings(self, params):
-        """ Load res config settings parameters to pos session.
-            params(dict):dictionary of search param with dictionary of
-                         field to load.
-            list: Returns list of dictionary with search param values."""
-        return self.env['res.config.settings'].search_read(
-            **params['search_params'])
-
-    def _loader_params_pos_payment(self):
-        """ Loads field user_payment_reference to pos session.
-            dictionary: Returns dictionary of search params with fields."""
-        return {'search_params': {'domain': [],
-                                  'fields': ['user_payment_reference']}}
-
-    def _get_pos_ui_pos_payment(self, params):
-        """ Load pos payment parameters to pos session.
-            params(dict):dictionary of search param with dictionary of
-                         field to load.
-            list: Returns list of dictionary with search param values."""
-        return self.env['pos.payment'].search_read(**params['search_params'])

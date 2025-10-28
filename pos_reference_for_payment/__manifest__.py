@@ -21,7 +21,7 @@
 ################################################################################
 {
     'name': 'POS Reference for Payment',
-    'version': '17.0.1.0.0',
+    'version': '18.0.1.0.0',
     'category': 'Point of Sale',
     'summary': """This module will help you to add reference for payment 
     manually from payment screen.""",
