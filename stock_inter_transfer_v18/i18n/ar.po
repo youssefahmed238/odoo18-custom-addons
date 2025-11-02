@@ -1,0 +1,1216 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_inter_transfer_v18
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-25 14:34+0000\n"
+"PO-Revision-Date: 2025-02-25 14:34+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer_line.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%s --> Product UoM is %s (%s) - Transfer UoM is %s (%s)"
+msgstr ""
+"\n"
+"\n"
+"%s --> وحده قياس المنتج هي %s (%s) - وحده قياس التحويل هي %s (%s)"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer_line.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Blocking: %s"
+msgstr ""
+"\n"
+"\n"
+"الحظر: %s"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.actions.report,print_report_name:stock_inter_transfer_v18.action_report_delivery_slip_warehouse_transfer
+msgid ""
+"'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr ""
+"'ايصال تحويل بالوسيط - %s - %s' % (object.partner_id.name or '', "
+"object.name)"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid ""
+"<span>\n"
+"                                    <strong>Customer Address:</strong>\n"
+"                                </span>"
+msgstr ""
+"<span>\n"
+"                                    <strong>عنوان العميل:</strong>\n"
+"                                </span>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid ""
+"<span>\n"
+"                                    <strong>Vendor Address:</strong>\n"
+"                                </span>"
+msgstr ""
+"<span>\n"
+"                                    <strong>عنوان المورد:</strong>\n"
+"                                </span>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid ""
+"<span>\n"
+"                                    <strong>Warehouse Address:</strong>\n"
+"                                </span>"
+msgstr ""
+"<span>\n"
+"                                    <strong>عنوان المستودع:</strong>\n"
+"                                </span>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid ""
+"<span>\n"
+"                                <strong>Delivery Address:</strong>\n"
+"                            </span>"
+msgstr ""
+"<span>\n"
+"                                <strong>عنوان التوصيل:</strong>\n"
+"                            </span>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid ""
+"<span>\n"
+"                                <strong>Warehouse Address:</strong>\n"
+"                            </span>"
+msgstr ""
+"<span>\n"
+"                                <strong>عنوان المستودع:</strong>\n"
+"                            </span>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<span>Remaining quantities not yet delivered:</span>"
+msgstr "<span>الكميات المتبقية لم يتم تسليمها بعد:</span>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Delivered</strong>"
+msgstr "<strong>تم التوصيل</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Destination Location</strong>"
+msgstr "<strong>عنوان الوجهة</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Notes:</strong>"
+msgstr "<strong>ملاحظات:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Order:</strong>"
+msgstr "امر:"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Ordered</strong>"
+msgstr "<strong>ما تم توصيله</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Product Barcode</strong>"
+msgstr "<strong>باركود المنتج</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Product</strong>"
+msgstr "<strong>المنتج</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Quantity</strong>"
+msgstr "<strong>الكميه</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Shipping Date:</strong>"
+msgstr "<strong>تاريخ الشحن:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Signature</strong>"
+msgstr "<strong>التوقيع</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Source Location</strong>"
+msgstr "<strong>الموقع المصدري</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "<strong>Transit Location</strong>"
+msgstr "<strong>المخزن الزسيط(السياره)</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__accessible_to_user
+msgid "Accessible to User"
+msgstr "متاح للمستخدم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_needaction
+msgid "Action Needed"
+msgstr "مطلوب اتخاذ إجراء"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_ids
+msgid "Activities"
+msgstr "أنشطة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "استثناء النشاط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_state
+msgid "Activity State"
+msgstr "حالة النشاط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "رمز نوع النشاط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.actions.act_window,name:stock_inter_transfer_v18.action_stock_transfer_kit_wizard
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_kit_wizard_form
+msgid "Add Kit Product"
+msgstr "اضافه منتج مجمع"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Add a product"
+msgstr "أضف منتجًا"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_form
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Approve"
+msgstr "يعتمد"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__is_approved
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__approved
+msgid "Approved"
+msgstr "تمت الموافقه"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__available_uom_ids
+msgid "Available Uom"
+msgstr "وحده القياس المتاحه"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_stock_backorder_confirmation
+msgid "Backorder Confirmation"
+msgstr "تأكيد الطلبات المتأخرة "
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__bom_id
+msgid "Bill of Materials"
+msgstr "قائمه المواد"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_kit_wizard_form
+msgid "Cancel"
+msgstr "الغاء"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__cancel
+msgid "Canceled"
+msgstr "تم الالغاء"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__product_uom_qty
+msgid "Cantidad"
+msgstr "الكميه"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Catalog"
+msgstr "الكتالوج"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__company_id
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__company_id
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_filter
+msgid "Company"
+msgstr "الشركه"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_kit_wizard_form
+msgid "Confirm"
+msgstr "تاكيد"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.actions.act_window,help:stock_inter_transfer_v18.action_stock_transfer
+msgid "Create new Internal Transfer"
+msgstr "إنشاء نقل داخلي جديد"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.actions.act_window,help:stock_inter_transfer_v18.action_request_product
+msgid "Create new Request Product"
+msgstr "انشئ طلب منتجات جديد"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__created_by
+msgid "Created By"
+msgstr "تم الإنشاء بواسطة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__create_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__create_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__create_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__create_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__create_uid
+msgid "Created by"
+msgstr "انشئ بواسطه"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__create_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__create_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__create_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__create_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__create_date
+msgid "Created on"
+msgstr "انشئ في"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__currency_id
+msgid "Currency"
+msgstr "العمله"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__deliver_dest
+msgid "Delivered To Destination"
+msgstr "تم تسليمها إلى الوجهة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__deliver_source
+msgid "Delivered To Source"
+msgstr "تم تسليمها إلى المصدر"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.actions.report,name:stock_inter_transfer_v18.action_report_delivery_slip_warehouse_transfer
+msgid "Delivery Slip Warehouse Transfer"
+msgstr "ايصال تحويل عن طريق وسيط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__name
+msgid "Description"
+msgstr "وصف"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__destination
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__location_dest_id
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_filter
+msgid "Destination"
+msgstr "وجهة"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Destination Approval"
+msgstr "موافقة الوجهة"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Detail"
+msgstr "التفاصيل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_stock_transfer_line
+msgid "Detail of Internal Transfers"
+msgstr "تفاصيل التحويلات الداخلية"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__line_ids
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_form
+msgid "Details"
+msgstr "تفاصيل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__transfer_type__direct_transfer
+msgid "Direct Transfer"
+msgstr "تحويل مباشر (يد بيد)"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Dispatches"
+msgstr "الإرساليات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__first_dispatch_done
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__second_dispatch_done
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__second_dispatch_progress
+msgid "Dispatches Done"
+msgstr "تم الانتهاء من الإرساليات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__display_name
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__display_name
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__display_name
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__display_name
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__display_qty_widget
+msgid "Display Qty Widget"
+msgstr "أداة عرض الكمية"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_follower_ids
+msgid "Followers"
+msgstr "المتابعون"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعون (الشركاء)"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "أيقونة الخط الرائعة على سبيل المثال مهام بسيطة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__forecast_expected_date
+msgid "Forecast Expected Date"
+msgstr "التاريخ المتوقع للتوقعات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__free_qty_today
+msgid "Free Qty Today"
+msgstr "كمية مجانية اليوم"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Generate Transfer"
+msgstr "انشاء التسليمات"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_filter
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__has_message
+msgid "Has Message"
+msgstr "لديه رسالة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__id
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__id
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__id
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__id
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__id
+msgid "ID"
+msgstr "بطاقة تعريف"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_exception_icon
+msgid "Icon"
+msgstr "رمز"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "أيقونة للإشارة إلى نشاط استثناء."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا تم تحديد هذا المربع، فإن الرسائل الجديدة تتطلب انتباهك."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__message_has_error
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا تم تحديد هذا المربع، فقد يكون لبعض الرسائل خطأ في التسليم."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__pricelist_id
+msgid "If you change the pricelist, only newly added lines will be affected."
+msgstr "إذا قمت بتغيير قائمة الأسعار، فسوف تتأثر فقط الأسطر المضافة حديثًا."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_res_users__allow_done_exceeds_demand
+msgid "Inter transfer: Allow Done quantity to be more than Demand?"
+msgstr "النقل الداخلي: هل يجوز أن تكون الكمية المنجزة أكبر من الطلب؟"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Internal Notes..."
+msgstr "ملاحظات داخلية..."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.actions.act_window,name:stock_inter_transfer_v18.action_stock_transfer
+msgid "Internal Transfer"
+msgstr "نقل داخلي"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_filter
+msgid "Internal Transfers"
+msgstr "التحويلات الداخلية"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_picking__transfer_id
+msgid "Internal transfer"
+msgstr "نقل داخلي"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_tree
+msgid "Internal transfers"
+msgstr "التحويلات الداخلية"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_stock_location
+msgid "Inventory Locations"
+msgstr "مواقع المخزون"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_is_follower
+msgid "Is Follower"
+msgstr "هل هو تابع"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__is_mto
+msgid "Is Mto"
+msgstr "هل هو متو"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__is_confirm
+msgid "It is confirmed"
+msgstr "تم التأكيد"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__is_cancel
+msgid "It's canceled"
+msgstr "لقد تم الغاءه"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__kit_product_id
+msgid "Kit Product"
+msgstr "منتج مجمع"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer_line.py:0
+#, python-format
+msgid "Kit Product Auto-Converted"
+msgstr "منتج مجمع محول تلقائيا"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__kit_quantity
+msgid "Kit Quantity"
+msgstr "كميه المنتج المجمع"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__write_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__write_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__write_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__write_uid
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__write_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__write_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__write_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__write_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__transfer_lines
+msgid "Lines"
+msgstr "خطوط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_res_users__location_ids
+msgid "Location"
+msgstr "موقع"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.stock_config_settings_view_form_inherit_inter_stock
+msgid "Locations"
+msgstr "المواقع"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_delivery_document_warehouse_transfer
+msgid "Lot/Serial Number"
+msgstr "الدفعة/الرقم التسلسلي"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسالة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_ids
+msgid "Messages"
+msgstr "رسائل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "الموعد النهائي لنشاطي"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__order_type__negative_forecast
+msgid "Negative Forecasted Products"
+msgstr "المنتجات المتوقعة السلبية"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/product_request.py:0
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid "New"
+msgstr "جديد"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "تقويم النشاط القادم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "الموعد النهائي للنشاط القادم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_summary
+msgid "Next Activity Summary"
+msgstr "ملخص النشاط القادم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_type_id
+msgid "Next Activity Type"
+msgstr "نوع النشاط التالي"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid "No 'Internal Transfers' picking type found for the selected warehouse."
+msgstr "لم يتم العثور على نوع اختيار 'التحويلات الداخلية' للمستودع المحدد."
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.stock_backorder_confirmation_inherit
+msgid "No Backorder"
+msgstr "لا يوجد طلب مؤجل"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Note"
+msgstr "ملحوظة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__note
+msgid "Notes"
+msgstr "ملحوظات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل التي بها خطأ في التسليم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__picking_count
+msgid "Number of transfers"
+msgstr "عدد التحويلات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__picking_type_id
+msgid "Operation Type"
+msgstr "نوع العملية"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__order_date
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__date_order
+msgid "Order Date"
+msgstr "تاريخ الطلب"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__order_number
+msgid "Order Number"
+msgstr "رقم الطلب"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__order_type
+msgid "Order Type"
+msgstr "نوع الطلب"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__partner_id
+msgid "Owner"
+msgstr "مالك"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__current_package_level_id
+msgid "Package Level"
+msgstr "مستوى الحزمة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__product_packaging_id
+msgid "Packaging"
+msgstr "التعبئة والتغليف"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__product_packaging_qty
+msgid "Packaging Quantity"
+msgstr "كمية التعبئة والتغليف"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__pending
+msgid "Pending"
+msgstr "قيد الانتظار"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid "Picking Type Not Found"
+msgstr "لم يتم العثور على نوع الاختيار"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid "Please create Detail lines"
+msgstr "الرجاء إنشاء خطوط التفاصيل"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid "Please create Detail lines."
+msgstr "يرجى إنشاء خطوط التفاصيل."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__pricelist_id
+msgid "Pricelist"
+msgstr "قائمة الأسعار"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__product_id
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__product_id
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_form
+msgid "Product"
+msgstr "منتج"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.actions.act_window,name:stock_inter_transfer_v18.action_product_request
+msgid "Product Request"
+msgstr "طلب منتجات"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid "Product with ID %s not found!"
+msgstr "لم يتم العثور على المنتج ذو المعرف %s!"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid "Product: %s (Requested: %s, Available: %s)"
+msgstr "المنتج: %s (مطلوب: %s، متوفر: %s)"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Products"
+msgstr "منتجات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__purchase_order_id
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__order_type__purchase_order
+msgid "Purchase Order"
+msgstr "أمر شراء"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__qty_available_today
+msgid "Qty Available Today"
+msgstr "الكمية المتوفرة اليوم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__qty_to_deliver
+msgid "Qty To Deliver"
+msgstr "الكمية المطلوب تسليمها"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__product_uom_qty
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_form
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Quantity"
+msgstr "كمية"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_picking.py:0
+#, python-format
+msgid "Quantity cannot be greater than Demand quantity."
+msgstr "لا يمكن أن تكون الكمية أكبر من كمية الطلب."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.constraint,message:stock_inter_transfer_v18.constraint_stock_transfer_line_check_qty
+msgid "Quantity must be greater than 0."
+msgstr "يجب أن تكون الكمية أكبر من 0."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__rating_ids
+msgid "Ratings"
+msgstr "التقييمات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.constraint,message:stock_inter_transfer_v18.constraint_stock_transfer_name_uniq
+msgid "Reference must be unique per company!"
+msgstr "يجب أن يكون المرجع فريدًا لكل شركة!"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__name
+msgid "Referencia"
+msgstr "مرجع"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_form
+msgid "Reject"
+msgstr "رفض"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer_line.py:0
+#, python-format
+msgid "Replenish on Order (MTO)"
+msgstr "التجديد حسب الطلب (MTO)"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.actions.act_window,name:stock_inter_transfer_v18.action_request_product
+#: model:ir.ui.menu,name:stock_inter_transfer_v18.request_product_menu
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_form
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_tree
+msgid "Request Product"
+msgstr "طلب منتجات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__request_id
+msgid "Request Reference"
+msgstr "مرجع الطلب"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__user_id
+msgid "Responsible"
+msgstr "مسؤول"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__activity_user_id
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__deliver_transit_source
+msgid "Returned To Source"
+msgstr "تمت العودة إلى المصدر"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطأ في تسليم الرسائل القصيرة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__sale_order_id
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__order_type__sale_order
+msgid "Sales Order"
+msgstr "امر بيع"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__scheduled_date
+msgid "Scheduled Date"
+msgstr "التاريخ المقرر"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__deliver_transit
+msgid "Sent To Transit"
+msgstr "تم الرسال الي المستودع الوسيط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__source
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__location_id
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_filter
+msgid "Source"
+msgstr "مصدر"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "Source Approval"
+msgstr "موافقة المصدر"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__source_approved
+msgid "Source Approved"
+msgstr "تمت الموافقه من المصدر"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__state
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_filter
+msgid "Status"
+msgstr "حالة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"الحالة بناءً على الأنشطةمتأخر: تاريخ الاستحقاق قد مر بالفعلاليوم: تاريخ "
+"النشاط هو اليوممخطط: الأنشطة المستقبلية."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_stock_transfer
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_kit_wizard__transfer_id
+msgid "Stock Transfer"
+msgstr "تحويل مخزني"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_stock_transfer_kit_wizard
+msgid "Stock Transfer Kit Wizard"
+msgstr "شاشه اضافه منتج مجمع"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_product_request_form
+msgid "Submit"
+msgstr "تاكيد"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__product_request__state__submitted
+msgid "Submitted"
+msgstr "مؤكد"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_res_config_settings__transfer_approval_required
+msgid ""
+"The approval of the responsible person will be needed to transfer the stock "
+"from one warehouse to another"
+msgstr "ستكون هناك حاجة إلى موافقة الشخص المسؤول لنقل الأسهممن مستودع إلى آخر"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid ""
+"The following products do not have enough stock in the source location:\n"
+msgstr "المنتجات التالية ليس لديها مخزون كاف في موقع المصدر:\n"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer_line.py:0
+#, python-format
+msgid ""
+"The selected product is a Kit and has been replaced with its components."
+msgstr "المنتج المحدد هو عبارة عن منتج مجمع وتم استبدالها بمكوناتها."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__product_request__state__to_submit
+msgid "To Submit"
+msgstr "للتاكيد"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_stock_picking
+msgid "Transfer"
+msgstr "تحويل "
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__transfer_id
+msgid "Transfer ID"
+msgstr "معرف التحويل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__transfer_type
+msgid "Transfer Type"
+msgstr "نوع التحويل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__transfer_type__transfer_with_transit
+msgid "Transfer With Transit"
+msgstr "تحويل مع وسيط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_res_config_settings__transfer_approval_required
+msgid "Transfer approval required"
+msgstr "مطلوب الموافقه علي التحويل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__transferred_to_source
+msgid "Transferred To Source"
+msgstr "تم نقله إلى المصدر"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.ui.menu,name:stock_inter_transfer_v18.stock_transfer_menu
+msgid "Transfers between Warehouses"
+msgstr "التحويل بين المخازن"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__transit_location_id
+msgid "Transit Location"
+msgstr "مستودع وسيط"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "نوع النشاط الاستثنائي المسجل."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__product_uom
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form
+msgid "UOM"
+msgstr "وحده القياس"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__price_unit
+msgid "Unit Price"
+msgstr "سعر الوحده"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request_line__product_uom
+msgid "Unit of Measure"
+msgstr "وحده القياس"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_res_users__use_locations
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.stock_config_settings_view_form_inherit_inter_stock
+msgid "Use Locations"
+msgstr "استخدم المواقع"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_res_users
+msgid "User"
+msgstr "المستخدم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_product_request__user_use_locations
+msgid "User Use Locations"
+msgstr "مواقع استخدام المستخدم"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_location__user_ids
+msgid "Users"
+msgstr "المستخدمون"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__virtual_available_at_date
+msgid "Virtual Available At Date"
+msgstr "متاح افتراضيًا في التاريخ"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__stock_transfer__state__confirm
+msgid "Waiting for approval"
+msgstr "في انتظار الموافقة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer_line__warehouse_id
+msgid "Warehouse"
+msgstr "مستودع"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__website_message_ids
+msgid "Website communication history"
+msgstr "سجل اتصالات الموقع"
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid ""
+"You are not allowed to approve this operation for the destination location: "
+"%s."
+msgstr "لا يجوز لك الموافقة على هذه العملية لموقع الوجهة: %s."
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid ""
+"You are not allowed to approve this operation for the source location: %s."
+msgstr "لا يُسمح لك بالموافقة على هذه العملية لموقع المصدر: %s."
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer.py:0
+#, python-format
+msgid ""
+"You cannot delete a transfer. You must first delete the Dispatch Orders."
+msgstr "لا يمكنك حذف عملية نقل. يجب عليك أولاً حذف أوامر الإرسال."
+
+#. module: stock_inter_transfer_v18
+#. odoo-python
+#: code:addons/stock_inter_transfer_v18/models/stock_transfer_line.py:0
+#, python-format
+msgid ""
+"You cannot make the transfer because the unit of measure has a different "
+"category than the unit of measure of the product."
+msgstr ""
+"لا يمكنك إجراء التحويل لأن وحدة القياس مختلفةفئة أخرى غير وحدة قياس المنتج."
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__approval_required
+msgid "approval required"
+msgstr "الموافقة مطلوبة"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__product_request__state__approved
+msgid "approved"
+msgstr "تمت الموافقه عليه"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__picking_ids
+msgid "dispatches"
+msgstr "تسليمات"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_product_request
+msgid "product.request"
+msgstr "طلب المنتج"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model,name:stock_inter_transfer_v18.model_product_request_line
+msgid "product.request.line"
+msgstr "المنتج.طلب.سطر"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields.selection,name:stock_inter_transfer_v18.selection__product_request__state__rejected
+msgid "rejected"
+msgstr "مرفوض"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_picking__picking_seq
+msgid "sequence"
+msgstr "تسلسل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,field_description:stock_inter_transfer_v18.field_stock_transfer__state
+msgid "state"
+msgstr "الحاله"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.model.fields,help:stock_inter_transfer_v18.field_stock_transfer__is_approved
+msgid "transfer approved."
+msgstr "تمت الموافقه علي التحويل"
+
+#. module: stock_inter_transfer_v18
+#: model:ir.actions.report,name:stock_inter_transfer_v18.action_report_stock_transfer
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "Transfer Report"
+msgstr "تقرير تحويل مخزني"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "<strong>Destination:</strong>"
+msgstr "<strong>الوجهه:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "<strong>Responsible:</strong>"
+msgstr "<strong>المسؤول:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "<strong>Source:</strong>"
+msgstr "<strong>المصدر:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "<strong>Transfer Number:</strong>"
+msgstr "<strong>رقم التحويل:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "<strong>Transfer Type:</strong>"
+msgstr "<strong>نوع التحويل:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "<strong>Transit Location:</strong>"
+msgstr "<strong>المستودع الوسيط:</strong>"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.report_stock_transfer_document
+msgid "Packaging Qty"
+msgstr "كميه التعبئه"
+
+#. module: stock_inter_transfer_v18
+#: model_terms:ir.ui.view,arch_db:stock_inter_transfer_v18.view_stock_transfer_form_inherit_report_button
+msgid "Print Transfer"
+msgstr "طباعه التحويل"

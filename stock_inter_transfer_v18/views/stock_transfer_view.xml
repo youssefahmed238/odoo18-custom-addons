@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_stock_transfer_tree">
+        <field name="name">Internal Transfers</field>
+        <field name="model">stock.transfer</field>
+        <field name="arch" type="xml">
+            <list string="Internal transfers">
+                <field name="name"/>
+                <field name="transfer_type"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <field name="state"/>
+                <field name="create_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+    <record id="operation_type_view_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban.mobile</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban/templates/t/div" position="attributes">
+                <attribute name="t-attf-class" add="oe_kanban_global_click" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_transfer_form" model="ir.ui.view">
+        <field name="name">stock.transfer.form</field>
+        <field name="model">stock.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Internal transfers">
+                <header>
+                    <field name="approval_required" invisible="1"/>
+                    <button name="action_confirm" string="Confirm" groups="stock.group_stock_user" type="object"
+                            class="oe_highlight"
+                            invisible="approval_required != True or state != 'pending'"
+                    />
+                    <button name="action_approve" string="Approve" groups="stock.group_stock_manager" type="object"
+                            class="oe_highlight"
+                            invisible="approval_required != True or state != 'confirm'"
+                    />
+                    <button name="generate_transfer" string="Generate Transfer" groups="stock.group_stock_user"
+                            type="object" class="oe_highlight"
+                            invisible="picking_ids or approval_required != False or state in ('cancel','confirm') or transfer_type == 'direct_transfer'"
+                    />
+                    <button name="generate_transfer" string="Generate Transfer" groups="stock.group_stock_manager"
+                            type="object" class="oe_highlight"
+                            invisible="picking_ids or approval_required == False or state != 'approved' or state == 'cancel'"
+                    />
+                    <!-- Approval Buttons -->
+                    <button name="action_source_approval" type="object" string="Source Approval"
+                            invisible="transfer_type != 'direct_transfer' or state != 'pending'" class="btn-primary"/>
+                    <button name="action_destination_approval" type="object" string="Destination Approval"
+                            invisible="transfer_type != 'direct_transfer' or state != 'source_approved'"
+                            class="btn-primary"/>
+
+                    <button name="action_cancel" string="Cancel" groups="stock.group_stock_user" type="object"
+                            invisible="state not in ['pending', 'confirm']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_pickings"
+                                invisible="picking_count == 0"
+                                icon="fa-list"
+                        >
+                            <field string="Dispatches" name="picking_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <h1 class="d-none d-md-block">
+                        <field name="name"/>
+                    </h1>
+                    <group col="4">
+                        <field name="create_date" readonly="1"/>
+                        <field name="partner_id" readonly="picking_ids or state == 'source_approved'"/>
+                        <field name="transfer_type" required="1" readonly="picking_ids or state == 'source_approved'"/>
+                        <field name="location_id"
+                               context="{'default_usage': 'internal', 'check_wh_user': True}"
+                               groups="stock.group_stock_multi_locations"
+                               domain="[('usage', '=', 'internal')]"
+                               readonly="picking_ids or state == 'source_approved'"
+                        />
+                        <field name="picking_type_id" context="{'default_code': 'internal'}"
+                               readonly="picking_ids or state == 'source_approved'"
+                               domain="[('code', '=', 'internal')]" invisible="1"/>
+
+                        <field name="location_dest_id"
+                               context="{'default_usage': 'internal', 'check_wh_user': True}"
+                               groups="stock.group_stock_multi_locations"
+                               domain="[('usage', '=', 'internal')]"
+                               readonly="picking_ids or state == 'source_approved'"
+                        />
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
+                               readonly="picking_ids or state == 'source_approved'"
+                        />
+                        <field name="transit_location_id" groups="stock.group_stock_multi_locations"
+                               context="{'default_usage': 'transit'}" domain="[('usage', '=', 'transit')]"
+                               readonly="picking_ids"
+                               invisible="transfer_type == 'direct_transfer'"
+                               required="transfer_type == 'transfer_with_transit'"
+                        />
+
+                        <field name="user_id" readonly="picking_ids or state == 'source_approved'"/>
+                        <field name="is_confirm" invisible="1"/>
+                        <field name="is_cancel" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="order_type"
+                               readonly="picking_ids or state == 'source_approved'"
+                               invisible="not location_dest_id"
+                               groups="stock.group_stock_multi_locations"/>
+                    </group>
+                    <group invisible="order_type != 'sale_order'" groups="stock.group_stock_multi_locations">
+                        <field name="sale_order_id" readonly="picking_ids or state == 'source_approved'"/>
+                    </group>
+                    <group invisible="order_type != 'purchase_order'" groups="stock.group_stock_multi_locations">
+                        <field name="purchase_order_id" readonly="picking_ids or state == 'source_approved'"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Detail">
+                            <!-- Kit Product Selection and Add Button -->
+                            <group>
+                                <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"
+                                     style="width: 200px;">
+<!--                                <button name="action_open_kit_wizard" type="object" string="Add Kit Product"-->
+<!--                                        class="oe_highlight" style="width: auto;" invisible="state != 'pending'"/>-->
+                                </div>
+                            </group>
+
+                            <!-- Transfer Lines -->
+                            <field name="transfer_lines" readonly="picking_ids or state == 'source_approved'">
+                                <list string="Products" editable="bottom">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <button name="action_add_from_catalog" string="Catalog" type="object"
+                                                class="px-4 btn-link" context="{'order_id': parent.id}"/>
+                                    </control>
+                                    <field name="name" column_invisible="1"/>
+                                    <field name="product_id" required="1"/>
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="product_uom_qty" string="Quantity"/>
+                                    <!-- below fields are used in the widget qty_at_date_widget -->
+                                    <field name="virtual_available_at_date" column_invisible="1"/>
+                                    <field name="qty_available_today" column_invisible="1"/>
+                                    <field name="free_qty_today" column_invisible="1"/>
+                                    <field name="scheduled_date" column_invisible="1"/>
+                                    <field name="forecast_expected_date" column_invisible="1"/>
+                                    <field name="warehouse_id" column_invisible="1"/>
+                                    <field name="qty_to_deliver" column_invisible="1"/>
+                                    <field name="is_mto" column_invisible="1"/>
+                                    <field name="display_qty_widget" column_invisible="1"/>
+                                    <widget name="qty_at_date_widget"/>
+
+                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}"
+                                           string="UOM" groups="uom.group_uom"/>
+                                    <field name="product_packaging_id"/>
+                                    <field name="product_packaging_qty"/>
+                                </list>
+                            </field>
+                            <field name="picking_ids" invisible="1"/>
+                        </page>
+                        <page string="Note" name="note">
+                            <field name="note" string="Note" placeholder="Internal Notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids" widget="mail_followers"/>-->
+<!--                    <field name="activity_ids" widget="mail_activity"/>-->
+<!--                    <field name="message_ids" widget="mail_thread"/>-->
+<!--                </div>-->
+            </form>
+        </field>
+    </record>
+
+    <record id="view_stock_transfer_filter" model="ir.ui.view">
+        <field name="name">stock.transfer.filter</field>
+        <field name="model">stock.transfer</field>
+        <field name="arch" type="xml">
+            <search string="Internal Transfers">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="transfer_type"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="0" string="Group By">
+                    <filter string="Source" name="groupby_location" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter string="Destination" name="groupby_location_dest_id" domain="[]"
+                            context="{'group_by': 'location_dest_id'}"/>
+                    <filter string="Company" name="groupby_company_id" domain="[]"
+                            context="{'group_by': 'company_id'}"/>
+                    <filter string="Status" name="groupby_status" domain="[]"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_transfer" model="ir.actions.act_window">
+        <field name="name">Internal Transfer</field>
+        <field name="res_model">stock.transfer</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new Internal Transfer
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            action="action_stock_transfer"
+            id="stock_transfer_menu"
+            parent="stock.menu_stock_root"
+            sequence="6"
+            name="Transfers between Warehouses"/>
+
+</odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_stock_transfer_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <main>
+                    <div class="page">
+                        <!-- Header -->
+                        <h2>Transfer Report</h2>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Transfer Number:</strong></td>
+                                    <td><span t-field="o.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Transfer Type:</strong></td>
+                                    <td><span t-field="o.transfer_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Source:</strong></td>
+                                    <td><span t-field="o.location_id.display_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Destination:</strong></td>
+                                    <td><span t-field="o.location_dest_id.display_name"/></td>
+                                </tr>
+                                <tr t-if="o.transfer_type == 'transfer_with_transit'">
+                                    <td><strong>Transit Location:</strong></td>
+                                    <td><span t-field="o.transit_location_id.display_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Responsible:</strong></td>
+                                    <td><span t-field="o.user_id.name"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+        
+                        <br/>
+        
+                        <!-- Lines Table -->
+                        <h3>Products</h3>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>UOM</th>
+                                    <th>Packaging</th>
+                                    <th>Packaging Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.transfer_lines" t-as="line">
+                                    <td><span t-field="line.product_id.display_name"/></td>
+                                    <td><span t-field="line.product_uom_qty"/></td>
+                                    <td><span t-field="line.product_uom.name"/></td>
+                                    <td><span t-field="line.product_packaging_id.name"/></td>
+                                    <td><span t-field="line.product_packaging_qty"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+            </t>
+        </t>
+    </template>
+
+</odoo>
