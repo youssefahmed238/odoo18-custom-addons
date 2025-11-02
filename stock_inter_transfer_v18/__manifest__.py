@@ -15,6 +15,7 @@
     'data': [
         "data/ir_sequence.xml",
         "security/ir.model.access.csv",
+        "security/stock_transfer_security.xml",
         "views/stock_transfer_view.xml",
         "views/res_config_settings_view.xml",
         "views/res_users_view.xml",

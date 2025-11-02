@@ -80,7 +80,6 @@
                         <field name="location_id"
                                context="{'default_usage': 'internal', 'check_wh_user': True}"
                                groups="stock.group_stock_multi_locations"
-                               domain="[('usage', '=', 'internal')]"
                                readonly="picking_ids or state == 'source_approved'"
                         />
                         <field name="picking_type_id" context="{'default_code': 'internal'}"
@@ -90,14 +89,13 @@
                         <field name="location_dest_id"
                                context="{'default_usage': 'internal', 'check_wh_user': True}"
                                groups="stock.group_stock_multi_locations"
-                               domain="[('usage', '=', 'internal')]"
                                readonly="picking_ids or state == 'source_approved'"
                         />
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
                                readonly="picking_ids or state == 'source_approved'"
                         />
                         <field name="transit_location_id" groups="stock.group_stock_multi_locations"
-                               context="{'default_usage': 'transit'}" domain="[('usage', '=', 'transit')]"
+                               context="{'default_usage': 'transit'}"
                                readonly="picking_ids"
                                invisible="transfer_type == 'direct_transfer'"
                                required="transfer_type == 'transfer_with_transit'"
@@ -126,8 +124,8 @@
                             <group>
                                 <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"
                                      style="width: 200px;">
-<!--                                <button name="action_open_kit_wizard" type="object" string="Add Kit Product"-->
-<!--                                        class="oe_highlight" style="width: auto;" invisible="state != 'pending'"/>-->
+                                    <!--                                <button name="action_open_kit_wizard" type="object" string="Add Kit Product"-->
+                                    <!--                                        class="oe_highlight" style="width: auto;" invisible="state != 'pending'"/>-->
                                 </div>
                             </group>
 
@@ -168,11 +166,11 @@
                         </page>
                     </notebook>
                 </sheet>
-<!--                <div class="oe_chatter">-->
-<!--                    <field name="message_follower_ids" widget="mail_followers"/>-->
-<!--                    <field name="activity_ids" widget="mail_activity"/>-->
-<!--                    <field name="message_ids" widget="mail_thread"/>-->
-<!--                </div>-->
+                <!--                <div class="oe_chatter">-->
+                <!--                    <field name="message_follower_ids" widget="mail_followers"/>-->
+                <!--                    <field name="activity_ids" widget="mail_activity"/>-->
+                <!--                    <field name="message_ids" widget="mail_thread"/>-->
+                <!--                </div>-->
             </form>
         </field>
     </record>

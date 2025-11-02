@@ -63,7 +63,7 @@ class StockTransfer(models.Model):
         message = _("The transfer (%s) has reached the transit stage. You need to receive the products.") % (self.name)
 
         for user in users_destination:
-            self.env['mail.activity'].create({
+            self.env['mail.activity'].sudo().create({
                 'res_id': self.id,
                 'res_model_id': model_id,
                 'activity_type_id': activity_type.id,
@@ -82,9 +82,9 @@ class StockTransfer(models.Model):
     transfer_type = fields.Selection(
         [('direct_transfer', 'Direct Transfer'), ('transfer_with_transit', 'Transfer With Transit')],
         string="Transfer Type", default="direct_transfer")
-    location_id = fields.Many2one('stock.location', "Source", tracking=True, check_company=True,)
-    location_dest_id = fields.Many2one('stock.location', "Destination", tracking=True,)
-    transit_location_id = fields.Many2one('stock.location', "Transit Location", tracking=True, check_company=True)
+    location_id = fields.Many2one('stock.location', "Source", tracking=True, check_company=True, domain=lambda self: self._get_location_domain())
+    location_dest_id = fields.Many2one('stock.location', "Destination", tracking=True, domain=lambda self: self._get_location_domain())
+    transit_location_id = fields.Many2one('stock.location', "Transit Location", tracking=True, check_company=True, domain=lambda self: self._get_location_domain())
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', tracking=True, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, index=True, required=True, tracking=True)
     state = fields.Selection(
@@ -507,7 +507,7 @@ class StockTransfer(models.Model):
                 self.name)
 
             for user in users_destination:
-                self.env['mail.activity'].create({
+                self.env['mail.activity'].sudo().create({
                     'res_id': self.id,
                     'res_model_id': model_id,
                     'activity_type_id': activity_type.id,
@@ -588,6 +588,11 @@ class StockTransfer(models.Model):
         res['approval_required'] = default_approval_required
         return res
 
+    def _get_location_domain(self):
+        user = self.env.user.sudo()
+        allowed_locations = user.location_ids.sudo()
+        return [('id', 'in', allowed_locations.ids), ('usage', '=', 'internal')]
+
     @api.model_create_multi
     def create(self, vals_list):
         activity_type = self.env.ref('mail.mail_activity_data_todo')
@@ -619,7 +624,7 @@ class StockTransfer(models.Model):
                 message2 = _("A new transfer (%s) was created. You are in the destination location.") % (res.name)
 
                 for user in users_source:
-                    self.env['mail.activity'].create({
+                    self.env['mail.activity'].sudo().create({
                         'res_id': res.id,
                         'res_model_id': model_id,
                         'activity_type_id': activity_type.id,
@@ -631,7 +636,7 @@ class StockTransfer(models.Model):
                     })
 
                 for user in users_destination:
-                    self.env['mail.activity'].create({
+                    self.env['mail.activity'].sudo().create({
                         'res_id': res.id,
                         'res_model_id': model_id,
                         'activity_type_id': activity_type.id,
