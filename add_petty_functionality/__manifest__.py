@@ -9,6 +9,7 @@
         'views/account_payment_view.xml',
         'views/account_move_view.xml',
         'views/account_payment_register_wizard_view.xml',
+        'views/hr_expense_sheet_view.xml',
     ],
     'installable': True,
     'application': False,

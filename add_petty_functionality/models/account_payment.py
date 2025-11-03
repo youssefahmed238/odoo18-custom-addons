@@ -10,21 +10,11 @@ class AccountPayment(models.Model):
     is_source_petty = fields.Boolean(related='journal_id.is_petty')
     is_destination_petty = fields.Boolean(related='destination_journal_id.is_petty')
 
-    @api.depends('journal_id')
-    def _compute_is_internal_transfer(self):
-        """ Override to set internal transfer if the journal is petty. """
-        for payment in self:
-            if self._context.get('from_bank_charge_wizard'):
-                payment.is_internal_transfer = False
-            elif not payment.is_internal_transfer:
-                payment.is_internal_transfer = payment.journal_id.is_petty
-
     def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
         """ Override to set petty_employee on move lines for internal transfers. """
         line_vals = super(AccountPayment, self)._prepare_move_line_default_vals(write_off_line_vals, force_balance)
 
-        if self.is_internal_transfer:
-            line_vals[0]['petty_employee'] = self.source_petty_employee_id.id if self.is_source_petty else False
+        line_vals[0]['petty_employee'] = self.source_petty_employee_id.id if self.is_source_petty else False
 
         return line_vals
 

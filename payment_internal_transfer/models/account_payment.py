@@ -22,9 +22,6 @@ class AccountPayment(models.Model):
             if payment.is_internal_transfer and payment.amount == 0:
                 raise ValidationError(_("The amount must be greater than zero for internal transfers."))
 
-    def _compute_is_internal_transfer(self):
-        pass
-
     @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer', 'destination_journal_id')
     def _compute_destination_account_id(self):
         """ Override to set the destination account for internal transfers. """

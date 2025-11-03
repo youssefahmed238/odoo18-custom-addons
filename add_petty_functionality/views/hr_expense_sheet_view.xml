@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="hr_expense_sheet_form_inherit" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.inherit</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='payment_method_line_id']" position="after">
+                <field name="petty_employee_id" invisible="not is_petty"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
