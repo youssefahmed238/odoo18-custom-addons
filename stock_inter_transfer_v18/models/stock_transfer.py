@@ -84,7 +84,7 @@ class StockTransfer(models.Model):
         string="Transfer Type", default="direct_transfer")
     location_id = fields.Many2one('stock.location', "Source", tracking=True, check_company=True, domain=lambda self: self._get_location_domain())
     location_dest_id = fields.Many2one('stock.location', "Destination", tracking=True, domain=lambda self: self._get_location_domain())
-    transit_location_id = fields.Many2one('stock.location', "Transit Location", tracking=True, check_company=True, domain=lambda self: self._get_location_domain())
+    transit_location_id = fields.Many2one('stock.location', "Transit Location", tracking=True, check_company=True, domain=[('usage', '=', 'transit'), ('usage', '=', 'transit')])
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', tracking=True, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, index=True, required=True, tracking=True)
     state = fields.Selection(
@@ -590,8 +590,11 @@ class StockTransfer(models.Model):
 
     def _get_location_domain(self):
         user = self.env.user.sudo()
+        domain = []
         allowed_locations = user.location_ids.sudo()
-        return [('id', 'in', allowed_locations.ids), ('usage', '=', 'internal')]
+        if user.use_locations:
+            domain.append(('id', 'in', allowed_locations.ids))
+        return domain
 
     @api.model_create_multi
     def create(self, vals_list):
