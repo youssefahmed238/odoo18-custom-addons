@@ -1,0 +1,51 @@
+<odoo>
+    <template id="pdf_export_main_custom_logo" inherit_id="account_reports.pdf_export_main">
+        <xpath expr="//div[@class='o_title']" position="before">
+            <div style="text-align:right;">
+                <t t-if="env.context.get('global_gate_pdf')">
+                    <img t-att-src="'change_customer_statement_report_logo/static/src/img/bank_logo.png'"
+                         alt="Company Logo"
+                         style="max-height:150px;"/>
+                </t>
+                <t t-else="">
+                    <t t-if="companies and companies[0]">
+                        <img t-att-src="'/web/image/res.company/' + str(companies[0].id) + '/company_logo'"
+                             alt="Company Logo"
+                             style="max-height:150px;"/>
+                    </t>
+                    <t t-else="">
+                        <img t-att-src="'/web/image/res.company/' + str(env.company.id) + '/company_logo'"
+                             alt="Company Logo"
+                             style="max-height:150px;"/>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="pdf_export_main_custom_stamp" inherit_id="account_reports.pdf_export_main">
+        <xpath expr="//div[@class='d-flex align-items-start']" position="after">
+
+            <div style="text-align:center;">
+                <t t-if="env.context.get('global_gate_pdf')">
+                    <img t-att-src="'change_customer_statement_report_logo/static/src/img/bank_stamp.png'"
+                         alt="Company Stamp"
+                         style="max-height:150px;"/>
+                </t>
+                <t t-else="">
+                    <t t-if="companies and companies[0]">
+                        <img t-att-src="'/web/image/res.company/' + str(companies[0].id) + '/stamp'"
+                             alt="Company Stamp"
+                             style="max-height:150px;"/>
+                    </t>
+                    <t t-else="">
+                        <img t-att-src="'/web/image/res.company/' + str(env.company.id) + '/stamp'"
+                             alt="Company Stamp"
+                             style="max-height:150px;"/>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

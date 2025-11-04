@@ -12,8 +12,11 @@ class AccountReport(models.Model):
                 'name': _('Global Gate PDF'),
                 'sequence': 5,
                 'action': 'export_file',
-                'action_param': 'export_to_pdf',
+                'action_param': 'export_to_pdf_global_gate',
                 'file_export_type': _('PDF'),
                 'branch_allowed': True,
-                'always_show': True
+                'always_show': True,
             })
+
+    def export_to_pdf_global_gate(self, options):
+        return self.with_context(global_gate_pdf=True).export_to_pdf(options)
