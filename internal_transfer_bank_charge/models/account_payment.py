@@ -41,8 +41,6 @@ class AccountPaymentInheritForPayment(models.Model):
             if payment.charge_move_id:
                 continue
 
-            if self.env.context.get('skip_create_charge_move'):
-                continue
 
             # Check if bank charge conditions are met
             if not (payment.allow_bank_charge_on_it and
@@ -111,8 +109,7 @@ class AccountPaymentInheritForPayment(models.Model):
 
     def _create_paired_internal_transfer_payment(self):
         """ Override to skip creating paired payment when creating bank charge move. """
-        return super(AccountPaymentInheritForPayment,
-                     self.with_context(skip_create_charge_move=True))._create_paired_internal_transfer_payment()
+        return super(AccountPaymentInheritForPayment, self)._create_paired_internal_transfer_payment()
 
     def action_post(self):
         res = super(AccountPaymentInheritForPayment, self).action_post()

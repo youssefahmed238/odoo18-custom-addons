@@ -102,7 +102,7 @@ class AccountPaymentInheritForPayment(models.Model):
                 move = self.env['account.move'].create(move_dict)
                 # Post the move if it's in draft state
                 if move.state == 'draft':
-                    move.with_context(skip_payment_post=True).action_post()
+                    move.action_post()
                 # Link the move to the payment
                 payment.charge_move_id = move.id if move else None
                 # Add chatter messages
@@ -111,8 +111,7 @@ class AccountPaymentInheritForPayment(models.Model):
 
     def action_post(self):
         res = super(AccountPaymentInheritForPayment, self).action_post()
-        if self.env.context.get('skip_payment_post'):
-            self.create_taxes_journal()
+        self.create_taxes_journal()
         return res
 
     def action_draft(self):
