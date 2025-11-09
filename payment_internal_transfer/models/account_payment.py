@@ -6,8 +6,7 @@ from odoo.tools.misc import format_date, formatLang
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    is_internal_transfer = fields.Boolean(string="Internal Transfer", readonly=False, store=True,
-                                          tracking=True, compute="_compute_is_internal_transfer")
+    is_internal_transfer = fields.Boolean(string="Internal Transfer", readonly=False, store=True, tracking=True)
 
     destination_journal_id = fields.Many2one(
         comodel_name='account.journal',
