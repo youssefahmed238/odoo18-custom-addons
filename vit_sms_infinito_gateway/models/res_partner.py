@@ -23,3 +23,22 @@ class ResPartner(models.Model):
                     }
                 )._send()
         return True
+
+    def action_infinito_sms(self):
+        """
+        Send a test SMS to this partner using the standard sms.sms workflow.
+        This respects the Infinito integration, if enabled.
+        """
+        SmsSms = self.env["sms.sms"].sudo()
+        message = self.env["sms.template"].search([("name", "=", "CEC")], limit=1).body or "Message not found"
+        for partner in self:
+            if partner.mobile and partner.otp_text:
+                message = message.replace("{{ object.otp_text }}", partner.otp_text)
+                SmsSms.create(
+                    {
+                        "number": partner.mobile,
+                        "body": message,
+                        "state": "outgoing",
+                    }
+                )._send()
+        return True

@@ -21,6 +21,6 @@ class ResPartner(models.Model):
 
     def _generate_unique_otp(self, used_otps):
         while True:
-            otp = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            otp = ''.join(random.choices(string.digits, k=6))
             if otp not in used_otps:
                 return otp
