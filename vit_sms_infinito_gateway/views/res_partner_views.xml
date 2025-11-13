@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_infinito_sms_button_18_fixed" model="ir.ui.view">
+        <field name="name">res.partner.form.infinito.sms.button.18.fixed</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add the button in the top button box -->
+            <xpath expr="//div[@class='oe_title mb24']" position="before">
+                <button name="action_infinito_test_sms"
+                        string="Send Test SMS (Infinito)"
+                        type="object"
+                        class="oe_stat_button oe_highlight"
+                        style="margin-top:20px;"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

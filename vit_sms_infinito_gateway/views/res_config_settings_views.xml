@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_infinito_sms_18_fixed" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.infinito.sms.18.fixed</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invite_users']" position="after">
+                <h2>Infinito SMS Gateway</h2>
+                <div class="row mt8 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="infinito_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="infinito_enabled"/>
+                            <div class="text-muted">
+                                When enabled, all sms.sms messages will be sent via Infinito Unified API.
+                            </div>
+                            <div class="mt8">
+                                <div class="o_setting_right_pane">
+                                    <strong>Infinito Client ID </strong>
+                                    <field name="infinito_client_id" invisible="infinito_enabled == False"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <strong>Infinito Client Password </strong>
+                                    <field name="infinito_client_password" password="True" invisible="infinito_enabled == False"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <strong>Infinito Sender ID </strong>
+                                    <field name="infinito_sender_id" invisible="infinito_enabled == False"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
