@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_policy_dashboard_form" model="ir.ui.view">
+            <field name="name">policy.dashboard.form</field>
+            <field name="model">policy.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Policy Dashboard" create="false" edit="false">
+                    <sheet>
+                        <h1>Insurance Policy Dashboard</h1>
+                        <group col="2">
+                            <statinfo title="Medical Policies" value="medical_count" icon="fa-heartbeat"
+                                      decoration-info="medical_count > 0"/>
+                            <statinfo title="Life Policies" value="life_count" icon="fa-user-md"
+                                      decoration-success="life_count > 0"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_policy_dashboard" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">policy.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{'create': False}</field>
+        </record>
+
+
+
+        <menuitem id="menu_policy_dashboard"
+                  name="Dashboard"
+                  parent="menu_policy_management"
+                  action="action_policy_dashboard"
+                  sequence="1"/>
+    </data>
+</odoo>

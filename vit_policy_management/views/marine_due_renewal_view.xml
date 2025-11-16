@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="marine_due_renewal_list_view">
+            <field name="name">marine.due.renewal.list.view</field>
+            <field name="model">marine.policy</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="marine_due_renewal_search_view">
+            <field name="name">marine.due.renewal.list.view.search</field>
+            <field name="model">marine.policy</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_marine_due_renewal" model="ir.actions.act_window">
+            <field name="name">Due Renewal</field>
+            <field name="res_model">marine.policy</field>
+            <field name="view_mode">list,form</field>
+            <field name="help">Due Renewal list.</field>
+        </record>
+
+
+        <menuitem id="menu_item_policy_due_renewal" name="Due Renewal" parent="menu_item_marine"
+              action="action_marine_due_renewal"/>
+
+    </data>
+</odoo>

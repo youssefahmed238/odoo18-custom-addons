@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="insurance_for_form_view">
+        <field name="name">insurance.for.form.view</field>
+        <field name="model">insurance.for</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                       <field name="name"/>
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="insurance_for_list_view">
+        <field name="name">insurance.for.list.view</field>
+        <field name="model">insurance.for</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="insurance_for_search_view">
+        <field name="name">insurance.for.search</field>
+        <field name="model">insurance.for</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_insurance_for" model="ir.actions.act_window">
+        <field name="name">Insurance For</field>
+        <field name="res_model">insurance.for</field>
+        <field name="view_mode">list,form</field>
+        <field name="help">Insurance For list.</field>
+    </record>
+    <menuitem id="menu_item_insurance_for" name="Insurance For" parent="menu_policy_configuration"
+              action="action_insurance_for"/>
+
+
+</odoo>

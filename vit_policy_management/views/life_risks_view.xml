@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="life_risks_form_view">
+            <field name="name">life.risks.form.view</field>
+            <field name="model">life.risks</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <header>
+                        <button name="set_to_draft" string="Set to Draft" type="object" class="oe_highlight"
+                                state="draft" invisible="state in ['draft' , 'approved']"/>
+
+                        <button name="set_to_cancel" string="Cancel" type="object" state="cancel"
+                                invisible="state in ['approved', 'cancel', 'delivered']"/>
+
+                        <button name="set_to_approved" string="Approved" type="object" class="oe_highlight"
+                                state="approved" invisible="state in ['approved', 'cancel', 'delivered']"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
+                               readonly="1"/>
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+
+                            </group>
+                        </group>
+
+
+<!--                        <notebook>-->
+<!--                            <page name="cover" string="Covers">-->
+<!--                                <field name="cover_line_id">-->
+<!--                                    <list>-->
+<!--                                        <field name="curr"/>-->
+<!--                                        <field name="cover"/>-->
+<!--                                        <field name="si_now"/>-->
+<!--                                        <field name="rate"/>-->
+<!--                                        <field name="net_premium"/>-->
+<!--                                    </list>-->
+<!--                                </field>-->
+<!--                            </page>-->
+<!--                        </notebook>-->
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="life_risks_list_view">
+            <field name="name">life.risks.list.view</field>
+            <field name="model">life.risks</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="life_risks_search_view">
+            <field name="name">life.risks.search</field>
+            <field name="model">life.risks</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_life_risks" model="ir.actions.act_window">
+            <field name="name">Life Risks</field>
+            <field name="res_model">life.risks</field>
+            <field name="view_mode">list,form</field>
+            <field name="help">Life risks list.</field>
+        </record>
+
+
+        <menuitem id="menu_item_life_risks" name="life Risks" parent="menu_item_life"
+              action="action_life_risks"/>
+
+    </data>
+</odoo>

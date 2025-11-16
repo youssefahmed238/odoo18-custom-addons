@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="medical_policy_form_view">
+            <field name="name">medical.policy.form.view</field>
+            <field name="model">medical.policy</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="set_to_draft" string="Set to Draft" type="object" class="oe_highlight"
+                                state="draft" invisible="state in ['draft' , 'approved']"/>
+
+                        <button name="set_to_cancel" string="Cancel" type="object" state="cancel"
+                                invisible="state in ['approved', 'cancel', 'delivered']"/>
+
+                        <button name="set_to_approved" string="Approved" type="object" class="oe_highlight"
+                                state="approved" invisible="state in ['approved', 'cancel', 'delivered']"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
+                               readonly="1"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <group>
+                                <field name="policy_Number"/>
+                                <field name="sum_insured"/>
+                                <field name="current"/>
+                                <field name="ifrs_group_name"/>
+                                <field name="ifrs_group_code"/>
+                            </group>
+                            <group>
+
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="policy_basic_info" string="Policy Basic Info">
+                                <group>
+                                    <group>
+                                        <field name="insurer"/>
+                                        <field name="product"/>
+                                        <field name="customer"/>
+                                        <field name="business_source_id"/>
+                                        <field name="in_favor"/>
+                                        <field name="kay_account"/>
+                                        <field name="branch"/>
+                                        <field name="transaction_type"/>
+                                        <field name="parent"/>
+                                        <field name="invoice"/>
+                                        <field name="approved_by"/>
+                                        <field name="approved_only"/>
+                                    </group>
+                                    <group>
+                                        <field name="curr"/>
+                                        <field name="calculation_type"/>
+                                        <field name="issue_date"/>
+                                        <field name="effective_date_from"/>
+                                        <field name="effective_date_to"/>
+                                        <field name="period_in_days"/>
+                                        <field name="version"/>
+                                        <field name="next_version_date"/>
+                                        <field name="dayes_torenewal"/>
+                                        <field name="loss_rate"/>
+                                        <field name="renewal_loss_ratio"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page name="risk_details" string="Risk Details">
+
+
+                            </page>
+
+
+                            <page name="policy_financial" string="Policy Financial">
+                                <group>
+                                    <group>
+                                        <field name="net_premium"/>
+                                        <field name="net_premium_egp"/>
+                                        <field name="reg_premium"/>
+                                        <field name="payment_on"/>
+                                        <field name="payment_freq"/>
+                                        <field name="years"/>
+                                        <field name="create_certificate_puc"/>
+
+                                    </group>
+                                    <group>
+                                        <field name="gross_premium"/>
+                                        <field name="gross_premium_egp"/>
+                                        <field name="gross_rate"/>
+
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="medical_policy_list_view">
+            <field name="name">medical.policy.list.view</field>
+            <field name="model">medical.policy</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="medical_policy_search_view">
+            <field name="name">medical.policy.search</field>
+            <field name="model">medical.policy</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_medical_policy" model="ir.actions.act_window">
+            <field name="name">Medical Policy</field>
+            <field name="res_model">medical.policy</field>
+            <field name="view_mode">list,form</field>
+            <field name="help">Medical Policy list.</field>
+        </record>
+
+        <menuitem id="menu_policy_management" name="Insurance Management"
+                  web_icon="vit_policy_management,static/description/logo_app.png"/>
+
+        <menuitem id="menu_item_medical" name="Medical" parent="menu_policy_management"
+                  sequence="2"/>
+
+        <menuitem id="menu_item_policy" name="Policy" parent="menu_item_medical"
+                  action="action_medical_policy" sequence="3"/>
+
+        <menuitem id="menu_policy_configuration"
+                  parent="menu_policy_management" name="Configuration"
+                  sequence="400"/>
+
+
+    </data>
+</odoo>
