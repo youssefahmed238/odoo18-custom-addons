@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Insurance Contract Form View -->
+    <record id="view_insurance_contract_form" model="ir.ui.view">
+        <field name="name">insurance.contract.form</field>
+        <field name="model">insurance.contract</field>
+        <field name="arch" type="xml">
+            <form string="Insurance Contract">
+                <header>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state == 'cancel'"/>
+
+                    <button name="action_draft" string="Reset to Draft" type="object"
+                            invisible="state == 'draft'"/>
+
+                    <button name="action_confirm" string="Confirm" type="object"
+                            invisible="state == 'confirm'" class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <span invisible="state != 'draft'">Draft</span>
+                            <span invisible="state != 'cancel'">Cancelled</span>
+                            <span invisible="state in ['draft', 'cancel']">
+                                <field name="name"/>
+                            </span>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="vendor_id" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Details">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+
+                                    <field name="basic"/>
+                                    <field name="commission"/>
+                                    <field name="bonus"/>
+
+                                    <field name="layer_1"/>
+                                    <field name="layer_2"/>
+                                    <field name="layer_3"/>
+                                    <field name="layer_4"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Insurance Contract List View -->
+    <record id="view_insurance_contract_tree" model="ir.ui.view">
+        <field name="name">insurance.contract.tree</field>
+        <field name="model">insurance.contract</field>
+        <field name="arch" type="xml">
+            <list string="Insurance Contracts">
+                <field name="name"/>
+                <field name="vendor_id"/>
+                <field name="date"/>
+                <field name="state" widget="badge" decoration-danger="state == 'cancel'"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirm'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Insurance Contract Search View -->
+    <record id="view_insurance_contract_search" model="ir.ui.view">
+        <field name="name">insurance.contract.search</field>
+        <field name="model">insurance.contract</field>
+        <field name="arch" type="xml">
+            <search string="Insurance Contracts">
+                <field name="name"/>
+                <field name="vendor_id"/>
+                <field name="date"/>
+
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirm')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="State" context="{'group_by':'state'}"/>
+                    <filter name="group_vendor" string="Vendor" context="{'group_by':'vendor_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action to open the Insurance Contracts view -->
+    <record id="action_insurance_contracts" model="ir.actions.act_window">
+        <field name="name">Insurance Contracts</field>
+        <field name="res_model">insurance.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Insurance Contract
+            </p>
+        </field>
+    </record>
+
+</odoo>

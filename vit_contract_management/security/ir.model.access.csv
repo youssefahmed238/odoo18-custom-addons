@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_insurance_contract,insurance.contract,model_insurance_contract,,1,1,1,1
+access_insurance_contract_line,insurance.contract.line,model_insurance_contract_line,,1,1,1,1

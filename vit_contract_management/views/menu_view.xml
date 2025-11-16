@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Main Menu for Contract Management -->
+    <menuitem id="menu_contract_management_root"
+              name="Insurers Agents"
+              web_icon="vit_contract_management,static/description/logo_app.png"/>
+
+    <!-- Submenu for Insurance Contracts -->
+    <menuitem id="menu_insurance_contracts"
+              name="Insurance Contracts"
+              parent="menu_contract_management_root"
+              action="action_insurance_contracts"/>
+
+</odoo>
