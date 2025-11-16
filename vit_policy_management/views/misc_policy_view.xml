@@ -16,11 +16,26 @@
                         <button name="set_to_approved" string="Approved" type="object" class="oe_highlight"
                                 state="approved" invisible="state in ['approved', 'cancel', 'delivered']"/>
 
+                        <button name="create_sub_misc_policy" string="Create Sub Policy" type="object"
+                                class="oe_highlight" invisible="state in ['cancel']"/>
+
                         <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
                                readonly="1"/>
                     </header>
 
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_parent_policy"
+                                    icon="fa-shield" invisible="not parent_id">
+                                Parent Policy
+                            </button>
+
+                            <button class="oe_stat_button" type="object" name="action_view_child_policies"
+                                    icon="fa-list" invisible="child_count == 0">
+                                <field string="Sub Policies" name="child_count" widget="statinfo"/>
+                            </button>
+                        </div>
+
                         <group>
                             <field name="name"/>
                             <group>

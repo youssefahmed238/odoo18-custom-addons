@@ -59,6 +59,120 @@ class LifePolicy(models.Model):
         copy=False,
     )
 
+    #   ------------------- Helper Fields ----------------------
+
+    parent_id = fields.Many2one('life.policy', string="Parent Policy")
+    child_ids = fields.One2many('life.policy', 'parent_id', string="Sub Policies")
+    child_count = fields.Integer(string="Children Count", compute='_compute_child_count')
+
+    def _compute_child_count(self):
+        """Compute the number of child policies"""
+        for record in self:
+            record.child_count = len(record.child_ids)
+
+    def action_view_parent_policy(self):
+        """Action to view parent policy"""
+        self.ensure_one()
+
+        if not self.parent_id:
+            return {'type': 'ir.actions.act_window_close'}
+
+        return {
+            'name': 'Parent Policy',
+            'type': 'ir.actions.act_window',
+            'res_model': 'life.policy',
+            'res_id': self.parent_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_view_child_policies(self):
+        """Action to view child policies"""
+        self.ensure_one()
+
+        if not self.child_ids:
+            return {'type': 'ir.actions.act_window_close'}
+
+        if len(self.child_ids) == 1:
+            return {
+                'name': 'Sub Policy',
+                'type': 'ir.actions.act_window',
+                'res_model': 'life.policy',
+                'res_id': self.child_ids.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        else:
+            return {
+                'name': f'Sub Policies of {self.name}',
+                'type': 'ir.actions.act_window',
+                'res_model': 'life.policy',
+                'view_mode': 'list,form',
+                'domain': [('parent_id', '=', self.id)],
+                'target': 'current',
+                'context': {'default_parent_id': self.id},
+            }
+
+    def create_sub_life_policy(self):
+        """Action to create a sub life policy"""
+        self.ensure_one()
+
+        default_vals = {
+            'name': f"{self.name} / ",
+            'policy_Number': self.policy_Number,
+            'sum_insured': self.sum_insured,
+            'current': False,
+            'ifrs_group_name': self.ifrs_group_name,
+            'ifrs_group_code': self.ifrs_group_code,
+            'insurer': self.insurer,
+            'product': self.product.id if self.product else False,
+            'customer': self.customer.id if self.customer else False,
+            'business_source_id': self.business_source_id,
+            'in_favor': self.in_favor,
+            'kay_account': self.kay_account,
+            'curr': self.curr,
+            'calculation_type': self.calculation_type,
+            'issue_date': self.issue_date,
+            'effective_date_from': self.effective_date_from,
+            'effective_date_to': self.effective_date_to,
+            'period_in_days': self.period_in_days,
+            'branch': self.branch,
+            'transaction_type': self.transaction_type,
+            'parent_id': self.id,
+            'invoice': self.invoice,
+            'approved_by': self.approved_by,
+            'approved_only': self.approved_only,
+            'version': self.version,
+            'next_version_date': self.next_version_date,
+            'dayes_torenewal': self.dayes_torenewal,
+            'loss_rate': self.loss_rate,
+            'renewal_loss_ratio': self.renewal_loss_ratio,
+            'net_premium': self.net_premium,
+            'net_premium_egp': self.net_premium_egp,
+            'reg_premium': self.reg_premium,
+            'payment_on': self.payment_on,
+            'payment_freq': self.payment_freq,
+            'years': self.years,
+            'create_certificate_puc': self.create_certificate_puc,
+            'gross_premium': self.gross_premium,
+            'gross_premium_egp': self.gross_premium_egp,
+            'gross_rate': self.gross_rate,
+            'state': 'draft',
+        }
+
+        return {
+            'name': 'Create Sub Life Policy',
+            'type': 'ir.actions.act_window',
+            'res_model': 'life.policy',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_name': default_vals['name'],
+                **default_vals,
+                'default_parent_id': self.id
+            },
+        }
+
     def set_to_draft(self):
         self.state = 'draft'
 
