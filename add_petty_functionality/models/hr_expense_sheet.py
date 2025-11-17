@@ -11,14 +11,14 @@ class HrExpenseSheet(models.Model):
         res = super(HrExpenseSheet, self).action_sheet_move_post()
         for sheet in self:
             if sheet.payment_ids:
-                payment_to_update = sheet.payment_ids[0]
-                payment_to_update.write({
-                    'source_petty_employee_id': sheet.petty_employee_id.id,
-                })
+                for payment in sheet.payment_ids:
+                    payment.write({
+                        'source_petty_employee_id': sheet.petty_employee_id.id,
+                    })
 
-                move_to_update = payment_to_update.move_id
-                if move_to_update:
-                    for line in move_to_update.line_ids:
-                        if line.account_id.name == payment_to_update.journal_id.name:
-                            line.petty_employee = sheet.petty_employee_id.id
+                    move_to_update = payment.move_id
+                    if move_to_update:
+                        for line in move_to_update.line_ids:
+                            if line.account_id.name == payment.journal_id.name:
+                                line.petty_employee = sheet.petty_employee_id.id
         return res
