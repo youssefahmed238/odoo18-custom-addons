@@ -1,11 +1,11 @@
 <odoo>
     <template id="pdf_export_main_custom_logo" inherit_id="account_reports.pdf_export_main">
-        <xpath expr="//div[@class='o_title']" position="before">
+        <xpath expr="//div[@style='text-align:right;']" position="replace">
             <div style="text-align:right;">
                 <t t-if="env.context.get('global_gate_pdf')">
-                    <img t-att-src="'change_customer_statement_report_logo/static/src/img/bank_logo.png'"
+                    <img t-att-src="'/web/image/res.company/3/logo'"
                          alt="Company Logo"
-                         style="max-height:150px;"/>
+                         style="max-height:230px;max-width:150"/>
                 </t>
                 <t t-else="">
                     <t t-if="companies and companies[0]">
@@ -25,11 +25,11 @@
 
 
     <template id="pdf_export_main_custom_stamp" inherit_id="account_reports.pdf_export_main">
-        <xpath expr="//div[@class='d-flex align-items-start']" position="after">
+        <xpath expr="//div[@style='text-align:center;']" position="replace">
 
             <div style="text-align:center;">
                 <t t-if="env.context.get('global_gate_pdf')">
-                    <img t-att-src="'change_customer_statement_report_logo/static/src/img/bank_stamp.png'"
+                    <img t-att-src="'/web/image/res.company/3/gate_stamp'"
                          alt="Company Stamp"
                          style="max-height:150px;"/>
                 </t>
