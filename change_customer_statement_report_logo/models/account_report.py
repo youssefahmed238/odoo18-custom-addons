@@ -7,7 +7,9 @@ class AccountReport(models.Model):
     def _init_options_buttons(self, options, previous_options):
         super(AccountReport, self)._init_options_buttons(options, previous_options)
 
-        if self.custom_handler_model_name == 'account.customer.statement.report.handler':
+        print(self.custom_handler_model_name)
+
+        if self.custom_handler_model_name == 'account.partner.ledger.report.handler':
             options['buttons'].insert(0, {
                 'name': _('Global Gate PDF'),
                 'sequence': 5,
