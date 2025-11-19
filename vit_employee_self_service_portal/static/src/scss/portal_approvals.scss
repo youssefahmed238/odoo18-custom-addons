@@ -1,0 +1,95 @@
+/* Container titles */
+.o_portal_content h3 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+/* Cards */
+.approval-card {
+    border-radius: 16px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background: #ffffff;
+    padding: 20px;
+}
+
+.approval-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Card Icon */
+.approval-icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+    color: #007bff;
+}
+
+/* Card Title */
+.approval-card h5 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* Card Button */
+.approval-card a.btn {
+    border-radius: 30px;
+    font-weight: 500;
+    padding: 8px 20px;
+}
+.category-img {
+    height: 150px;
+    object-fit: cover;
+}
+.custom-card {
+    background-color: #f8f9fa; /* Light background */
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-decoration: none;
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+.go-back-btn {
+    padding-right: 200px;
+}
+
+/* Style the search input group */
+.input-group {
+    max-width: 500px; /* Limit the width */
+    margin: 0 auto; /* Center horizontally */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+.input-group-text {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+/* Style the search input */
+#approvalSearch {
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    outline: none;
+}
+/* On focus, highlight the input */
+#approvalSearch:focus {
+    box-shadow: 0 0 5px #007bff;
+}
+.o_portal_avatar img {
+    min-width: 24px;
+    min-height: 24px;
+}

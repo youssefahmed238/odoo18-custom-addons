@@ -1,0 +1,25 @@
+<odoo>
+  <record id="view_approval_category_form_inherit" model="ir.ui.view">
+    <field name="name">approval.category.form.inherit</field>
+    <field name="model">approval.category</field>
+    <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="inside">
+        <notebook>
+          <page string="Portal Visibility">
+            <group>
+              <field name="show_trip_portal" invisible="name != 'Business Trip'"/>
+              <field name="show_borrow_portal" invisible="name != 'Borrow Items'"/>
+              <field name="show_general_portal" invisible="name != 'General Approval'"/>
+              <field name="show_contract_portal" invisible="name != 'Contract Approval'"/>
+              <field name="show_payment_portal" invisible="name != 'Payment Application'"/>
+              <field name="show_car_rental_portal" invisible="name != 'Car Rental Application'"/>
+              <field name="show_job_referral_portal" invisible="name != 'Job Referral Award'"/>
+              <field name="show_procurement_portal" invisible="name != 'Procurement'"/>
+            </group>
+          </page>
+        </notebook>
+      </xpath>
+    </field>
+  </record>
+</odoo>

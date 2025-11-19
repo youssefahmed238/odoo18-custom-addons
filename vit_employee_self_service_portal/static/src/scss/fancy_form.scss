@@ -1,0 +1,132 @@
+/* -----------------------------
+   Fancy Form SCSS (Odoo 18)
+   Scoped to .vit-fancy-form-section / .vit-fancy-form
+------------------------------ */
+
+/* Variables */
+$black: #303030;
+$grey: #909090;
+$off-white: #EDEEE9;
+$code: #D8DBCE;
+$sans-serif: 'Inter', sans-serif;
+
+/* Global-ish, but still scoped */
+.vit-fancy-form-section {
+  position: relative;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background-color: $off-white;
+
+  .vit-fancy-form {
+    width: 100%;
+    max-width: 768px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    padding: 2rem 2rem 1.5rem;
+    margin: 5vh auto;
+    background-color: $code;
+    color: $black;
+    font-family: $sans-serif;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .cta-form {
+      margin-bottom: 2rem;
+      text-align: center;
+
+      @media (min-width: 768px) {
+        margin-bottom: 0;
+        margin-right: 2rem;
+        text-align: left;
+        max-width: 360px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        width: 100%;
+        max-width: 25ch;
+        margin: 0 auto;
+        text-align: center;
+
+        @media (min-width: 768px) {
+          text-align: left;
+          margin: 0;
+        }
+      }
+
+      p {
+        margin-top: 1rem;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 28ch;
+      }
+    }
+
+    /* Form Styles */
+    .form {
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .form__input {
+      width: clamp(120px, 50vw, 420px);
+      height: 2.5rem;
+      padding: 0 1.25rem;
+      border: 1px solid $black;
+      border-radius: 2px;
+      margin: 0.625rem auto;
+      transition: all 250ms;
+
+      @media (min-width: 768px) {
+        width: clamp(120px, 35vw, 420px);
+        margin-left: 0; /* align with labels in desktop */
+        margin-right: 0;
+      }
+
+      &:focus {
+        outline: none;
+        border-top-color: rgba(0, 0, 0, 0.1);
+      }
+
+      /* Move label up on focus or when content exists */
+      &:focus + .form__label,
+      &:not(:placeholder-shown) + .form__label {
+        transform: translateY(-4.50rem) scale(1);
+        color: $black;
+      }
+
+      /* Hide placeholder but keep it logically present */
+      &::placeholder {
+        display: none;
+        color: transparent;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      &:not(:placeholder-shown) {
+        border-top-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    .form__label {
+      font-size: 1rem;
+      color: $grey;
+      display: block;
+      transform: translate(1.25rem, -2.5rem);
+      transform-origin: 0 0;
+      transition: all 500ms;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      pointer-events: none;
+    }
+  }
+}

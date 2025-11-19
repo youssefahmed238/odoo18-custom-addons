@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_menu_payslip" name="Portal layout : payslips menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li id="portal_breadcrumbs_sale"
+                t-if="page_name == 'payslip' or payslip"
+                t-attf-class="breadcrumb-item #{'active ' if not payslip else ''}">
+                <a t-if="payslip" t-attf-href="/my/payslips?{{ keep_query() }}">Payslips</a>
+                <t t-else="">Payslips</t>
+            </li>
+            <li t-if="payslip" class="breadcrumb-item active">
+                <t t-out="payslip.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_payslip" name="Show Payslips of Employee" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="51">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry" t-if="partner.employee_ids">
+                <t t-set="icon" t-value="'/hr_payroll/static/description/icon.png'"/>
+                <t t-set="title">Payslips</t>
+                <t t-set="url" t-value="'/my/payslips'"/>
+                <t t-set="text">Follow, view your payslips</t>
+                <t t-set="placeholder_count" t-value="'payslips_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_my_payslips" name="My Payslips">
+
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+<!--            <t t-call="portal.portal_searchbar">-->
+<!--                <t t-set="title">My Payslips</t>-->
+<!--            </t>-->
+            <h4><img src="/hr_payroll/static/description/icon.png" height="40px" width="40px"/>
+                My Payslips
+            </h4>
+
+            <t t-if="not payslips">
+                <p>There are currently no Payslips for your account.</p>
+            </t>
+            <div class="table-responsive">
+                <t t-if="payslips" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>
+                                <span class='d-none d-md-inline'>Payslip #</span>
+                                <span class='d-block d-md-none'>Ref.</span>
+                            </th>
+                            <th class="text-right">Payslip Date</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="payslips" t-as="payslip">
+                        <tr>
+                            <td>
+                                <a t-att-href="payslip.get_portal_url()">
+                                    <t t-esc="payslip.name"/>
+                                </a>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="payslip.date_from" t-options="{'widget': 'date'}"/>
+                                &amp;nbsp;
+                                <span class='d-none d-md-inline' t-field="payslip.date_to"
+                                      t-options="{'time_only': True}"/>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </div>
+            <div class="col-12 text-center" style="text-align: center;margin:16px;">
+                <a role="button" t-attf-href="/my" class="btn btn-danger btn-lg" style="font-weight: bold">Go Back To Home
+                    Page
+                </a>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_payslip" name="Payslip Portal Template" inherit_id="portal.portal_sidebar"
+              primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="hr_payroll.group_hr_payroll_manager">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url"
+                       t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (payslip._name, payslip.id, payslip.env.ref('hr_payroll.action_view_hr_payslip_month_form').id)"/>
+                </t>
+            </t>
+
+            <div class="row mt16 o_portal_payslip_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
+                    <t t-set="title">
+                        <h2 class="mb-0">Your Contract Wage :
+                            <br/>
+                            <t t-if="payslip.line_ids">
+                                <div id="comp_line_total">
+                                    <span t-esc="payslip.line_ids[-1].total"
+                                          t-options='{"widget": "monetary","display_currency": payslip.company_id.currency_id}'/>
+                                </div>
+                            </t>
+                        </h2>
+                    </t>
+                    <t t-set="entries">
+                        <div class="d-flex flex-column gap-4">
+                            <div class="flex-basis-100 flex-basis-sm-50 flex-basis-lg-100 order-1 order-lg-0">
+                                <div class="o_download_pdf d-flex gap-1 flex-lg-column flex-xl-row">
+                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn"
+                                           t-att-href="payslip.get_portal_url(report_type='pdf', download=True)"
+                                           title="Download">
+                                            <i class="fa fa-download"/>
+                                            Download
+                                        </a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <button
+                                                class="btn btn-info btn-block o_print_btn o_portal_payslip_print"
+                                                role="button" id="print_payslip_report"
+                                                t-att-report_url="payslip.get_portal_url(report_type='pdf')">
+                                            <i class="fa fa-print"/>
+                                            Print
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="payslip.employee_id.parent_id" class="flex-grow-1">
+                                <h6>
+                                    <small class="text-muted">Employee Manager</small>
+                                </h6>
+                                <div class="o_portal_contact_details d-flex flex-column gap-2">
+                                    <div class="d-flex justify-content-start align-items-center gap-2">
+                                        <img class="o_avatar o_portal_contact_img rounded"
+                                             t-att-src="image_data_uri(payslip.employee_id.parent_id.avatar_1024)"
+                                             alt="Contact"/>
+                                        <div>
+                                            <h6 class="mb-0"
+                                                t-out="payslip.employee_id.parent_id.work_contact_id.name or payslip.employee_id.parent_id.name"/>
+                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">
+                                                Send message
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div t-field="payslip.employee_id.parent_id.work_contact_id"
+                                         t-options='{"widget": "contact", "fields": ["name", "phone"]}'/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <!-- Page content -->
+                <div id="payslip_content" class="o_portal_content col-12 col-lg-9 col-xl-8">
+                    <div t-if="payslip.state == 'cancel'"
+                         class="alert alert-danger alert-dismissable d-print-none"
+                         role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                            &amp;times;
+                        </button>
+                        <strong>This payslip has been rejected.</strong>
+                    </div>
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}"
+                         id="portal_payslip_content">
+                        <div t-call="vit_employee_self_service_portal.payslip_portal_content"/>
+                    </div>
+                    <!-- chatter -->
+                    <div id="payslip_communication" class="mt-4">
+                        <h3>Communication history</h3>
+                        <t t-call="portal.message_thread"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 text-center" style="text-align: center;margin:16px;">
+                <a role="button" t-attf-href="/my" class="btn btn-danger btn-lg" style="font-weight: bold">Go Back To Home
+                    Page
+                </a>
+            </div>
+        </xpath>
+    </template>
+    <template id="payslip_portal_content" name="Payslip Portal Content">
+        <!-- Intro -->
+        <div id="introduction"
+             t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+            <h2 class="my-0">
+                <t t-if="payslip.state in ['verify','done']">
+                    Payslip
+                </t>
+                <em t-esc="payslip.name"/>
+            </h2>
+        </div>
+
+        <div t-attf-class="#{'card-body' if report_type == 'html' else ''}">
+            <section id="details" style="page-break-inside: auto;" class="mt32">
+                <h3 id="details">Salary Computation</h3>
+                <div class="table-responsive">
+                    <table t-att-data-order-id="payslip.id" t-att-data-token="payslip.access_token"
+                           class="table table-sm"
+                           id="payslip_salary_computation_table"
+                           style="border: 1px solid black;border-collapse: collapse;">
+                        <thead class="bg-100">
+                            <tr>
+                                <th class="text-left">Name</th>
+                                <th class="text-left">Code</th>
+                                <th class="text-left">Category</th>
+                                <th class="text-left">Quantity</th>
+                                <th class="text-left">Rate(%)</th>
+                                <th class="text-right">Rule</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="payslip_computation_tbody">
+                            <t t-foreach="payslip.line_ids" t-as="line">
+                                <tr>
+                                    <td id="comp_line_name">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td class="text-left">
+                                        <div id="comp_line_code">
+                                            <span t-field="line.code"/>
+                                        </div>
+                                    </td>
+                                    <td class="text-left">
+                                        <div id="comp_line_categ">
+                                            <span t-field="line.category_id.name"/>
+                                        </div>
+                                    </td>
+                                    <td class="text-left">
+                                        <div id="comp_line_qty">
+                                            <span t-field="line.quantity"/>
+                                        </div>
+                                    </td>
+                                    <td class="text-left">
+                                        <div id="comp_line_rate">
+                                            <span t-field="line.rate"/>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <div id="comp_line_rule">
+                                            <span t-field="line.salary_rule_id.name"/>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <div id="comp_line_amount">
+                                            <span t-field="line.amount"
+                                                  t-options='{"widget": "monetary","display_currency": payslip.company_id.currency_id}'/>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <div id="comp_line_total">
+                                            <span t-field="line.total"
+                                                  t-options='{"widget": "monetary","display_currency": payslip.company_id.currency_id}'/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </template>
+</odoo>

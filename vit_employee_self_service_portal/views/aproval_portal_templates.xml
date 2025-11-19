@@ -1,0 +1,1665 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Portal Breadcrumbs for Approvals -->
+    <template id="portal_my_home_menu_approvals" name="Portal layout : Approvals menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li id="portal_breadcrumbs_approvals"
+                t-if="page_name == 'approvals' or approvals"
+                t-attf-class="breadcrumb-item #{'active ' if not approvals else ''}">
+                <a t-if="approvals" t-attf-href="/my/approvals?{{ keep_query() }}">Approvals</a>
+                <t t-else="">Approvals</t>
+            </li>
+
+        </xpath>
+    </template>
+
+    <!-- Portal Card for Approvals -->
+    <template id="portal_my_home_approvals" name="Show Approvals of Employee" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="54">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry" t-if="partner.employee_ids">
+                <t t-set="icon" t-value="'/approvals/static/description/icon.png'"/>
+                <t t-set="title">Approvals</t>
+                <t t-set="url" t-value="'/my/approvals'"/>
+                <t t-set="text">Check and manage your approvals</t>
+                <t t-set="config_card" t-value="True"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_my_approvals_dashboard" name="Approvals Portal Template" inherit_id="portal.portal_sidebar"
+              primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <h4>
+                <img src="/approvals/static/description/icon.png" height="40px" width="40px"/>
+                My Approvals
+            </h4>
+            <div class="col-12 col-lg-9 col-xl-8 container o_portal_sidebar">
+                <h3 class="text-center" style="margin-bottom:50px;font-weight: bold;">Approval Categories</h3>
+                <div class="row"> <!-- Bootstrap grid with gap -->
+                    <t t-foreach="categories" t-as="cat">
+                        <div class="col-lg-4 col-md-6 col-sm-12 text-center"
+                             style=" padding: 10px 10px 10px 10px;">  <!-- Two cards per row on md+ screens -->
+                            <a t-att-href="'/my/approvals/category/%s' % cat.id"
+                               class="card custom-card d-flex align-items-center p-3 text-decoration-none text-reset">
+                                <div class="me-3">
+                                    <!-- Category icon -->
+
+                                    <t t-if="cat.id == 1">
+                                        <img t-att-src="'/approvals/static/src/img/Suitcase.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+                                    <t t-elif="cat.id == 2">
+                                        <img t-att-src="'/approvals/static/src/img/Books.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+                                    <t t-elif="cat.id == 3">
+                                        <img t-att-src="'/approvals/static/src/img/Folder.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+                                    <t t-elif="cat.id == 4">
+                                        <img t-att-src="'/approvals/static/src/img/Contract.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+                                    <t t-elif="cat.id == 5">
+                                        <img t-att-src="'/approvals/static/src/img/Credit-card.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+                                    <t t-elif="cat.id == 6">
+                                        <img t-att-src="'/approvals/static/src/img/Car.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+                                    <t t-elif="cat.id == 7">
+                                        <img t-att-src="'/approvals/static/src/img/Award.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+                                    <t t-elif="cat.id == 8">
+                                        <img t-att-src="'/approvals/static/src/img/Bag.png'" alt="Category Icon"
+                                             class="category-icon"/>
+                                    </t>
+
+                                </div>
+                                <div>
+                                    <h5 class="mb-1" t-out="cat.display_name"/>
+                                    <p class="mb-0 small text-muted">Check and manage your approvals
+                                    </p>  <!-- Subtext example -->
+                                </div>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Go back button -->
+            <div class="col-12 text-start mt-4 go-back-btn">
+                <a role="button" t-attf-href="/my" class="btn btn-danger btn-lg" style="font-weight: bold">Go Back To
+                    Home Page
+                </a>
+            </div>
+
+
+        </xpath>
+    </template>
+
+    <!-- Approvals by Category -->
+    <template id="portal_my_approvals_by_category" name="Approvals by Category">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4 o_portal_approvals_container">
+                <!-- Search bar -->
+                <div class="row" style="margin-bottom:50px;">
+                    <div class="col-6">
+                        <h3>
+                            Approvals in
+                            <t t-out="category.display_name"/>
+                        </h3>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            <input type="text" id="approvalSearch" class="form-control form-control-sm"
+                                   placeholder="Search approvals by subject, owner, or location..."/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <ul class="list-group mt-3">
+                    <t t-if="not approvals">
+                        <li class="list-group-item text-muted">No approvals found in this category</li>
+                    </t>
+
+                    <t t-if="approvals" t-call="portal.portal_table">
+
+                        <thead>
+                            <tr class="active">
+                                <th class="text-left">Approval Subject</th>
+                                <th class="text-left">Request Owner</th>
+                                <th class="text-left">Category</th>
+                                <th class="text-left">Request Start</th>
+                                <th class="text-left">Request To</th>
+                                <th class="text-left">Location</th>
+                                <th class="text-left">Request Status</th>
+                                <th class="text-right">Edit</th>
+
+                            </tr>
+                        </thead>
+                        <t t-foreach="approvals" t-as="app">
+                            <tr>
+                                <!-- Approval Subject -->
+                                <td class="text-left">
+                                    <a t-att-href="'/my/approvals/%d' % app.id">
+                                        <t t-esc="app.name"/>
+                                    </a>
+                                </td>
+
+                                <td class="text-left">
+                                    <t t-esc="app.request_owner_id.name"/>
+                                </td>
+
+                                <!--                                                                &lt;!&ndash; Request Owner &ndash;&gt;-->
+                                <!--                                <td class="text-left d-flex align-items-center gap-2">-->
+                                <!--                                    <img t-att-src="'/web/image/res.users/%d/avatar_128' % app.request_owner_id.id"-->
+                                <!--                                         style="width:24px; height:24px; border-radius:50%; object-fit:cover;"/>-->
+                                <!--                                    <t t-esc="app.request_owner_id.name"/>-->
+                                <!--                                </td>-->
+
+                                <!-- Category -->
+                                <td class="text-left">
+                                    <t t-esc="app.category_id.name"/>
+                                </td>
+
+                                <!-- Request Start -->
+                                <td class="text-left">
+                                    <t t-esc="format_datetime(app.date_start, tz='Africa/Cairo')"/>
+                                </td>
+
+                                <!-- Request To -->
+                                <td class="text-left">
+                                    <t t-esc="format_datetime(app.date_end, tz='Africa/Cairo')"/>
+                                </td>
+
+                                <!-- Location -->
+                                <td class="text-left">
+                                    <t t-esc="app.location or '-'"/>
+                                </td>
+
+                                <td class="text-left">
+                                    <t t-if="app.request_status == 'new'">
+                                        <span class="badge badge-secondary" style="font-size:13px;color:black">To
+                                            Submit
+                                        </span>
+                                    </t>
+                                    <t t-elif="app.request_status == 'pending'">
+                                        <span class="badge badge-warning" style="font-size:13px;color:black">Submitted
+                                        </span>
+                                    </t>
+                                    <t t-elif="app.request_status == 'approved'">
+                                        <span class="badge badge-success" style="font-size:13px;color:black">Approved
+                                        </span>
+                                    </t>
+                                    <t t-elif="app.request_status == 'cancel'">
+                                        <span class="badge badge-danger" style="font-size:13px;color:black">Canceled
+                                        </span>
+                                    </t>
+                                    <t t-elif="app.request_status == 'refused'">
+                                        <span class="badge badge-dark" style="font-size:13px;color:black">Refused</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge badge-light" style="color:black;font-size:13px;">
+                                            <t t-esc="app.request_status"/>
+                                        </span>
+                                    </t>
+                                </td>
+                                <td class="text-right">
+                                    <a t-if="app.request_status in ['new']" role="button" title="Edit Request"
+                                       id="edit_approval" t-attf-href="/edit_approval/#{app.id}"
+                                       class="btn btn-info btn-lg">
+                                        <i class="fa fa-edit" style="color: white;"/>
+                                    </a>
+                                </td>
+
+
+                            </tr>
+                        </t>
+                    </t>
+
+                    <!-- Buttons -->
+                    <div class="col-12 mt-3">
+                        <div class="col-6 text-center" style="float:left;justify-content:center;">
+                            <!-- Business Trip -->
+                            <t t-if="category.id == 1">
+                                <a t-attf-href="/request/business_trip" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                            <!-- Borrow Items -->
+                            <t t-if="category.id == 2">
+                                <a t-attf-href="/request/borrow_items" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                            <!-- General Approval -->
+                            <t t-if="category.id == 3">
+                                <a t-attf-href="/request/general_approval" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                            <!-- Contract Approval -->
+                            <t t-if="category.id == 4">
+                                <a t-attf-href="/request/contract_approval" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                            <!-- Payment Application -->
+                            <t t-if="category.id == 5">
+                                <a t-attf-href="/request/payment_application" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                            <!-- Car Rental Application -->
+                            <t t-if="category.id == 6">
+                                <a t-attf-href="/request/car_rental" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                            <!-- Job Referral Award -->
+                            <t t-if="category.id == 7">
+                                <a t-attf-href="/request/job_award" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                            <!-- Procurement -->
+                            <t t-if="category.id == 8">
+                                <a t-attf-href="/request/procurement" class="btn btn-info btn-lg"
+                                   style="font-weight:bold">New Request
+                                </a>
+                            </t>
+                        </div>
+                        <div class="col-6 text-center" style="float:right;justify-content:center;">
+                            <a role="button" href="/my" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back
+                                To Home Page
+                            </a>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </t>
+    </template>
+
+
+    <!-- Default -->
+    <template id="portal_approval_detail_default" name="Approval Detail (Default)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <h3>
+                    <t t-out="approval.name"/>
+                </h3>
+                <table class="table table-bordered mt-3">
+                    <tr>
+                        <th>Category</th>
+                        <td>
+                            <t t-out="approval.category_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Requested By</th>
+                        <td>
+                            <t t-out="approval.request_owner_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <t t-out="approval.request_status"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <!-- Business Trip Display data -->
+    <template id="portal_approval_detail_business_trip" name="Approval Detail (Business Trip)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <div class="table" style="width:50%;">
+                    <table class="table">
+                        <tr class="text-center">
+                            <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                                <span>
+                                    <t t-out="approval.name"/>
+                                </span>
+                            </th>
+                        </tr>
+                        <!--                        <tr>-->
+                        <!--                            <th>Name</th>-->
+                        <!--                            <td>-->
+                        <!--                                <t t-out="approval.name"/>-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
+                        <tr>
+                            <th>Category</th>
+                            <td>
+                                <t t-out="approval.category_id.name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Period Start</th>
+                            <td>
+                                <t t-out="approval.date_start"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Period End</th>
+                            <td>
+                                <t t-out="approval.date_end"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Location</th>
+                            <td>
+                                <t t-out="approval.location"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                        <i class="fa fa-print"></i>
+                        Print Approval
+                    </button>
+                </div>
+                <div class="col-8 text-center" style="float:right;justify-content:center;">
+                    <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back
+                        To My Approvals Page
+                    </a>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- Borrow Items Display data -->
+    <template id="portal_approval_detail_borrow_items" name="Approval Detail (Borrow Items)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <table class="table" style="width:50%;">
+                    <tr class="text-center">
+                        <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                            <span>
+                                <t t-out="approval.name"/>
+                            </span>
+                        </th>
+                    </tr>
+                    <!--                    <tr><th>Name</th><td><t t-out="approval.name"/></td></tr>-->
+                    <tr>
+                        <th>Category</th>
+                        <td>
+                            <t t-out="approval.category_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Period Start</th>
+                        <td>
+                            <t t-out="approval.date_start"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Period End</th>
+                        <td>
+                            <t t-out="approval.date_end"/>
+                        </td>
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                    <i class="fa fa-print"></i>
+                    Print Approval
+                </button>
+                <div class="col-6 text-center" style="float:right;justify-content:center;">
+                    <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back
+                        To My Approvals Page
+                    </a>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- General Approval Display data -->
+    <template id="portal_approval_detail_general" name="Approval Detail (General)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <table class="table" style="width:50%;">
+                    <tr class="text-center">
+                        <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                            <span>
+                                <t t-out="approval.name"/>
+                            </span>
+                        </th>
+                    </tr>
+                    <!--                    <tr><th>Name</th><td><t t-out="approval.name"/></td></tr>-->
+                    <tr>
+                        <th>Category</th>
+                        <td>
+                            <t t-out="approval.category_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>
+                            <t t-out="approval.date"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Period Start</th>
+                        <td>
+                            <t t-out="approval.date_start"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Period End</th>
+                        <td>
+                            <t t-out="approval.date_end"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Contact</th>
+                        <td>
+                            <t t-out="approval.partner_id.sudo().name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Amount</th>
+                        <td>
+                            <t t-out="approval.amount"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Reference</th>
+                        <td>
+                            <t t-out="approval.reference"/>
+                        </td>
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                    <i class="fa fa-print"></i>
+                    Print Approval
+                </button>
+                <div class="col-6 text-center" style="float:right;justify-content:center;">
+                    <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back
+                        To My Approvals Page
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Contract Approval Display data -->
+    <template id="portal_approval_detail_contract" name="Approval Detail (Contract)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <table class="table " style="width:50%;">
+                    <tr class="text-center">
+                        <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                            <span>
+                                <t t-out="approval.name"/>
+                            </span>
+                        </th>
+                    </tr>
+
+                    <!--                    <tr><th>Name</th><td><t t-out="approval.name"/></td></tr>-->
+                    <tr>
+                        <th>Category</th>
+                        <td>
+                            <t t-out="approval.category_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Contact</th>
+                        <td>
+                            <t t-out="approval.partner_id.sudo().name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Amount</th>
+                        <td>
+                            <t t-out="approval.amount"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Reference</th>
+                        <td>
+                            <t t-out="approval.reference"/>
+                        </td>
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                    <i class="fa fa-print"></i>
+                    Print Approval
+                </button>
+                <div class="col-6 text-center" style="float:right;justify-content:center;">
+                    <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back
+                        To My Approvals Page
+                    </a>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- Payment Application Display data -->
+    <template id="portal_approval_detail_payment" name="Approval Detail (Payment)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <table class="table" style="width:50%;">
+                    <tr class="text-center">
+                        <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                            <span>
+                                <t t-out="approval.name"/>
+                            </span>
+                        </th>
+                    </tr>
+                    <!--                    <tr><th>Name</th><td><t t-out="approval.name"/></td></tr>-->
+                    <tr>
+                        <th>Category</th>
+                        <td>
+                            <t t-out="approval.category_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>
+                            <t t-out="approval.date"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Contact</th>
+                        <td>
+                            <t t-out="approval.partner_id.sudo().name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Amount</th>
+                        <td>
+                            <t t-out="approval.amount"/>
+                        </td>
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                    <i class="fa fa-print"></i>
+                    Print Approval
+                </button>
+                <div class="col-6 text-center" style="float:right;justify-content:center;">
+                    <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back
+                        To My Approvals Page
+                    </a>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- Car Rental Display data -->
+    <template id="portal_approval_detail_car_rental" name="Approval Detail (Car Rental)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <table class="table" style="width:50%;">
+                    <tr class="text-center">
+                        <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                            <span>
+                                <t t-out="approval.name"/>
+                            </span>
+                        </th>
+                    </tr>
+                    <!--                    <tr><th>Name</th><td><t t-out="approval.name"/></td></tr>-->
+                    <tr>
+                        <th>Category</th>
+                        <td>
+                            <t t-out="approval.category_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Period Start</th>
+                        <td>
+                            <t t-out="approval.date_start"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Period End</th>
+                        <td>
+                            <t t-out="approval.date_end"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                <i class="fa fa-print"></i>
+                Print Approval
+            </button>
+            <div class="col-6 text-center" style="float:right;justify-content:center;">
+                <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back To
+                    My Approvals Page
+                </a>
+            </div>
+
+        </t>
+    </template>
+
+    <!-- Job Referral Award Display data -->
+    <template id="portal_approval_detail_job_award" name="Approval Detail (Job Referral Award)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <table class="table" style="width:50%;">
+                    <tr class="text-center">
+                        <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                            <span>
+                                <t t-out="approval.name"/>
+                            </span>
+                        </th>
+                    </tr>
+                    <!--                    <tr><th>Name</th><td><t t-out="approval.name"/></td></tr>-->
+                    <tr>
+                        <th>Category</th>
+                        <td>
+                            <t t-out="approval.category_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Contact</th>
+                        <td>
+                            <t t-out="approval.partner_id.sudo().name"/>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                <i class="fa fa-print"></i>
+                Print Approval
+            </button>
+            <div class="col-6 text-center" style="float:right;justify-content:center;">
+                <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back To
+                    My Approvals Page
+                </a>
+            </div>
+
+        </t>
+    </template>
+
+    <!-- Procurement Display data -->
+    <template id="portal_approval_detail_procurement" name="Approval Detail (Procurement)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <table class="table" style="width:50%;">
+                    <tr class="text-center">
+                        <th colspan="2" style="font-size:22px;border-style:solid;background-color: #D6EEEE;">
+                            <span>
+                                <t t-out="approval.name"/>
+                            </span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>
+                            <t t-out="approval.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Quantity</th>
+                        <td>
+                            <t t-out="approval.quantity"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Amount</th>
+                        <td>
+                            <t t-out="approval.amount"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary mb-3" onclick="window.print();">
+                <i class="fa fa-print"></i>
+                Print Approval
+            </button>
+            <div class="col-6 text-center" style="float:right;justify-content:center;">
+                <a role="button" href="/my/approvals" class="btn btn-danger btn-lg" style="font-weight:bold">Go Back To
+                    My Approvals Page
+                </a>
+            </div>
+
+        </t>
+    </template>
+
+
+    <!-- Business Trip Request Form -->
+    <template id="portal_request_business_trip" name="Business Trip Request Page">
+        <t t-call="portal.portal_layout">
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Suitcase.png'" width="45px" height="45px"/>
+                        New Business Trip Request
+                    </h2>
+                    <div class="container vit-fancy-form">
+                        <form action="/create_new_business_trip" enctype="multipart/form-data" method="post"
+                              class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <strong>
+                                <label name="Name">Business Trip Name</label>
+                            </strong>
+                            <input type="text" name="name" class="form-control" required="required"
+                                   value="Business Trip"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Period Start -->
+                            <strong>
+                                <label name="Name">Period Start</label>
+                            </strong>
+                            <input type="date" class="form-control datetimepicker-input"
+                                   name="date_start" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Period End -->
+
+                            <strong>
+                                <label name="Name">Period End</label>
+                            </strong>
+                            <input type="date" class="form-control datetimepicker-input"
+                                   name="date_end" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Location -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <strong>Location</strong>
+                                </label>
+                                <input type="text" class="form-control" name="location" required="required"/>
+                            </div>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attach Document -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <strong>Attach Document</strong>
+                                </label>
+                                <input type="file" class="form-control" name="attachment" required="required"/>
+                            </div>
+                            <div style="margin-top:25px;"></div>
+
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Success page -->
+    <template id="new_business_trip_success" name="Business Trip Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90" height="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <p>Your Business Trip request has been successfully created.</p>
+                <a role="button" href="/my/approvals" class="btn btn-primary btn-lg mt-3">
+                    Go Back To Approvals
+                </a>
+            </div>
+        </t>
+    </template>
+
+
+    <!-- Borrow Items Requests  -->
+
+    <template id="portal_request_borrow_items" name="Request Borrow Items">
+        <t t-call="portal.portal_layout">
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Books.png'" width="45px" height="45px"/>
+                        New Borrow Item Request
+                    </h2>
+                    <div class="container vit-fancy-form">
+                        <form action="/create_new_borrow_item" enctype="multipart/form-data" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <label class="form-label">
+                                <strong>Item Name</strong>
+                            </label>
+                            <input type="text" name="name" class="form-control" required="required" value="Borrow Items"
+                                   style="width:400px;"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <label class="form-label">
+                                <strong>Period Start</strong>
+                            </label>
+                            <input type="date" name="date_start" class="form-control" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <label class="form-label">
+                                <strong>Period End</strong>
+                            </label>
+                            <input type="date" name="date_end" class="form-control" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <label class="form-label">
+                                <strong>Attach Document</strong>
+                            </label>
+                            <input type="file" class="form-control" name="attachment"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="new_borrow_item_success" name="New Borrow Item Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <h4>Your Borrow Item Request has been created.</h4>
+                <a href="/my/approvals" class="btn btn-primary mt-3">Back to Approvals</a>
+            </div>
+        </t>
+    </template>
+
+
+    <!-- General Approval Request Form -->
+    <template id="portal_request_general" name="General Approval Request Page">
+        <t t-call="portal.portal_layout">
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Folder.png'" width="45px" height="45px"/>
+                        New General Approval Request
+                    </h2>
+                    <div class="container vit-fancy-form">
+                        <form action="/create_new_general" enctype="multipart/form-data" method="post" class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!-- Name -->
+                            <label class="form-label">
+                                <strong>Item Name</strong>
+                            </label>
+                            <input type="text" name="name" class="form-control" required="required"
+                                   value="General Approval"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Date -->
+                            <label class="form-label">
+                                <strong>Date</strong>
+                            </label>
+                            <input type="date" class="form-control" name="date" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Period Start -->
+                            <label class="form-label">
+                                <strong>Period Start</strong>
+                            </label>
+                            <input type="date" class="form-control" name="date_start"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Period End -->
+                            <label class="form-label">
+                                <strong>Period End</strong>
+                            </label>
+                            <input type="date" class="form-control" name="date_end"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Location -->
+                            <label class="form-label">
+                                <strong>Location</strong>
+                            </label>
+                            <input type="text" class="form-control" name="location" placeholder="Enter location"
+                                   required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Amount -->
+                            <label class="form-label">
+                                <strong>Amount</strong>
+                            </label>
+                            <input type="number" class="form-control" step="0.01" name="amount"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Reference -->
+                            <label class="form-label">
+                                <strong>Reference</strong>
+                            </label>
+                            <input type="text" class="form-control" name="reference"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Contact -->
+                            <label class="form-label">
+                                <strong>Contact</strong>
+                            </label>
+                            <select class="form-control" name="partner_id" required="required">
+                                <option value="">-- Select Contact --</option>
+                                <t t-foreach="partners" t-as="partner">
+                                    <option t-att-value="partner.id">
+                                        <t t-esc="partner.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attach Document -->
+                            <label class="form-label">
+                                <strong>Attach Document</strong>
+                            </label>
+                            <input type="file" class="form-control" name="attachment"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- General Approval Success -->
+    <template id="new_general_success" name="General Approval Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90" height="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <p>Your General Approval request has been successfully created.</p>
+                <a href="/my/approvals" class="btn btn-primary btn-lg mt-3">Go Back To Approvals</a>
+            </div>
+        </t>
+    </template>
+
+
+    <!-- Contract Approval Request Form -->
+    <template id="portal_request_contract" name="Contract Approval Request Page">
+        <t t-call="portal.portal_layout">
+
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Contract.png'" width="45px" height="45px"/>
+                        New Contract Approval Request
+                    </h2>
+                    <div class="container vit-fancy-form">
+                        <form action="/create_new_contract" enctype="multipart/form-data" method="post" class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!--Name-->
+                            <label class="form-label">
+                                <strong>Item Name</strong>
+                            </label>
+                            <input type="text" name="name" class="form-control" required="required"
+                                   value="Contract Approval"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Contact -->
+                            <label class="form-label">
+                                <strong>Contact</strong>
+                            </label>
+                            <select class="form-control" name="partner_id" required="required">
+                                <option value="">-- Select Contact --</option>
+                                <t t-foreach="partners" t-as="partner">
+                                    <option t-att-value="partner.id">
+                                        <t t-esc="partner.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Amount -->
+                            <label class="form-label">
+                                <strong>Amount</strong>
+                            </label>
+                            <input type="number" class="form-control" step="0.01" name="amount"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Reference -->
+                            <label class="form-label">
+                                <strong>Reference</strong>
+                            </label>
+                            <input type="text" class="form-control" name="reference"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attach Document -->
+                            <label class="form-label">
+                                <strong>Attach Document</strong>
+                            </label>
+                            <input type="file" class="form-control" name="attachment"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Contract Approval Success -->
+    <template id="new_contract_success" name="Contract Approval Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90" height="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <p>Your Contract Approval request has been successfully created.</p>
+                <a href="/my/approvals" class="btn btn-primary btn-lg mt-3">Go Back To Approvals</a>
+            </div>
+        </t>
+    </template>
+
+
+    <!-- Payment Application Request Form -->
+    <template id="portal_request_payment" name="Payment Application Request Page">
+        <t t-call="portal.portal_layout">
+
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Credit-card.png'" width="45px" height="45px"/>
+                        New Payment Application</h2>
+                    <div class="container vit-fancy-form">
+                        <form action="/create_new_payment" enctype="multipart/form-data" method="post" class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!--Name-->
+                            <label class="form-label">
+                                <strong>Item Name</strong>
+                            </label>
+                            <input type="text" name="name" class="form-control" required="required" value="Payment Application"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Date -->
+                            <label class="form-label">
+                                <strong>Date</strong>
+                            </label>
+                            <input type="date" class="form-control" name="date" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Contact -->
+                            <label class="form-label">
+                                <strong>Contact</strong>
+                            </label>
+                            <select class="form-control" name="partner_id" required="required">
+                                <option value="">-- Select Contact --</option>
+                                <t t-foreach="partners" t-as="partner">
+                                    <option t-att-value="partner.id">
+                                        <t t-esc="partner.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Amount -->
+                            <label class="form-label">
+                                <strong>Amount</strong>
+                            </label>
+                            <input type="number" class="form-control" step="0.01" name="amount" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attach Document -->
+                            <label class="form-label">
+                                <strong>Attach Document</strong>
+                            </label>
+                            <input type="file" class="form-control" name="attachment"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Payment Application Success -->
+    <template id="new_payment_success" name="Payment Application Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90" height="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <p>Your Payment Application has been successfully created.</p>
+                <a href="/my/approvals" class="btn btn-primary btn-lg mt-3">Go Back To Approvals</a>
+            </div>
+        </t>
+    </template>
+
+
+    <!-- Car Rental Request Form -->
+    <template id="portal_request_car_rental" name="Car Rental Request Page">
+        <t t-call="portal.portal_layout">
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Car.png'" width="45px" height="45px"/>
+                        New Borrow Item Request</h2>
+                    <div class="container vit-fancy-form">
+                        <form action="/create_new_car_rental" enctype="multipart/form-data" method="post" class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!--Name-->
+                            <label class="form-label">
+                                <strong>Item Name</strong>
+                            </label>
+                            <input type="text" name="name" class="form-control" required="required" value="Car Rental Application"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Period Start -->
+                            <label class="form-label">
+                                <strong>Period Start</strong>
+                            </label>
+                            <input type="date" class="form-control" name="date_start" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Period End -->
+                            <label class="form-label">
+                                <strong>Period End</strong>
+                            </label>
+                            <input type="date" class="form-control" name="date_end" required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attach Document -->
+                            <label class="form-label">
+                                <strong>Attach Document</strong>
+                            </label>
+                            <input type="file" class="form-control" name="attachment"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Car Rental Success -->
+    <template id="new_car_rental_success" name="Car Rental Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90" height="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <p>Your Car Rental request has been successfully created.</p>
+                <a href="/my/approvals" class="btn btn-primary btn-lg mt-3">Go Back To Approvals</a>
+            </div>
+        </t>
+    </template>
+
+    <!-- Job Referral Award Request Form -->
+    <template id="portal_request_job_award" name="Job Referral Award Request Page">
+        <t t-call="portal.portal_layout">
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Award.png'" width="45px" height="45px"/>
+                        New Job Referral Award Request</h2>
+                    <div class="container vit-fancy-form">
+                        <form action="/create_new_job_award" enctype="multipart/form-data" method="post" class="mt-4">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!--Name-->
+                            <label class="form-label">
+                                <strong>Item Name</strong>
+                            </label>
+                            <input type="text" name="name" class="form-control" required="required" value="Job Referral Award"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Contact -->
+                            <label class="form-label">
+                                <strong>Contact</strong>
+                            </label>
+                            <select class="form-control" name="partner_id" required="required">
+                                <option value="">-- Select Contact --</option>
+                                <t t-foreach="partners" t-as="partner">
+                                    <option t-att-value="partner.id">
+                                        <t t-esc="partner.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attach Document -->
+                            <label class="form-label">
+                                <strong>Attach Document</strong>
+                            </label>
+                            <input type="file" class="form-control" name="attachment"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Job Referral Award Success -->
+    <template id="new_job_award_success" name="Job Referral Award Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90" height="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <p>Your Job Referral Award request has been successfully created.</p>
+                <a href="/my/approvals" class="btn btn-primary btn-lg mt-3">Go Back To Approvals</a>
+            </div>
+        </t>
+    </template>
+
+
+    <!-- Procurement Request Form -->
+    <template id="portal_request_procurement" name="Procurement Request Page">
+        <t t-call="portal.portal_layout">
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        <img t-att-src="'/approvals/static/src/img/Bag.png'" width="45px" height="45px"/>
+                        New Procurement Request</h2>
+                    <div class="container vit-fancy-form">
+
+                        <form action="/create_new_procurement" enctype="multipart/form-data" method="post" class="mt-4">
+                            <!-- Security token -->
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!--Name-->
+                            <label class="form-label">
+                                <strong>Item Name</strong>
+                            </label>
+                            <input type="text" name="name" class="form-control" required="required" value="Procurement"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Quantity -->
+                            <label class="form-label">
+                                <strong>Quantity</strong>
+                            </label>
+                            <input type="number" class="form-control" name="quantity" placeholder="Enter quantity"
+                                   required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Amount -->
+                            <label class="form-label">
+                                <strong>Amount</strong>
+                            </label>
+                            <input type="number" class="form-control" step="0.01" name="amount" placeholder="Enter amount"
+                                   required="required"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attach Document -->
+                            <label class="form-label">
+                                <strong>Attach Document</strong>
+                            </label>
+                            <input type="file" class="form-control" name="attachment"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Success Page -->
+    <template id="new_procurement_success" name="Procurement Success">
+        <t t-call="portal.portal_layout">
+            <div class="container text-center mt-5">
+                <img src="/vit_employee_self_service_portal/static/src/img/done.png" width="90" height="90"/>
+                <h2 class="mt-3">Thank You</h2>
+                <p>Your Procurement request has been successfully created.</p>
+                <a role="button" href="/my/approvals" class="btn btn-primary btn-lg mt-3">
+                    Go Back To Approvals
+                </a>
+            </div>
+        </t>
+    </template>
+
+    <!--Edit Approval-->
+    <template id="portal_edit_approval_form" name="Edit Approval Request">
+        <t t-call="portal.portal_layout">
+
+            <div class="oe_structure">
+                <section class="vit-fancy-form-section">
+                    <h2 style="text-align:center;margin:16px;font-weight: bold">
+                        Edit Approval Request</h2>
+                    <div class="container vit-fancy-form">
+
+                        <form action="/save_approval" method="post" class="form-horizontal">
+                            <!-- hidden fields -->
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="app_id" t-att-value="approval.id"/>
+
+
+                            <!-- Request Name -->
+                            <label for="name">Request Name</label>
+                            <input type="text" id="name" name="name" class="form-control"
+                                   t-att-value="approval.name or ''"/>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Date (conditional) -->
+                            <t t-if="approval.category_id and approval.category_id.id in [3,5]">
+                                <label for="date">Date</label>
+                                <input type="date" id="date" name="date" class="form-control"
+                                       t-att-value="approval.date or ''"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Contact (conditional) -->
+                            <t t-if="approval.category_id and approval.category_id.id in [5,4,3,7]">
+                                <label class="form-label">
+                                    <strong>Contact</strong>
+                                </label>
+                                <select class="form-control" name="partner_id" required="required">
+                                    <option value="">-- Select Contact --</option>
+                                    <t t-foreach="partners" t-as="partner">
+                                        <option t-att-value="partner.id"
+                                                t-att-selected="approval.partner_id and approval.partner_id.id == partner.id">
+                                            <t t-esc="partner.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Date Start -->
+                            <t t-if="approval.category_id and approval.category_id.id in [1,2,3,6]">
+                                <label for="date_start">Start Date</label>
+                                <input type="date" id="date_start" name="date_start" class="form-control"
+                                       t-att-value="approval.date_start or ''"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Date End -->
+                            <t t-if="approval.category_id and approval.category_id.id in [1,2,3,6]">
+                                <label for="date_end">End Date</label>
+                                <input type="date" id="date_end" name="date_end" class="form-control"
+                                       t-att-value="approval.date_end or ''"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Location (conditional) -->
+                            <t t-if="approval.category_id and approval.category_id.id in [1,3]">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" name="location" class="form-control"
+                                       t-att-value="approval.location or ''"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Quantity (conditional) -->
+                            <t t-if="approval.category_id and approval.category_id.id in [8]">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" id="quantity" name="quantity" class="form-control" step="1"
+                                       t-att-value="approval.quantity or ''"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Amount (conditional) -->
+                            <t t-if="approval.category_id and approval.category_id.id in [3,4,5,8]">
+                                <label for="amount">Amount</label>
+                                <input type="number" id="amount" name="amount" class="form-control" step="0.01"
+                                       t-att-value="approval.amount or ''"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Reference (conditional) -->
+                            <t t-if="approval.category_id and approval.category_id.id in [3,4]">
+                                    <label for="reference">Reference</label>
+                                    <input type="text" id="reference" name="reference" class="form-control"
+                                           t-att-value="approval.reference or ''"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Attachment (conditional) -->
+                            <t t-if="approval.category_id">
+                                <label for="attachment">Attachment</label>
+                                <input type="file" id="attachment" name="attachment" class="form-control"/>
+                            </t>
+                            <div style="margin-top:25px;"></div>
+
+                            <!-- Buttons -->
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button type="submit" class="btn btn-success btn-lg"
+                                            style="align-item:center;font-weight: bold;">Apply
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="/my/approvals" class="btn btn-danger btn-lg"
+                                       style="align-item:center;font-weight: bold;">Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+
+
+<!--            <div class="container mt-5 mb-5">-->
+<!--                <h2 class="mb-4">Edit Approval Request</h2>-->
+<!--                <form action="/save_approval" method="post" class="form-horizontal">-->
+
+<!--                    &lt;!&ndash; hidden fields &ndash;&gt;-->
+<!--                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>-->
+<!--                    <input type="hidden" name="app_id" t-att-value="approval.id"/>-->
+
+<!--                    &lt;!&ndash; Request Name &ndash;&gt;-->
+<!--                    <div class="form-group mb-3">-->
+<!--                        <label for="name">Request Name</label>-->
+<!--                        <input type="text" id="name" name="name" class="form-control"-->
+<!--                               t-att-value="approval.name or ''"/>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Date (conditional) &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [3,5]">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="date">Date</label>-->
+<!--                            <input type="date" id="date" name="date" class="form-control"-->
+<!--                                   t-att-value="approval.date or ''"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+<!--                    &lt;!&ndash; Contact (conditional) &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [5,4,3,7]">-->
+<!--                        <div class="mb-3">-->
+<!--                            <label class="form-label">-->
+<!--                                <strong>Contact</strong>-->
+<!--                            </label>-->
+<!--                            <select class="form-control" name="partner_id" required="required">-->
+<!--                                <option value="">&#45;&#45; Select Contact &#45;&#45;</option>-->
+<!--                                <t t-foreach="partners" t-as="partner">-->
+<!--                                    <option t-att-value="partner.id"-->
+<!--                                            t-att-selected="approval.partner_id and approval.partner_id.id == partner.id">-->
+<!--                                        <t t-esc="partner.name"/>-->
+<!--                                    </option>-->
+<!--                                </t>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </t>-->
+
+
+<!--                    &lt;!&ndash; Date Start &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [1,2,3,6]">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="date_start">Start Date</label>-->
+<!--                            <input type="date" id="date_start" name="date_start" class="form-control"-->
+<!--                                   t-att-value="approval.date_start or ''"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+
+<!--                    &lt;!&ndash; Date End &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [1,2,3,6]">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="date_end">End Date</label>-->
+<!--                            <input type="date" id="date_end" name="date_end" class="form-control"-->
+<!--                                   t-att-value="approval.date_end or ''"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+
+<!--                    &lt;!&ndash; Location (conditional) &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [1,3]">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="location">Location</label>-->
+<!--                            <input type="text" id="location" name="location" class="form-control"-->
+<!--                                   t-att-value="approval.location or ''"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+<!--                    &lt;!&ndash; Quantity (conditional) &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [8]">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="quantity">Quantity</label>-->
+<!--                            <input type="number" id="quantity" name="quantity" class="form-control" step="1"-->
+<!--                                   t-att-value="approval.quantity or ''"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+
+<!--                    &lt;!&ndash; Amount (conditional) &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [3,4,5,8]">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="amount">Amount</label>-->
+<!--                            <input type="number" id="amount" name="amount" class="form-control" step="0.01"-->
+<!--                                   t-att-value="approval.amount or ''"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+<!--                    &lt;!&ndash; Reference (conditional) &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id and approval.category_id.id in [3,4]">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="reference">Reference</label>-->
+<!--                            <input type="text" id="reference" name="reference" class="form-control"-->
+<!--                                   t-att-value="approval.reference or ''"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+
+
+<!--                    &lt;!&ndash; Attachment (conditional) &ndash;&gt;-->
+<!--                    <t t-if="approval.category_id">-->
+<!--                        <div class="form-group mb-3">-->
+<!--                            <label for="attachment">Attachment</label>-->
+<!--                            <input type="file" id="attachment" name="attachment" class="form-control"/>-->
+<!--                        </div>-->
+<!--                    </t>-->
+
+
+<!--                    &lt;!&ndash; Submit &ndash;&gt;-->
+<!--                    <div class="mt-4">-->
+<!--                        <button type="submit" class="btn btn-primary">Save Changes</button>-->
+<!--                        <a href="/my/approvals" class="btn btn-secondary ms-2">Cancel</a>-->
+<!--                    </div>-->
+
+<!--                </form>-->
+<!--            </div>-->
+        </t>
+    </template>
+
+</odoo>
