@@ -62,13 +62,17 @@ class MedicalPolicy(models.Model):
 
     @api.model
     def create(self, vals):
-        name = self.env['ir.sequence'].next_by_code('medical.policy.seq')
+        name = vals.get('name', '') + self.env['ir.sequence'].next_by_code('medical.policy.seq')
         vals.update({
             'name': name,
             'create_date': fields.datetime.today(),
             'create_by': self.env.uid
         })
-        return super(MedicalPolicy, self).create(vals)
+        res = super(MedicalPolicy, self).create(vals)
+
+        res.name = res.parent_id.name + ' / ' + name if res.parent_id else name
+
+        return res
 
     #   ------------------- Helper Fields ----------------------
 

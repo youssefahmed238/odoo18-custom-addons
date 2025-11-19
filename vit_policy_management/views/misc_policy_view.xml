@@ -17,7 +17,7 @@
                                 state="approved" invisible="state in ['approved', 'cancel', 'delivered']"/>
 
                         <button name="create_sub_misc_policy" string="Create Sub Policy" type="object"
-                                class="oe_highlight" invisible="state in ['cancel']"/>
+                                class="oe_highlight" invisible="state not in ['approved'] or parent_id"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
                                readonly="1"/>

@@ -68,7 +68,11 @@ class LifePolicy(models.Model):
             'create_date': fields.datetime.today(),
             'create_by': self.env.uid
         })
-        return super(LifePolicy, self).create(vals)
+        res = super(LifePolicy, self).create(vals)
+
+        res.name = res.parent_id.name + ' / ' + name if res.parent_id else name
+
+        return res
 
     #   ------------------- Helper Fields ----------------------
 

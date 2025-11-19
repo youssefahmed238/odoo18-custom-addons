@@ -74,8 +74,11 @@ class MiscPolicy(models.Model):
             'create_date': fields.datetime.today(),
             'create_by': self.env.uid
         })
-        return super(MiscPolicy, self).create(vals)
+        res = super(MiscPolicy, self).create(vals)
 
+        res.name = res.parent_id.name + ' / ' + name if res.parent_id else name
+
+        return res
 
     def _compute_child_count(self):
         """Compute the number of child policies"""
