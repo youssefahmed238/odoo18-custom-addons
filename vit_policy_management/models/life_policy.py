@@ -1,14 +1,15 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class LifePolicy(models.Model):
     _name = "life.policy"
 
-    name = fields.Char(required=True)
-    policy_Number = fields.Char(string="Policy Number")
+    name = fields.Char(readonly=True)
     sum_insured = fields.Integer(string="Sum insured")
     current = fields.Boolean(default=False, string="Current Version")
     ifrs_group_name = fields.Char(string="IFRS Group Name")
     ifrs_group_code = fields.Char(string="IFRS group code")
+    create_by = fields.Many2one('res.users', string="Create By", readonly=True)
+    create_date = fields.Datetime(string="Create Date", readonly=True)
 
     #   ------------------ Policy Basic Info Fields --------------------
 
@@ -58,6 +59,16 @@ class LifePolicy(models.Model):
         default='draft',
         copy=False,
     )
+
+    @api.model
+    def create(self, vals):
+        name = self.env['ir.sequence'].next_by_code('life.policy.seq')
+        vals.update({
+            'name': name,
+            'create_date': fields.datetime.today(),
+            'create_by': self.env.uid
+        })
+        return super(LifePolicy, self).create(vals)
 
     #   ------------------- Helper Fields ----------------------
 

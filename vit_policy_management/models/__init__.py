@@ -17,3 +17,4 @@ from . import fire_risks
 from . import misc_risks
 from . import engineering_risks
 from . import marine_risks
+from . import cover_risks_line

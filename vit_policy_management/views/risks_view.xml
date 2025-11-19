@@ -23,8 +23,8 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
-                                <field name="risk_name"/>
+                                <field name="name" readonly="state != 'draft'"/>
+                                <field name="risk_name" readonly="state != 'draft'"/>
                             </group>
                             <group>
 
@@ -36,11 +36,11 @@
                             <page name="cover" string="Covers">
                                 <field name="cover_line_id">
                                     <list>
-                                        <field name="curr"/>
-                                        <field name="cover"/>
-                                        <field name="si_now"/>
-                                        <field name="rate"/>
-                                        <field name="net_premium"/>
+                                        <field name="curr" readonly="parent.state != 'draft'"/>
+                                        <field name="cover" readonly="parent.state != 'draft'"/>
+                                        <field name="si_now" readonly="parent.state != 'draft'"/>
+                                        <field name="rate" readonly="parent.state != 'draft'"/>
+                                        <field name="net_premium" readonly="parent.state != 'draft'"/>
                                     </list>
                                 </field>
                             </page>

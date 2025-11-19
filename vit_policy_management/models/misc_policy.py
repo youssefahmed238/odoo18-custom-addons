@@ -1,15 +1,16 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class MiscPolicy(models.Model):
     _name = "misc.policy"
 
-    name = fields.Char(string="Policy Misc", required=True)
-    policy_number = fields.Char(string="Policy Number")
+    name = fields.Char(string="Policy Misc", readonly=True)
     sum_insured = fields.Integer(string="Sum insured")
     current = fields.Boolean(default=False, string="Current Version")
     ifrs_group_name = fields.Char(string="IFRS Group Name")
     ifrs_group_code = fields.Char(string="IFRS group code")
+    create_by = fields.Many2one('res.users', string="Create By", readonly=True)
+    create_date = fields.Datetime(string="Create Date", readonly=True)
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -25,6 +26,56 @@ class MiscPolicy(models.Model):
     parent_id = fields.Many2one('misc.policy', string="Parent Policy")
     child_ids = fields.One2many('misc.policy', 'parent_id', string="Sub Policies")
     child_count = fields.Integer(string="Children Count", compute='_compute_child_count')
+
+    #   ------------------ Policy Basic Info Fields --------------------
+
+    insurer = fields.Char(string="Insurer")
+    product = fields.Many2one('product.product', string="Product")
+    customer = fields.Many2one('hr.employee', string="Customer")
+    business_source_id = fields.Char(string="Business Source Id")
+    in_favor = fields.Char(string="Is Favor")
+    kay_account = fields.Char(string="Kay Account")
+    curr = fields.Selection([('egy', 'EGY')])
+    calculation_type = fields.Char(string="Calculation Type")
+    issue_date = fields.Date(string="Issue Date")
+    effective_date_from = fields.Date(string="Effective Date From")
+    effective_date_to = fields.Date(string="Effective Date To")
+    period_in_days = fields.Integer(string="Period In Days")
+    branch = fields.Char(string="Branch")
+    transaction_type = fields.Selection([('new', 'New')])
+    parent = fields.Char(string="Parent")
+    invoice = fields.Char(string="Invoice")
+    approved_by = fields.Char(string="Approved By")
+    approved_only = fields.Date(string="Approved On")
+    version = fields.Char(string="Version")
+    next_version_date = fields.Date(string="Next Version Date")
+    dayes_torenewal = fields.Integer(string="Dayes Torenewal")
+    loss_rate = fields.Integer(string="Loss Rate")
+    renewal_loss_ratio = fields.Integer(string="Renewal Loss Ratio")
+
+    #     ------------------- Policy Financial Fields ----------------------
+
+    net_premium = fields.Integer(string="Net Premium")
+    net_premium_egp = fields.Integer(string="Net Premium EGP")
+    reg_premium = fields.Integer(string="Regulator Premium")
+    payment_on = fields.Boolean(string="Payment On")
+    payment_freq = fields.Boolean(string="Payment Freq")
+    years = fields.Integer(string="Years")
+    create_certificate_puc = fields.Boolean(string="Create Certificate PUC")
+    gross_premium = fields.Integer(string="Gross Premium")
+    gross_premium_egp = fields.Integer(string="Gross Premium EGP")
+    gross_rate = fields.Integer(string="Gross Rate")
+
+    @api.model
+    def create(self, vals):
+        name = self.env['ir.sequence'].next_by_code('misc.policy.seq')
+        vals.update({
+            'name': name,
+            'create_date': fields.datetime.today(),
+            'create_by': self.env.uid
+        })
+        return super(MiscPolicy, self).create(vals)
+
 
     def _compute_child_count(self):
         """Compute the number of child policies"""

@@ -24,12 +24,31 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="policy_number" readonly="state != 'draft'" />
+                                <field name="name" readonly="state != 'draft'" />
+
                             </group>
                             <group>
 
                             </group>
                         </group>
+
+                         <notebook>
+                            <page name="life_cover" string="Cover">
+                                <field name="cover_risks_ids">
+                                    <list editable="bottom">
+                                        <field name="currency" readonly="parent.state != 'draft'"/>
+                                        <field name="cover" readonly="parent.state != 'draft'"/>
+                                        <field name="si_before" readonly="parent.state != 'draft'"/>
+                                        <field name="si_now" readonly="parent.state != 'draft'"/>
+                                        <field name="rate" readonly="parent.state != 'draft'"/>
+                                        <field name="premium" readonly="parent.state != 'draft'"/>
+                                    </list>
+                                </field>
+                            </page>
+
+
+                        </notebook>
 
                     </sheet>
                 </form>

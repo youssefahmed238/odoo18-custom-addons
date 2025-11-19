@@ -4,8 +4,14 @@ class LifeRisks(models.Model):
     _name = "life.risks"
     _description = "Life Risks"
 
-    name = fields.Char(string="Life Risks")
+    name = fields.Char(string="Life Risks", required=True)
+    policy_number = fields.Many2one('life.policy',string="Policy Number", required=True)
 
+    cover_risks_ids = fields.One2many(
+        'medical.risk.cover',
+        'life_id',
+        string="Covers"
+    )
 
     state = fields.Selection([
         ('draft', 'Draft'),

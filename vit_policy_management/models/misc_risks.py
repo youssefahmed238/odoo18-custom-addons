@@ -4,9 +4,14 @@ class MiscRisks(models.Model):
     _name = "misc.risks"
     _description = "Misc Risks"
 
-    name = fields.Char(string="Misc Risks")
+    name = fields.Char(string="Misc Risks", required=True)
+    policy_number = fields.Many2one('misc.policy',string="Policy Number", required=True)
 
-
+    cover_risks_ids = fields.One2many(
+        'medical.risk.cover',
+        'misc_id',
+        string="Covers"
+    )
 
 
 

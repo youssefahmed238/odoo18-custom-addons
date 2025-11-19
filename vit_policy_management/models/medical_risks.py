@@ -4,7 +4,15 @@ class PolicyMedicalRisks(models.Model):
     _name = "policy.medical.risks"
     _description = "Medical Risks"
 
-    name = fields.Char(string="Medical Risks")
+    name = fields.Char(string="Risks Name")
+    risk_name = fields.Many2one('medical.policy',string=" Policy Number")
+
+    cover_risks_ids = fields.One2many(
+        'medical.risk.cover',
+        'medical_id',
+        string="Covers"
+    )
+
 
 
 
@@ -28,4 +36,8 @@ class PolicyMedicalRisks(models.Model):
 
     def set_to_approved(self):
         self.state = 'approved'
+
+
+
+
 

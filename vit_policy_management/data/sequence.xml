@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequences for Medical Policy Sequence -->
+        <record id="medical_policy_sequences" model = "ir.sequence">
+            <field name="name">Medical Policy Sequence.seq</field>
+            <field name="code">medical.policy.seq</field>
+            <field name="prefix">Medical - </field>
+            <field name="padding">6</field>
+        </record>
+
+
+        <!-- Sequences for Life Policy Sequence -->
+        <record id="life_policy_sequences" model = "ir.sequence">
+            <field name="name">Life Policy Sequence.seq</field>
+            <field name="code">life.policy.seq</field>
+            <field name="prefix">Life - </field>
+            <field name="padding">6</field>
+        </record>
+
+
+        <!-- Sequences for Motor Policy Sequence -->
+        <record id="motor_policy_sequences" model = "ir.sequence">
+            <field name="name">Motor Policy Sequence.seq</field>
+            <field name="code">motor.policy.seq</field>
+            <field name="prefix">Motor - </field>
+            <field name="padding">6</field>
+        </record>
+
+
+        <!-- Sequences for Fire Policy Sequence -->
+        <record id="fire_policy_sequences" model = "ir.sequence">
+            <field name="name">Fire Policy Sequence.seq</field>
+            <field name="code">fire.policy.seq</field>
+            <field name="prefix">Fire - </field>
+            <field name="padding">6</field>
+        </record>
+
+
+         <!-- Sequences for Misc Policy Sequence -->
+        <record id="misc_policy_sequences" model = "ir.sequence">
+            <field name="name">Misc Policy Sequence.seq</field>
+            <field name="code">misc.policy.seq</field>
+            <field name="prefix">Misc - </field>
+            <field name="padding">6</field>
+        </record>
+
+        <!-- Sequences for Marine Policy Sequence -->
+        <record id="marine_policy_sequences" model = "ir.sequence">
+            <field name="name">Marine Policy Sequence.seq</field>
+            <field name="code">marine.policy.seq</field>
+            <field name="prefix">Marine - </field>
+            <field name="padding">6</field>
+        </record>
+
+
+        <!-- Sequences for Engineering Policy Sequence -->
+        <record id="engineering_policy_sequences" model = "ir.sequence">
+            <field name="name">Engineering Policy Sequence.seq</field>
+            <field name="code">engineering.policy.seq</field>
+            <field name="prefix">Engineering - </field>
+            <field name="padding">6</field>
+        </record>
+
+
+    </data>
+</odoo>

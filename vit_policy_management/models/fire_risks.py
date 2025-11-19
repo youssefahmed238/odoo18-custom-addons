@@ -4,13 +4,13 @@ class FireRisks(models.Model):
     _name = "fire.risks"
 
     name = fields.Char(string="Fire Risks", required=True)
-    policy_number = fields.Char(string="Policy Number")
-    sum_insured = fields.Integer(string="Sum insured")
-    current = fields.Boolean(default=False, string="Current Version")
-    ifrs_group_name = fields.Char(string="IFRS Group Name")
-    ifrs_group_code = fields.Char(string="IFRS group code")
+    policy_number = fields.Many2one(string="Policy Number")
 
-
+    cover_risks_ids = fields.One2many(
+        'medical.risk.cover',
+        'fire_id',
+        string="Covers"
+    )
 
     state = fields.Selection([
         ('draft', 'Draft'),

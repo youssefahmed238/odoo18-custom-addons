@@ -1,17 +1,17 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class MedicalPolicy(models.Model):
     _name = "medical.policy"
 
-    name = fields.Char(required=True)
+    name = fields.Char(readonly=True)
 
-    policy_Number = fields.Char(string="Policy Number")
     sum_insured = fields.Integer(string="Sum insured")
     current = fields.Boolean(default=False, string="Current Version")
     ifrs_group_name = fields.Char(string="IFRS Group Name")
     ifrs_group_code = fields.Char(string="IFRS group code")
-
+    create_by = fields.Many2one('res.users', string="Create By", readonly=True)
+    create_date = fields.Datetime(string="Create Date", readonly=True)
     #   ------------------ Policy Basic Info Fields --------------------
 
     insurer = fields.Char(string="Insurer")
@@ -59,6 +59,16 @@ class MedicalPolicy(models.Model):
         default='draft',
         copy=False,
     )
+
+    @api.model
+    def create(self, vals):
+        name = self.env['ir.sequence'].next_by_code('medical.policy.seq')
+        vals.update({
+            'name': name,
+            'create_date': fields.datetime.today(),
+            'create_by': self.env.uid
+        })
+        return super(MedicalPolicy, self).create(vals)
 
     #   ------------------- Helper Fields ----------------------
 
@@ -120,7 +130,7 @@ class MedicalPolicy(models.Model):
 
         default_vals = {
             'name': f"{self.name} / ",
-            'policy_Number': self.policy_Number,
+            # 'policy_Number': self.policy_Number,
             'sum_insured': self.sum_insured,
             'current': False,
             'ifrs_group_name': self.ifrs_group_name,

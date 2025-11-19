@@ -9,14 +9,17 @@
         #  Security File
         'security/ir.model.access.csv',
 
+        # Sequence File
+        'data/sequence.xml',
+
         #  Basic Menu
         'views/menu_view.xml',
         # 'views/policy_management_dashboard.xml',
-        # 'views/risks_view.xml',
+        'views/risks_view.xml',
 
         # Configuration Menu
-        # 'views/policy_category_view.xml',
-        # 'views/insurance_for_view.xml',
+        'views/policy_category_view.xml',
+        'views/insurance_for_view.xml',
 
         # Medical Menu
         'views/medical_policy_view.xml',
