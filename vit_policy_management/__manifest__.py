@@ -20,6 +20,7 @@
         # Configuration Menu
         'views/policy_category_view.xml',
         'views/insurance_for_view.xml',
+        'views/policy_product_view.xml',
 
         # Medical Menu
         'views/medical_policy_view.xml',

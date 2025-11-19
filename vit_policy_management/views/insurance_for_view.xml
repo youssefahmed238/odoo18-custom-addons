@@ -45,7 +45,7 @@
         <field name="help">Insurance For list.</field>
     </record>
     <menuitem id="menu_item_insurance_for" name="Insurance For" parent="menu_policy_configuration"
-              action="action_insurance_for"/>
+              action="action_insurance_for" sequence="50"/>
 
 
 </odoo>

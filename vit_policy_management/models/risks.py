@@ -5,17 +5,9 @@ class PolicyRisks(models.Model):
     _description = "Policy Risks"
 
     name = fields.Char(string="Name")
-    risk_name = fields.Char(string="Risk Name")
+    policy_number = fields.Char(string="Policy Number")
 
     cover_line_id = fields.One2many('policy.cover.line', 'risks_id', string='Cover Line')
-
-    # Fields Line
-    curr = fields.Char(string="Curr")
-    cover = fields.Char(string="Cover")
-    si_now = fields.Float(string="SI Now")
-    rate = fields.Float(string="Rate (%)")
-    net_premium = fields.Float(string="Net Premium")
-
 
 
 

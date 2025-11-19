@@ -89,9 +89,43 @@
                             </page>
 
                             <page name="risk_details" string="Risk Details">
+                                <group string="Risks">
+                                    <field name="risks_ids" nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="risks_number"/>
+                                            <field name="risks_id"/>
+                                        </list>
+                                    </field>
+                                </group>
 
+                                <group string="Policy Risks Premium Summary">
+                                    <field name="risks_policy_risks_premium_summary_ids" nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="risks_id"/>
+                                            <field name="currency"/>
+                                            <field name="lob"/>
+                                            <field name="si_before"/>
+                                            <field name="si_addition"/>
+                                            <field name="si_now"/>
+                                            <field name="premium"/>
+                                        </list>
+                                    </field>
+                                </group>
 
+                                <group string="Policy Premium Summary">
+                                    <field name="risks_policy_premium_summary_ids" nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="currency"/>
+                                            <field name="lob"/>
+                                            <field name="si_before"/>
+                                            <field name="si_addition"/>
+                                            <field name="si_now"/>
+                                            <field name="premium"/>
+                                        </list>
+                                    </field>
+                                </group>
                             </page>
+
 
 
                             <page name="policy_financial" string="Policy Financial">

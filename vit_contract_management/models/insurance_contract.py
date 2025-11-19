@@ -43,14 +43,17 @@ class InsuranceContractLine(models.Model):
     start_date = fields.Date(string='From', required=True)
     end_date = fields.Date(string='To', required=True)
 
-    basic = fields.Float(string='Basic', required=True)
-    commission = fields.Float(string='Commission', required=True)
-    bonus = fields.Float(string='Bonus', required=True)
+    insurance_line = fields.Many2one('policy.category', string='Insurance Line', required=True)
+    insurance_product = fields.Many2many('policy.product', string='Insurance Product', required=True)
 
-    layer_1 = fields.Float(string='Layer 1', required=True)
-    layer_2 = fields.Float(string='Layer 2', required=True)
-    layer_3 = fields.Float(string='Layer 3', required=True)
-    layer_4 = fields.Float(string='Layer 4', required=True)
+    basic = fields.Float(string='Basic %', required=True)
+    commission = fields.Float(string='Commission %', required=True)
+    bonus = fields.Float(string='Bonus %', required=True)
+
+    layer_1 = fields.Float(string='Layer 1 %', required=True)
+    layer_2 = fields.Float(string='Layer 2 %', required=True)
+    layer_3 = fields.Float(string='Layer 3 %', required=True)
+    layer_4 = fields.Float(string='Layer 4 %', required=True)
 
     @api.constrains('end_date', 'start_date')
     def _check_dates(self):
@@ -58,17 +61,22 @@ class InsuranceContractLine(models.Model):
             if record.end_date < record.start_date:
                 raise ValidationError("End date must be after start date.")
 
-    @api.constrains('basic', 'commission', 'bonus', 'layer_1', 'layer_2', 'layer_3', 'layer_4')
+    FIELDS_TO_CHECK = [
+        'basic', 'commission', 'bonus',
+        'layer_1', 'layer_2', 'layer_3', 'layer_4',
+    ]
+
+    @api.constrains(*FIELDS_TO_CHECK)
     def _check_percentage_values(self):
         for record in self:
             fields_to_check = {
-                'Basic': record.basic,
-                'Commission': record.commission,
-                'Bonus': record.bonus,
-                'Layer 1': record.layer_1,
-                'Layer 2': record.layer_2,
-                'Layer 3': record.layer_3,
-                'Layer 4': record.layer_4,
+                'Basic %': record.basic,
+                'Commission %': record.commission,
+                'Bonus %': record.bonus,
+                'Layer 1 %': record.layer_1,
+                'Layer 2 %': record.layer_2,
+                'Layer 3 %': record.layer_3,
+                'Layer 4 %': record.layer_4,
             }
             for field_name, value in fields_to_check.items():
                 if not (0 <= value <= 100):

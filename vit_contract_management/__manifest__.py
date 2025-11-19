@@ -3,7 +3,7 @@
     'name': 'Contract Management',
     'author': 'VarietyIT, Youssef Ahmed',
     'version': '18.0.0.1.0',
-    'depends': ['base'],
+    'depends': ['base', 'vit_policy_management'],
     'data': [
         # Security
         'security/ir.model.access.csv',

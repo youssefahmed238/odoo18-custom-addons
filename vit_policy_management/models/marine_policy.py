@@ -66,6 +66,10 @@ class MarinePolicy(models.Model):
     gross_premium_egp = fields.Integer(string="Gross Premium EGP")
     gross_rate = fields.Integer(string="Gross Rate")
 
+    risks_ids = fields.One2many('risks.line', 'marine_risks_id')
+    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'marine_risks_id')
+    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'marine_risks_id')
+
     @api.model
     def create(self, vals):
         name = self.env['ir.sequence'].next_by_code('marine.policy.seq')

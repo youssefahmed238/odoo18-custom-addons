@@ -60,6 +60,10 @@ class MedicalPolicy(models.Model):
         copy=False,
     )
 
+    risks_ids = fields.One2many('risks.line', 'medical_risks_id')
+    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
+    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
+
     @api.model
     def create(self, vals):
         name = vals.get('name', '') + self.env['ir.sequence'].next_by_code('medical.policy.seq')
