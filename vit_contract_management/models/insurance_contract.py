@@ -7,7 +7,7 @@ class InsuranceContract(models.Model):
     _description = 'Insurance Contract'
 
     name = fields.Char(default='New', readonly=True, store=True)
-    vendor_id = fields.Many2one('res.partner', string='Vendor', required=True)
+    vendor_id = fields.Many2one('res.partner', string='Insurer', required=True)
     date = fields.Date(required=True, default=fields.Date.context_today)
 
     state = fields.Selection([
@@ -44,11 +44,13 @@ class InsuranceContractLine(models.Model):
     end_date = fields.Date(string='To', required=True)
 
     insurance_line = fields.Many2one('policy.category', string='Insurance Line', required=True)
-    insurance_product = fields.Many2many('policy.product', string='Insurance Product', required=True)
+    insurance_products = fields.Many2many('policy.product', string='Insurance Products', required=True,
+                                         domain="[('category_id', '=', insurance_line)]")
 
     basic = fields.Float(string='Basic %', required=True)
-    commission = fields.Float(string='Commission %', required=True)
+    comp = fields.Float(string='Comp %', required=True)
     bonus = fields.Float(string='Bonus %', required=True)
+    commission = fields.Float(string='Commission %', required=True)
 
     layer_1 = fields.Float(string='Layer 1 %', required=True)
     layer_2 = fields.Float(string='Layer 2 %', required=True)
@@ -62,7 +64,7 @@ class InsuranceContractLine(models.Model):
                 raise ValidationError("End date must be after start date.")
 
     FIELDS_TO_CHECK = [
-        'basic', 'commission', 'bonus',
+        'basic', 'comp', 'bonus', 'commission',
         'layer_1', 'layer_2', 'layer_3', 'layer_4',
     ]
 
@@ -71,8 +73,9 @@ class InsuranceContractLine(models.Model):
         for record in self:
             fields_to_check = {
                 'Basic %': record.basic,
-                'Commission %': record.commission,
+                'Comp %': record.comp,
                 'Bonus %': record.bonus,
+                'Commission %': record.commission,
                 'Layer 1 %': record.layer_1,
                 'Layer 2 %': record.layer_2,
                 'Layer 3 %': record.layer_3,

@@ -1,4 +1,3 @@
-
 {
     'name': 'Contract Management',
     'author': 'VarietyIT, Youssef Ahmed',
@@ -21,4 +20,3 @@
     'auto_install': False,
     'license': 'LGPL-3',
 }
-

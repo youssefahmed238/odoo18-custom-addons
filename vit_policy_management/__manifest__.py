@@ -13,7 +13,7 @@
         'data/sequence.xml',
 
         #  Basic Menu
-        'views/menu_view.xml',
+        # 'views/menu_view.xml',
         # 'views/policy_management_dashboard.xml',
         'views/risks_view.xml',
 

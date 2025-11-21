@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--  Add commission lines to misc policy form view  -->
+    <record id="view_misc_policy_form_inherit_commission" model="ir.ui.view">
+        <field name="name">misc.policy.form.inherit.commission</field>
+        <field name="model">misc.policy</field>
+        <field name="inherit_id" ref="vit_policy_management.misc_policy_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page[@name='policy_financial']" position="inside">
+                <group string="Company Commission">
+                    <field name="commission_line_ids" readonly="1" nolabel="1">
+                        <list>
+                            <field name="basic_p"/>
+                            <field name="comp_p"/>
+                            <field name="bonus_p"/>
+                            <field name="commission_p"/>
+
+                            <field name="layer_1_p"/>
+                            <field name="layer_2_p"/>
+                            <field name="layer_3_p"/>
+                            <field name="layer_4_p"/>
+
+                            <field name="basic"/>
+                            <field name="comp"/>
+                            <field name="bonus"/>
+                            <field name="commission"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

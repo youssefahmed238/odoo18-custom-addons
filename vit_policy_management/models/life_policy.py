@@ -4,56 +4,88 @@ class LifePolicy(models.Model):
     _name = "life.policy"
 
     name = fields.Char(readonly=True)
+
     sum_insured = fields.Integer(string="Sum insured")
     current = fields.Boolean(default=False, string="Current Version")
     ifrs_group_name = fields.Char(string="IFRS Group Name")
     ifrs_group_code = fields.Char(string="IFRS group code")
-    create_by = fields.Many2one('res.users', string="Create By", readonly=True)
-    create_date = fields.Datetime(string="Create Date", readonly=True)
+
+
 
     #   ------------------ Policy Basic Info Fields --------------------
 
-    insurer = fields.Char(string="Insurer")
-    product = fields.Many2one('product.product', string="Product")
-    customer = fields.Many2one('hr.employee', string="Customer")
-    business_source_id = fields.Char(string="Business Source Id")
-    in_favor = fields.Char(string="Is Favor")
+    # -------- group 1 -------------
+    insurer = fields.Many2one('res.partner',string="Insurer")
+    product = fields.Many2one('policy.product', string="Product", domain=[('category_id', '=', 'life')])
+    customer = fields.Many2one('res.partner', string="Customer")
+    business_source_id = fields.Many2one('res.partner',string="Business Source Id")
     kay_account = fields.Char(string="Kay Account")
-    curr = fields.Selection([('egy', 'EGY')])
-    calculation_type = fields.Char(string="Calculation Type")
+    insured = fields.Many2one('res.partner', string="Insured")
+    tpa_partner = fields.Many2one('res.partner',string="TPA Partner")
+
+    # -------- group 2 -------------
+    curr = fields.Many2one('res.currency', string="Currency")
+    calculation_type = fields.Selection([
+        ('one_year', 'One Year'),
+        ('prorata', 'Prorata'),
+        ('short_period', 'Short Period'),
+        ('long_term', 'Long Period'),
+    ],string="Calculation Type")
     issue_date = fields.Date(string="Issue Date")
     effective_date_from = fields.Date(string="Effective Date From")
     effective_date_to = fields.Date(string="Effective Date To")
-    period_in_days = fields.Integer(string="Period In Days")
-    branch = fields.Char(string="Branch")
-    transaction_type = fields.Selection([('new', 'New')])
-    parent = fields.Char(string="Parent")
-    invoice = fields.Char(string="Invoice")
-    approved_by = fields.Char(string="Approved By")
-    approved_only = fields.Date(string="Approved On")
-    version = fields.Char(string="Version")
+    period_in_days = fields.Integer(string="Period In Days", compute='_compute_total_days', readonly=True)
+    payment_method = fields.Char(string="Payment Method")
+
+    # -------- group 3 -------------
+    branch = fields.Many2one('account.analytic.account',string="Branch")
+
+    # -------- group 4 -------------
+    create_by = fields.Many2one('res.users', string="Create By", readonly=True)
+    create_date = fields.Datetime(string="Create Date", readonly=True)
+    approved_by = fields.Many2one('res.users', string="Approved On", readonly=True)
+    approved_on = fields.Datetime(string="Approved On", readonly=True)
+
+    # -------- group 5 -------------
+    transaction_type = fields.Selection([
+        ('new', 'New'),
+        ('renewal', 'Renewal'),
+        ('non_technical', 'Technical Add'),
+        ('technical_refund', 'Technical Refund'),
+        ('technical_borndead', 'Technical Born Dead'),
+        ('cancel', 'Technical Cancel With Refund'),
+        ('period_extension', 'Technical Period Extension'),
+        ('cancel_add_end', 'Technical Cancel Add End'),
+        ('cancel_refund_end', 'Technical Cancel Refund End'),
+        ('cancel_inception', 'Technical Cancel From Inception'),
+        ('cancel_period_extension', 'Technical Cancel Period Extension'),
+    ])
+    parent = fields.Many2one('res.partner',string="Parent")
+    invoice = fields.Many2one('account.move',string="Invoice")
+    endorsement_reason = fields.Text(string="Endorsement Reason")
+
+    # -------- group 6 -------------
+    version = fields.Integer(string="Version")
     next_version_date = fields.Date(string="Next Version Date")
-    dayes_torenewal = fields.Integer(string="Dayes Torenewal")
-    loss_rate = fields.Integer(string="Loss Rate")
-    renewal_loss_ratio = fields.Integer(string="Renewal Loss Ratio")
+    days_to_renewal = fields.Integer(string="Days To renewal")
+    loss_rate = fields.Float(string="Loss Rate")
+    renewal_loss_ratio = fields.Float(string="Renewal Loss Ratio")
+
+
 
     #     ------------------- Policy Financial Fields ----------------------
 
-    net_premium = fields.Integer(string="Net Premium")
-    net_premium_egp = fields.Integer(string="Net Premium EGP")
-    reg_premium = fields.Integer(string="Regulator Premium")
-    payment_on = fields.Boolean(string="Payment On")
+    net_premium = fields.Float(string="Net Premium")
+    net_premium_egp = fields.Float(string="Net Premium EGP")
+    reg_premium = fields.Float(string="Regulator Premium")
+    payment_on = fields.Boolean(string="Payment on Instalments")
     payment_freq = fields.Boolean(string="Payment Freq")
-    years = fields.Integer(string="Years")
+    # years = fields.Integer(string="Years")
     create_certificate_puc = fields.Boolean(string="Create Certificate PUC")
+
     gross_premium = fields.Integer(string="Gross Premium")
     gross_premium_egp = fields.Integer(string="Gross Premium EGP")
     gross_rate = fields.Integer(string="Gross Rate")
-
-    risks_ids = fields.One2many('risks.line', 'life_risks_id')
-    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'life_risks_id')
-    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'life_risks_id')
-
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -63,6 +95,14 @@ class LifePolicy(models.Model):
         default='draft',
         copy=False,
     )
+
+    risks_ids = fields.One2many('risks.line', 'medical_risks_id')
+    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
+    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
+
+
+
+
 
     @api.model
     def create(self, vals):
@@ -199,4 +239,18 @@ class LifePolicy(models.Model):
         self.state = 'cancel'
 
     def set_to_approved(self):
-        self.state = 'approved'
+        for rec in self:
+            rec.write({
+                'state': 'approved',
+                'approved_by': self.env.user.id,
+                'approved_on': fields.Datetime.now(),
+            })
+
+    @api.depends('effective_date_from', 'effective_date_to')
+    def _compute_total_days(self):
+        for rec in self:
+            if rec.effective_date_from and rec.effective_date_to:
+                delta = rec.effective_date_to - rec.effective_date_from
+                rec.period_in_days = delta.days + 1
+            else:
+                rec.period_in_days = 0

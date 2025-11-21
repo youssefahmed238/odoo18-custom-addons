@@ -45,11 +45,12 @@
                                     <field name="end_date"/>
 
                                     <field name="insurance_line"/>
-                                    <field name="insurance_product" widget='many2many_tags'/>
+                                    <field name="insurance_products" widget='many2many_tags'/>
 
                                     <field name="basic"/>
-                                    <field name="commission"/>
+                                    <field name="comp"/>
                                     <field name="bonus"/>
+                                    <field name="commission"/>
 
                                     <field name="layer_1"/>
                                     <field name="layer_2"/>
