@@ -20,7 +20,7 @@ class MotorPolicy(models.Model):
 
             for line in contract.line_ids:
                 if record.create_date and line.start_date <= record.create_date.date() <= line.end_date:
-                    if line.insurance_line.name == 'motor':
+                    if line.insurance_line.name == 'Motor':
                         if record.product.id in line.insurance_products.ids:
                             commission_line = self.env['commission.line'].create({
                                 'motor_policy_id': record.id,

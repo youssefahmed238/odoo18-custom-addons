@@ -20,7 +20,7 @@ class EngineeringPolicy(models.Model):
 
             for line in contract.line_ids:
                 if record.create_date and line.start_date <= record.create_date.date() <= line.end_date:
-                    if line.insurance_line.name == 'engineering':
+                    if line.insurance_line.name == 'Engineering':
                         if record.product.id in line.insurance_products.ids:
                             commission_line = self.env['commission.line'].create({
                                 'engineering_policy_id': record.id,
