@@ -169,6 +169,23 @@
 
                                     </group>
                                 </group>
+                                <group>
+                                    <field name="instalment_ids" nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="instalment_date"/>
+                                            <field name="instalment_net"/>
+                                            <field name="instalment_gross"/>s
+                                        </list>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="policy_premium_summary_charges_ids" nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="name"/>
+                                            <field name="value"/>
+                                        </list>
+                                    </field>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

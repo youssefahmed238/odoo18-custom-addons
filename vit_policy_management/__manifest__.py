@@ -9,8 +9,9 @@
         #  Security File
         'security/ir.model.access.csv',
 
-        # Sequence File
+        #  File Data
         'data/sequence.xml',
+        'data/create_cat_data.xml',
 
         #  Basic Menu
         # 'views/menu_view.xml',

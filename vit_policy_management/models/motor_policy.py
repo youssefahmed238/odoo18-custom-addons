@@ -92,12 +92,19 @@ class MotorPolicy(models.Model):
         copy=False,
     )
 
-    risks_ids = fields.One2many('risks.line', 'medical_risks_id')
-    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
-    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
+    risks_ids = fields.One2many('risks.line', 'motor_risks_id')
+    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'motor_risks_id')
+    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'motor_risks_id')
 
+    instalment_ids = fields.One2many('instalment.line', 'motor_policy_id')
 
+    policy_premium_summary_charges_ids = fields.One2many('insurance.policy.premium.summary', 'motor_policy_id')
 
+    #   ------------------- Helper Fields ----------------------
+
+    parent_id = fields.Many2one('motor.policy', string="Parent Policy")
+    child_ids = fields.One2many('motor.policy', 'parent_id', string="Sub Policies")
+    child_count = fields.Integer(string="Children Count", compute='_compute_child_count')
 
     @api.model
     def create(self, vals):
@@ -112,12 +119,6 @@ class MotorPolicy(models.Model):
         res.name = res.parent_id.name + ' / ' + name if res.parent_id else name
 
         return res
-
-    #   ------------------- Helper Fields ----------------------
-
-    parent_id = fields.Many2one('motor.policy', string="Parent Policy")
-    child_ids = fields.One2many('motor.policy', 'parent_id', string="Sub Policies")
-    child_count = fields.Integer(string="Children Count", compute='_compute_child_count')
 
     def _compute_child_count(self):
         """Compute the number of child policies"""

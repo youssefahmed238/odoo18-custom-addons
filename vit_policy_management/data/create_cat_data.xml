@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="policy_category_medical" model="policy.category">
+        <field name="name">Medical</field>
+    </record>
+
+    <record id="policy_category_life" model="policy.category">
+        <field name="name">Life</field>
+    </record>
+
+    <record id="policy_category_motor" model="policy.category">
+        <field name="name">Motor</field>
+    </record>
+
+    <record id="policy_category_fire" model="policy.category">
+        <field name="name">Fire</field>
+    </record>
+
+    <record id="policy_category_engineering" model="policy.category">
+        <field name="name">Engineering</field>
+    </record>
+
+    <record id="policy_category_misc" model="policy.category">
+        <field name="name">MISC</field>
+    </record>
+
+    <record id="policy_category_marine" model="policy.category">
+        <field name="name">Marine</field>
+    </record>
+</odoo>

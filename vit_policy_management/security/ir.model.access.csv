@@ -43,3 +43,7 @@ access_medical_risk_cover,medical.risk.cover,model_medical_risk_cover,,1,1,1,1
 access_policy_product,policy.product,model_policy_product,,1,1,1,1
 
 access_risks_line,risks.line,model_risks_line,,1,1,1,1
+
+access_instalment_line,instalment.line,model_instalment_line,,1,1,1,1
+
+access_insurance_policy_premium_summary,insurance.policy.premium.summary,model_insurance_policy_premium_summary,,1,1,1,1

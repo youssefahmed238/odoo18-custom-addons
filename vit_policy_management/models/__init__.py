@@ -20,3 +20,5 @@ from . import marine_risks
 from . import cover_risks_line
 from . import policy_product
 from . import risks_line
+from . import instalment_line
+from . import insurance_policy_premium_summary

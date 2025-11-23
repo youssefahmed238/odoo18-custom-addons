@@ -93,9 +93,14 @@ class MiscPolicy(models.Model):
         copy=False,
     )
 
-    risks_ids = fields.One2many('risks.line', 'medical_risks_id')
-    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
-    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
+    risks_ids = fields.One2many('risks.line', 'misc_risks_id')
+    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'misc_risks_id')
+    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'misc_risks_id')
+
+    instalment_ids = fields.One2many('instalment.line', 'misc_policy_id')
+
+    policy_premium_summary_charges_ids = fields.One2many('insurance.policy.premium.summary', 'misc_policy_id')
+
 
     #   ------------------- Helper Fields ----------------------
 

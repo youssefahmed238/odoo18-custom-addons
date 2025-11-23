@@ -44,10 +44,10 @@
                         <group>
                             <group>
                                 <field name="create_date"/>
-                                <field name="sum_insured" readonly="state != 'draft'" />
-                                <field name="current" readonly="state != 'draft'" />
-                                <field name="ifrs_group_name" readonly="state != 'draft'" />
-                                <field name="ifrs_group_code" readonly="state != 'draft'" />
+                                <field name="sum_insured" readonly="state != 'draft'"/>
+                                <field name="current" readonly="state != 'draft'"/>
+                                <field name="ifrs_group_name" readonly="state != 'draft'"/>
+                                <field name="ifrs_group_code" readonly="state != 'draft'"/>
                                 <field name="create_by"/>
                             </group>
                             <group>
@@ -57,9 +57,9 @@
 
                         <notebook>
                             <page name="policy_basic_info" string="Policy Basic Info">
-                                 <group>
+                                <group>
                                     <!-- group 1 -->
-                                    <group >
+                                    <group>
                                         <field name="insurer" readonly="state != 'draft'"/>
                                         <field name="product" readonly="state != 'draft'"/>
                                         <field name="customer" readonly="state != 'draft'"/>
@@ -152,21 +152,37 @@
                             <page name="policy_financial" string="Policy Financial">
                                 <group>
                                     <group>
-                                        <field name="net_premium" readonly="state != 'draft'" />
-                                        <field name="net_premium_egp" readonly="state != 'draft'" />
-                                        <field name="reg_premium" readonly="state != 'draft'" />
-                                        <field name="payment_on" readonly="state != 'draft'" />
-                                        <field name="payment_freq" readonly="state != 'draft'" />
-<!--                                        <field name="years" readonly="state != 'draft'" />-->
-                                        <field name="create_certificate_puc" readonly="state != 'draft'" />
+                                        <field name="net_premium" readonly="state != 'draft'"/>
+                                        <field name="net_premium_egp" readonly="state != 'draft'"/>
+                                        <field name="reg_premium" readonly="state != 'draft'"/>
+                                        <field name="payment_on" readonly="state != 'draft'"/>
+                                        <field name="payment_freq" readonly="state != 'draft'"/>
+                                        <!--                                        <field name="years" readonly="state != 'draft'" />-->
+                                        <field name="create_certificate_puc" readonly="state != 'draft'"/>
 
                                     </group>
                                     <group>
-                                        <field name="gross_premium" readonly="state != 'draft'" />
-                                        <field name="gross_premium_egp" readonly="state != 'draft'" />
-                                        <field name="gross_rate" readonly="state != 'draft'" />
-
+                                        <field name="gross_premium" readonly="state != 'draft'"/>
+                                        <field name="gross_premium_egp" readonly="state != 'draft'"/>
+                                        <field name="gross_rate" readonly="state != 'draft'"/>
                                     </group>
+                                </group>
+                                <group>
+                                    <field name="instalment_ids" nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="instalment_date"/>
+                                            <field name="instalment_net"/>
+                                            <field name="instalment_gross"/>s
+                                        </list>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="policy_premium_summary_charges_ids" nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="name"/>
+                                            <field name="value"/>
+                                        </list>
+                                    </field>
                                 </group>
                             </page>
                         </notebook>

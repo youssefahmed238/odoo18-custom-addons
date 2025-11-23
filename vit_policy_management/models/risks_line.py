@@ -14,11 +14,11 @@ class RisksLine(models.Model):
     premium =fields.Float("Premium")
 
     medical_risks_id = fields.Many2one("medical.policy", string="Medical")
-    life_risks_id = fields.Many2one("medical.policy", string="Life")
-    motor_risks_id = fields.Many2one("medical.policy", string="motor")
-    fire_risks_id = fields.Many2one("medical.policy", string="fire")
-    misc_risks_id = fields.Many2one("medical.policy", string="misc")
-    marine_risks_id = fields.Many2one("medical.policy", string="marine")
-    end_risks_id = fields.Many2one("medical.policy", string="marine")
+    life_risks_id = fields.Many2one("life.policy", string="Life")
+    motor_risks_id = fields.Many2one("motor.policy", string="motor")
+    fire_risks_id = fields.Many2one("fire.policy", string="fire")
+    misc_risks_id = fields.Many2one("misc.policy", string="misc")
+    marine_risks_id = fields.Many2one("marine.policy", string="marine")
+    engineering_risks_id = fields.Many2one("engineering.policy", string="engineering")
 
 

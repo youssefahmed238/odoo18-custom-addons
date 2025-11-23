@@ -92,15 +92,20 @@ class FirePolicy(models.Model):
         default='draft',
         copy=False,
     )
-    risks_ids = fields.One2many('risks.line', 'medical_risks_id')
-    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
-    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'medical_risks_id')
+    risks_ids = fields.One2many('risks.line', 'fire_risks_id')
+    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'fire_risks_id')
+    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'fire_risks_id')
+
+    instalment_ids = fields.One2many('instalment.line', 'fire_policy_id')
+
+    policy_premium_summary_charges_ids = fields.One2many('insurance.policy.premium.summary', 'fire_policy_id')
+
+
     #   ------------------- Helper Fields ----------------------
 
     parent_id = fields.Many2one('life.policy', string="Parent Policy")
     child_ids = fields.One2many('life.policy', 'parent_id', string="Sub Policies")
     child_count = fields.Integer(string="Children Count", compute='_compute_child_count')
-
 
 
     @api.model
