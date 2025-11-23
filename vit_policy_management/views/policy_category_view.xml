@@ -49,6 +49,11 @@
         <field name="view_mode">list,form</field>
         <field name="help">Policy Category list.</field>
     </record>
+
+    <menuitem id="menu_policy_configuration"
+              parent="menu_policy_management" name="Configuration"
+              sequence="400"/>
+
     <menuitem id="menu_item_policy_category" name="Policy Category" parent="menu_policy_configuration"
               action="action_policy_category" sequence="10"/>
 

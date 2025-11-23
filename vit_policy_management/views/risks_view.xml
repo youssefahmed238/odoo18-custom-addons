@@ -81,6 +81,7 @@
             <field name="help">policy risks list.</field>
         </record>
 
+        <menuitem id="menu_policy_management" name="Policy Management" sequence="10"/>
 
         <menuitem id="menu_item_risks" name="Risks" parent="menu_policy_management"
               action="action_policy_risks"/>
