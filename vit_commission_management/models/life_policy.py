@@ -11,7 +11,7 @@ class LifePolicy(models.Model):
     def _compute_commission_lines(self):
         for record in self:
             contract = self.env['insurance.contract'].search([
-                ('vendor_id', '=', record.insurer.id),
+                ('partner_id', '=', record.insurer.id),
             ], limit=1)
 
             record.commission_line_ids = False
