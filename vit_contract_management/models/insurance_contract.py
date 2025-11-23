@@ -19,6 +19,19 @@ class InsuranceContract(models.Model):
 
     line_ids = fields.One2many('insurance.contract.line', 'contract_id', string='Contract Lines')
 
+    @api.constrains('line_ids')
+    def _check_overlapping_lines(self):
+        for contract in self:
+            lines = contract.line_ids
+            for i, line1 in enumerate(lines):
+                for line2 in lines[i + 1:]:
+                    if (line1.start_date <= line2.start_date <= line1.end_date) or \
+                            (line1.start_date <= line2.end_date <= line1.end_date):
+                        if line1.insurance_line == line2.insurance_line and \
+                                set(line1.insurance_products.ids).intersection(set(line2.insurance_products.ids)):
+                            raise ValidationError(
+                                "Overlapping contract lines with the same insurance line and products in same date range are not allowed.")
+
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
