@@ -9,7 +9,8 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='payment_date']" position="before">
-                <field name="source_petty_employee_id" invisible="not is_source_petty" required="is_source_petty"/>
+                <field name="source_petty_employee_id_domain" invisible="1"/>
+                <field name="source_petty_employee_id" invisible="not is_source_petty" required="is_source_petty" domain="source_petty_employee_id_domain"/>
             </xpath>
 
         </field>

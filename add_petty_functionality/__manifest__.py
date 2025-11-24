@@ -5,6 +5,7 @@
     'category': 'Accounting',
     'depends': ['account', 'hr', 'payment_internal_transfer'],
     'data': [
+        'security/petty_security.xml',
         'views/account_journal_view.xml',
         'views/account_payment_view.xml',
         'views/account_move_view.xml',

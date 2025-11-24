@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
                 <field name="is_petty"/>
+                <field name="petty_employees_ids" invisible="not is_petty" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>

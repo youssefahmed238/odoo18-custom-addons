@@ -4,11 +4,26 @@ from odoo import models, fields, api, _
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
+
+    source_petty_employee_id_domain = fields.Binary(string='Petty Employees domain', compute="_compute_petty_employee_id_domain")
     source_petty_employee_id = fields.Many2one('hr.employee', string='Source Petty Employee')
+    destination_petty_employee_id_domain = fields.Binary(string='Petty Employees domain', compute="_compute_petty_employee_id_domain")
     destination_petty_employee_id = fields.Many2one('hr.employee', string='Destination Petty Employee')
 
     is_source_petty = fields.Boolean(related='journal_id.is_petty')
     is_destination_petty = fields.Boolean(related='destination_journal_id.is_petty')
+
+    @api.depends('journal_id', 'journal_id.petty_employees_ids', 'destination_journal_id', 'destination_journal_id.petty_employees_ids')
+    def _compute_petty_employee_id_domain(self):
+        for rec in self:
+            rec.source_petty_employee_id_domain = [('id', '=', self.env.user.employee_id.id)]
+            rec.destination_petty_employee_id_domain = [('id', '=', self.env.user.employee_id.id)]
+            if self.env.user.has_group('add_petty_functionality.group_petty_account_manager'):
+                rec.source_petty_employee_id_domain = []
+                rec.destination_petty_employee_id_domain = []
+            elif self.env.user.has_group('add_petty_functionality.group_petty_branch_accountant'):
+                rec.source_petty_employee_id_domain = [('id', "in", rec.journal_id.petty_employees_ids.ids)]
+                rec.destination_petty_employee_id_domain = [('id', "in", rec.destination_journal_id.petty_employees_ids.ids)]
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
         """ Override to set petty_employee on move lines for internal transfers. """

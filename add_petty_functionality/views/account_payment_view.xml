@@ -8,9 +8,12 @@
 
             <!-- Add source petty employee field -->
             <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="source_petty_employee_id_domain" invisible="1"/>
+                <field name="destination_petty_employee_id_domain" invisible="1"/>
                 <field name="source_petty_employee_id"
                        readonly="state != 'draft'"
                        invisible="not is_source_petty"
+                       domain="source_petty_employee_id_domain"
                        required="is_source_petty"/>
             </xpath>
 
@@ -19,6 +22,7 @@
                 <field name="destination_petty_employee_id"
                        readonly="state != 'draft'"
                        invisible="not is_destination_petty or not is_internal_transfer"
+                       domain="destination_petty_employee_id_domain"
                        required="is_destination_petty"/>
             </xpath>
 
