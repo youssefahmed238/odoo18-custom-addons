@@ -10,9 +10,7 @@ class MISCPolicy(models.Model):
     @api.depends('insurer', 'product')
     def _compute_commission_lines(self):
         for record in self:
-            contract = self.env['insurance.contract'].search([
-                ('partner_id', '=', record.insurer.id),
-            ], limit=1)
+            contract = self.env['insurance.contract'].search([('partner_id', '=', record.insurer.id)])
 
             record.commission_line_ids = False
 

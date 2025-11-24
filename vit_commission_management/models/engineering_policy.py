@@ -4,15 +4,14 @@ from odoo import models, fields, api
 class EngineeringPolicy(models.Model):
     _inherit = 'engineering.policy'
 
-    commission_line_ids = fields.One2many('commission.line', 'engineering_policy_id', compute='_compute_commission_lines',
+    commission_line_ids = fields.One2many('commission.line', 'engineering_policy_id',
+                                          compute='_compute_commission_lines',
                                           store=True)
 
     @api.depends('insurer', 'product')
     def _compute_commission_lines(self):
         for record in self:
-            contract = self.env['insurance.contract'].search([
-                ('partner_id', '=', record.insurer.id),
-            ], limit=1)
+            contract = self.env['insurance.contract'].search([('partner_id', '=', record.insurer.id)])
 
             record.commission_line_ids = False
 
