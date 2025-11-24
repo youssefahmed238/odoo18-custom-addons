@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale.ProductConfiguratorDialog" t-inherit="sale.ProductConfiguratorDialog" t-inherit-mode="extension">
+        <xpath expr="//ProductList[@t-if='this.state.optionalProducts.length']" position="after">
+            <!-- Accessory Products Section -->
+            <ProductList
+                t-if="this.state.accessoryProducts.length"
+                products="this.state.accessoryProducts"
+                areProductsOptional="true"
+                title="'Add accessory products'"/>
+
+            <!-- Alternative Products Section -->
+            <ProductList
+                t-if="this.state.alternativeProducts.length"
+                products="this.state.alternativeProducts"
+                areProductsOptional="true"
+                title="'Add alternative products'"/>
+        </xpath>
+    </t>
+</templates>
