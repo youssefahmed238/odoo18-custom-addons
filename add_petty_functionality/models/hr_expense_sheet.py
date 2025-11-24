@@ -29,7 +29,9 @@ class HrExpenseSheet(models.Model):
 
                     move_to_update = payment.move_id
                     if move_to_update:
+                        journal_account = payment.journal_id.default_account_id
+
                         for line in move_to_update.line_ids:
-                            if line.account_id.name == payment.journal_id.name:
+                            if journal_account and line.account_id.id == journal_account.id:
                                 line.petty_employee = sheet.petty_employee_id.id
         return res
