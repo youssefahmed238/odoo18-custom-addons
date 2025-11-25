@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="portal_my_security_inherit" inherit_id="portal.portal_my_security">
+
+        <xpath expr="//section[@name='portal_change_password']" position="after">
+            <section name="portal_otp_section">
+                <h4>Your verification OTP code:
+                    <span class="fs-5 text-primary"
+                          t-esc="request.env.user.partner_id.otp_text or 'You not have OTP for now.'"/>
+                </h4>
+            </section>
+        </xpath>
+
+    </template>
+</odoo>
