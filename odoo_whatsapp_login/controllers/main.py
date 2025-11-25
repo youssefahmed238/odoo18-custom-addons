@@ -1,7 +1,7 @@
 import json
 import requests
 import odoo
-from odoo import http, _, fields
+from odoo import http, _ , fields
 from odoo.http import request
 from odoo.addons.web.controllers.home import Home, ensure_db
 from datetime import datetime
@@ -189,6 +189,44 @@ class CustomLoginController(Home):
                                           {'mobile': '*' * 10 + mobile[10:], 'otp_sent': True})
             return request.render('odoo_whatsapp_login.wa_otp_login_template', {'number_error': True})
 
+    # @http.route('/web/send/sms-otp', type='http', auth='public', website=True, csrf=True)
+    # def send_sms_otp(self, **kw):
+    #     if kw.get('country_code') and kw.get('mobile'):
+    #         mobile = kw.get('country_code') + kw.get('mobile')
+    #     else:
+    #         mobile = False
+    #         return request.render('odoo_whatsapp_login.wa_otp_login_template', {'invalid_mobile': True})
+    #     user = request.env['res.users'].sudo().search([]).filtered(
+    #         lambda user: user.partner_id.mobile.strip('+').replace(" ", "") == mobile.strip(
+    #             '+') if user.partner_id.mobile else False)
+    #     if user:
+    #         partner = user.partner_id
+    #         if partner:
+    #             otp = ''.join(random.choices(string.digits, k=6))
+    #             partner.write({
+    #                 'otp_time': fields.Datetime.now(),
+    #                 'otp_text': otp,
+    #             })
+    #             SmsSms = request.env["sms.sms"].sudo()
+    #             message = request.env["sms.template"].sudo().search([("id", "=", 8)],
+    #                                                       limit=1).body or "Message not found"
+    #             message = message.replace("{{ object.otp_text }}", str(otp))
+    #             SmsSms.create(
+    #                 {
+    #                     "number": partner.mobile,
+    #                     "body": message,
+    #                     "state": "outgoing",
+    #                 }
+    #             )._send()
+
+    #             return request.render('odoo_whatsapp_login.wa_otp_verification_template',
+    #                                   {'mobile': '*' * 10 + mobile[10:], 'otp_sent': True})
+
+    #     return request.render('odoo_whatsapp_login.wa_otp_login_template', {'number_error': True})
+
+
+    # EDit Code 
+
     @http.route('/web/send/sms-otp', type='http', auth='public', website=True, csrf=True)
     def send_sms_otp(self, **kw):
         if kw.get('country_code') and kw.get('mobile'):
@@ -196,12 +234,11 @@ class CustomLoginController(Home):
         else:
             mobile = False
             return request.render('odoo_whatsapp_login.wa_otp_login_template', {'invalid_mobile': True})
-
         request.session['mobile'] = mobile
         user = request.env['res.users'].sudo().search([]).filtered(
             lambda user: user.partner_id.mobile.strip('+').replace(" ", "") == mobile.strip(
                 '+') if user.partner_id.mobile else False)
-
+        # Logic to send SMS OTP to the mobile number
         if user:
             partner = user.partner_id
             if partner:
@@ -212,7 +249,7 @@ class CustomLoginController(Home):
                 })
                 SmsSms = request.env["sms.sms"].sudo()
                 message = request.env["sms.template"].sudo().search([("id", "=", 8)],
-                                                                    limit=1).body or "Message not found"
+                                                          limit=1).body or "Message not found"
                 message = message.replace("{{ object.otp_text }}", str(otp))
                 SmsSms.create(
                     {
@@ -225,33 +262,29 @@ class CustomLoginController(Home):
                 return request.render('odoo_whatsapp_login.wa_otp_verification_template',
                                       {'mobile': '*' * 10 + mobile[10:], 'otp_sent': True})
         else:
-            # Handle new user registration via SMS
             auth_signup = request.env['res.users']._get_signup_invitation_scope()
             if auth_signup == 'b2c':
                 try:
-                    # Generate OTP and store in session for new users
                     otp = ''.join(random.choices(string.digits, k=6))
                     request.session['otp'] = otp
-
-                    # Send SMS
                     SmsSms = request.env["sms.sms"].sudo()
                     message = request.env["sms.template"].sudo().search([("id", "=", 8)],
-                                                                        limit=1).body or "Message not found"
+                                                              limit=1).body or "Message not found"
                     message = message.replace("{{ object.otp_text }}", str(otp))
                     SmsSms.create(
                         {
-                            "number": mobile,
+                            "number": mobile.strip('+'),
                             "body": message,
                             "state": "outgoing",
                         }
                     )._send()
-
-                    return request.render('odoo_whatsapp_login.wa_otp_verification_template',
-                                          {'mobile': '*' * 10 + mobile[10:], 'otp_sent': True})
                 except Exception as e:
                     _logger.info(_(e))
+                return request.render('odoo_whatsapp_login.wa_otp_verification_template',
+                                      {'mobile': '*' * 10 + mobile[10:], 'otp_sent': True})
+            return request.render('odoo_whatsapp_login.wa_otp_login_template', {'number_error': True})
 
-        return request.render('odoo_whatsapp_login.wa_otp_login_template', {'number_error': True})
+
 
     @http.route('/web/verify/wa-otp', type='http', auth='public', website=True, csrf=True)
     def verify_otp(self, *args, **kw):
@@ -318,10 +351,6 @@ class CustomLoginController(Home):
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
-
-    def _signup_with_values(self, token, values):
-        super(CustomLoginController, self)._signup_with_values(token, values)
-
 
     def _prepare_signup_values(self, qcontext):
         qcontext.update(request.params.copy())

@@ -11,11 +11,11 @@
             <div t-attf-class="clearfix oe_login_buttons text-center gap-1 d-grid mb-1 {{'pt-2' if form_small else 'pt-3'}}">
                 <a href="/web/login/wa-otp" class="btn  whatsapp_login" role="button">
                     <i class="fa fa-phone" aria-hidden="false"></i>
-                    Login/Signup with Phone
+                    Login/Signup with Mobile
                 </a>
             </div>
             <div class="justify-content-between mt-2 d-flex small">
-                <a t-if="wa_reset_password_enabled" t-attf-href="/web/whatsapp/reset_password?{{ keep_query() }}">Reset Password using Phone</a>
+                <a t-if="wa_reset_password_enabled" t-attf-href="/web/whatsapp/reset_password?{{ keep_query() }}">Reset Password using Mobile</a>
             </div>
         </xpath>
     </template>
@@ -83,24 +83,24 @@
                 <form id="otp_login_form" class="oe_login_form" role="form" action="/web/send/sms-otp" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="form-group">
-                        <input type="tel" id="mobile_code" class="form-control" placeholder="Phone Number"
+                        <input type="tel" id="mobile_code" class="form-control" placeholder="Mobile Number"
                                name="mobile"/>
                     </div>
                     <input type="hidden" id="country_code" name="country_code"/>
                     <p t-if="number_error" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-                        This Phone number is not registered with any of the user
+                        This Mobile number is not registered with any of the user
                     </p>
                      <p t-if="invalid_mobile" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-                        Please enter the Phone number
+                        Please enter the Mobile number
                     </p>
                     <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
-                        <button style="width:100%" type="submit" class="btn btn-primary btn-block">Send Phone OTP</button>
+                        <button style="width:100%" type="submit" class="btn btn-primary btn-block">Send Mobile OTP</button>
                     </div>
                     <div style="margin-top:10px; display:flex;">
                         <a t-attf-href="/web/login" class="btn btn-link" role="button">Login with Password</a>
                     </div>
                     <div style="margin-top:10px; display:flex;">
-                        <a t-attf-href="/web/otp/available" class="btn btn-link" role="button">Already Have Phone OTP</a>
+                        <a t-attf-href="/web/otp/available" class="btn btn-link" role="button">Already Have Mobile OTP</a>
                     </div>
                 </form>
 
@@ -139,25 +139,25 @@
                         <input t-att-value="login" id="login" type="hidden" name="login"/>
                     </div>
                     <p t-if="otp_sent" class="alert alert-success" role="alert" style="margin-top: 5px;">
-                        OTP sent on this Phone number <t t-esc="mobile"/> successfully
+                        OTP sent on this Mobile number <t t-esc="mobile"/> successfully
                     </p>
                     <p t-if="otp_invalid" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-                        Phone OTP Invalid
+                        Mobile OTP Invalid
                     </p>
                     <p t-if="otp_expired" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-                        Phone OTP Expired
+                        Mobile OTP Expired
                     </p>
                     <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
-                        <button style="width:100%" type="submit" class="btn btn-primary btn-block">Verify Phone OTP</button>
+                        <button style="width:100%" type="submit" class="btn btn-primary btn-block">Verify Mobile OTP</button>
                     </div>
                     <t t-if="request.session.get('mobile') or mobile">
                         <div style="display:flex;">
-                            <a href="#" onclick="resendOTP()" class="btn btn-link" role="button">Resend Phone OTP</a>
+                            <a href="#" onclick="resendOTP()" class="btn btn-link" role="button">Resend Mobile OTP</a>
                         </div>
                     </t>
                     <t t-if="otp_available">
                         <div style="display:flex;">
-                            <a href="/web/send/wa-otp" class="btn btn-link" role="button">Resend Phone OTP</a>
+                            <a href="/web/send/wa-otp" class="btn btn-link" role="button">Resend Mobile OTP</a>
                         </div>
                     </t>
                 </form>
@@ -177,7 +177,7 @@
                 <form id="auth_form_otp" class="oe_login_form" role="form"
                       action="" method="post">
                     <div class="mb-2 mt-2 text-muted">
-                        To login, enter below the six-digit OTP sent on Phone.
+                        To login, enter below the six-digit OTP sent on Mobile.
                     </div>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="form-group">
@@ -188,25 +188,25 @@
                         <input t-att-value="login" id="login" type="hidden" name="login"/>
                     </div>
                     <p t-if="otp_sent" class="alert alert-success" role="alert" style="margin-top: 5px;">
-                        OTP sent on this Phone number <t t-esc="mobile"/> successfully
+                        OTP sent on this Mobile number <t t-esc="mobile"/> successfully
                     </p>
                     <p t-if="otp_invalid" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-                        Phone OTP Invalid
+                        Mobile OTP Invalid
                     </p>
                     <p t-if="otp_expired" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-                        Phone OTP Expired
+                        Mobile OTP Expired
                     </p>
                     <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
                         <button style="width:100%" type="submit" class="btn btn-primary btn-block">Login</button>
                     </div>
                     <t t-if="request.session.get('mobile') or mobile">
                         <div style="display:flex;">
-                            <a href="#" onclick="resendOTP()" class="btn btn-link" role="button">Resend Phone OTP</a>
+                            <a href="#" onclick="resendOTP()" class="btn btn-link" role="button">Resend Mobile OTP</a>
                         </div>
                     </t>
                     <t t-if="otp_available">
                         <div style="display:flex;">
-                            <a href="/web/send/wa-otp" class="btn btn-link" role="button">Resend Phone OTP</a>
+                            <a href="/web/send/wa-otp" class="btn btn-link" role="button">Resend Mobile OTP</a>
                         </div>
                     </t>
                 </form>
@@ -296,11 +296,11 @@
                 <!-- Send OTP Form -->
                 <form id="otp_login_form" t-if="not message_sent" class="oe_login_form" role="form" action="" method="post">
                     <div class="mb-2 mt-2 text-muted">
-                        To reset password, enter your Phone number linked with the user.
+                        To reset password, enter your Mobile number linked with the user.
                     </div>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="form-group">
-                        <input type="tel" id="mobile_code" class="form-control" placeholder="Phone Number"
+                        <input type="tel" id="mobile_code" class="form-control" placeholder="Mobile Number"
                                name="mobile"/>
                     </div>
                     <input type="hidden" id="country_code" name="country_code"/>
@@ -335,12 +335,12 @@
         </t>
     </template>
 
-    <template id="odoo_whatsapp_login.signup_fields" name="Phone Signup Fields" inherit_id="auth_signup.fields">
+    <template id="odoo_whatsapp_login.signup_fields" name="Mobile Signup Fields" inherit_id="auth_signup.fields">
         <xpath expr="//div[hasclass('field-name')]" position="after">
             <div class="mb-3 field-mobile">
-                <label for="name">Phone Number</label>
+                <label for="name">Mobile Number</label>
                 <input type="tel" name="mobile" t-att-value="request.session.get('mobile') or mobile" id="mobile" class="form-control form-control-sm"
-                    required="required" placeholder="+9665XXXXXXXX"/>
+                    required="required" placeholder="+9665XXXXXXXX" t-att-readonly="1"/>
             </div>
         </xpath>
     </template>
