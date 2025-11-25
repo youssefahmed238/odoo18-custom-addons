@@ -16,7 +16,7 @@ class LifePolicy(models.Model):
 
     # -------- group 1 -------------
     insurer = fields.Many2one('res.partner',string="Insurer")
-    product = fields.Many2one('policy.product', string="Product", domain=[('category_id', '=', 'life')])
+    product = fields.Many2one('policy.product', string="Product", domain=[('category_id', '=', 'Life')])
     customer = fields.Many2one('res.partner', string="Customer")
     business_source_id = fields.Many2one('res.partner',string="Business Source Id")
     kay_account = fields.Char(string="Kay Account")

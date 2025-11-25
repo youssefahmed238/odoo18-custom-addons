@@ -10,7 +10,8 @@ class MarinePolicy(models.Model):
     @api.depends('insurer', 'product')
     def _compute_commission_lines(self):
         for record in self:
-            contract = self.env['insurance.contract'].search([('partner_id', '=', record.insurer.id)])
+            contract = self.env['insurance.contract'].search(
+                [('partner_id', '=', record.insurer.id), ('state', '=', 'confirm')])
 
             record.commission_line_ids = False
 
