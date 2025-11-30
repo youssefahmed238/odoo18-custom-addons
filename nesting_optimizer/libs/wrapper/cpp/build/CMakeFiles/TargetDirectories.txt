@@ -1,0 +1,3 @@
+/odoo18/custom/addons/nesting_optimizer/libs/wrapper/cpp/build/CMakeFiles/nest2d_wrapper.dir
+/odoo18/custom/addons/nesting_optimizer/libs/wrapper/cpp/build/CMakeFiles/edit_cache.dir
+/odoo18/custom/addons/nesting_optimizer/libs/wrapper/cpp/build/CMakeFiles/rebuild_cache.dir

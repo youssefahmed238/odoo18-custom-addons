@@ -1,0 +1,10 @@
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/generate-cpp.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/nlopt.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/package.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/package_source.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/edit_cache.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/rebuild_cache.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/list_install_components.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/install.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/install/local.dir
+/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build/CMakeFiles/install/strip.dir
