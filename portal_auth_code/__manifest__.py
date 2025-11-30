@@ -1,9 +1,9 @@
 {
-    'name': 'Portal OTP',
+    'name': 'Portal Authentication Code',
     'author': 'Youssef Ahmed',
     'version': '1.0',
     'category': 'Portal',
-    'depends': ['portal', 'odoo_all_in_one_whatsapp_ent'],
+    'depends': ['portal'],
     'data': [
         'views/portal_security_inherit.xml',
     ],

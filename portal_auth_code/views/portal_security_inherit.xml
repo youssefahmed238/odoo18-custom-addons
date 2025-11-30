@@ -5,9 +5,9 @@
 
         <xpath expr="//section[@name='portal_change_password']" position="after">
             <section name="portal_otp_section">
-                <h4>Your verification OTP code:
+                <h4>Your authentication code:
                     <span class="fs-5 text-primary"
-                          t-esc="request.env.user.partner_id.otp_text or 'You not have OTP for now.'"/>
+                          t-esc="request.env.user.partner_id.auth_code or 'You not have auth code for now.'"/>
                 </h4>
             </section>
         </xpath>
