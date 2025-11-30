@@ -30,35 +30,36 @@ class CommissionLine(models.Model):
     bonus = fields.Float(string='Bonus', compute='_compute_values', store=True)
     commission = fields.Float(string='Commission', compute='_compute_values', store=True)
 
-    net_premium = fields.Float(string="Net Premium", compute='_get_net_premium', store=True)
+    net_premium_egp = fields.Float(string="Net Premium EGP", compute='_get_net_premium_egp', store=True)
 
-    @api.depends('medical_policy_id.net_premium', 'life_policy_id.net_premium', 'motor_policy_id.net_premium',
-                 'fire_policy_id.net_premium', 'engineering_policy_id.net_premium',
-                 'misc_policy_id.net_premium', 'marine_policy_id.net_premium')
-    def _get_net_premium(self):
+
+    @api.depends('medical_policy_id.net_premium_egp', 'life_policy_id.net_premium_egp', 'motor_policy_id.net_premium_egp',
+                 'fire_policy_id.net_premium_egp', 'engineering_policy_id.net_premium_egp',
+                 'misc_policy_id.net_premium_egp', 'marine_policy_id.net_premium_egp')
+    def _get_net_premium_egp(self):
         for record in self:
             if record.medical_policy_id:
-                record.net_premium = record.medical_policy_id.net_premium
+                record.net_premium_egp = record.medical_policy_id.net_premium_egp
             elif record.life_policy_id:
-                record.net_premium = record.life_policy_id.net_premium
+                record.net_premium_egp = record.life_policy_id.net_premium_egp
             elif record.motor_policy_id:
-                record.net_premium = record.motor_policy_id.net_premium
+                record.net_premium_egp = record.motor_policy_id.net_premium_egp
             elif record.fire_policy_id:
-                record.net_premium = record.fire_policy_id.net_premium
+                record.net_premium_egp = record.fire_policy_id.net_premium_egp
             elif record.engineering_policy_id:
-                record.net_premium = record.engineering_policy_id.net_premium
+                record.net_premium_egp = record.engineering_policy_id.net_premium_egp
             elif record.misc_policy_id:
-                record.net_premium = record.misc_policy_id.net_premium
+                record.net_premium_egp = record.misc_policy_id.net_premium_egp
             elif record.marine_policy_id:
-                record.net_premium = record.marine_policy_id.net_premium
+                record.net_premium_egp = record.marine_policy_id.net_premium_egp
             else:
-                record.net_premium = 0
+                record.net_premium_egp = 0
 
-    @api.depends('net_premium', 'contract_line_id.basic', 'contract_line_id.comp',
+    @api.depends('net_premium_egp', 'contract_line_id.basic', 'contract_line_id.comp',
                  'contract_line_id.bonus', 'contract_line_id.commission')
     def _compute_values(self):
         for record in self:
             for field in ['basic', 'comp', 'bonus', 'commission']:
                 percentage = getattr(record.contract_line_id, field)
-                value = (record.net_premium * percentage) / 100
+                value = (record.net_premium_egp * percentage) / 100
                 setattr(record, field, value)
