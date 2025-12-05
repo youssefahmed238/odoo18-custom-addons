@@ -19,7 +19,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_cmake_targets_defined "")
 set(_cmake_targets_not_defined "")
 set(_cmake_expected_targets "")
-foreach(_cmake_expected_target IN ITEMS Libnest2D::stdThreading Libnest2D::clipperBackend Libnest2D::nloptOptimizer Libnest2D::libnest2d Libnest2D::libnest2d_headeronly)
+foreach(_cmake_expected_target IN ITEMS Libnest2D::stdThreading Libnest2D::clipperBackend Libnest2D::nloptOptimizer Libnest2D::libnest2d Libnest2D::libnest2d_headeronly Libnest2D::libnest2d_clipper_nlopt)
   list(APPEND _cmake_expected_targets "${_cmake_expected_target}")
   if(TARGET "${_cmake_expected_target}")
     list(APPEND _cmake_targets_defined "${_cmake_expected_target}")
@@ -83,7 +83,7 @@ set_target_properties(Libnest2D::nloptOptimizer PROPERTIES
 add_library(Libnest2D::libnest2d INTERFACE IMPORTED)
 
 set_target_properties(Libnest2D::libnest2d PROPERTIES
-  INTERFACE_LINK_LIBRARIES "Libnest2D::libnest2d_headeronly"
+  INTERFACE_LINK_LIBRARIES "Libnest2D::libnest2d_clipper_nlopt"
 )
 
 # Create imported target Libnest2D::libnest2d_headeronly
@@ -92,6 +92,14 @@ add_library(Libnest2D::libnest2d_headeronly INTERFACE IMPORTED)
 set_target_properties(Libnest2D::libnest2d_headeronly PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "LIBNEST2D_THREADING_std;LIBNEST2D_GEOMETRIES_clipper;LIBNEST2D_OPTIMIZER_nlopt"
   INTERFACE_LINK_LIBRARIES "Libnest2D::stdThreading;Libnest2D::clipperBackend;Libnest2D::nloptOptimizer"
+)
+
+# Create imported target Libnest2D::libnest2d_clipper_nlopt
+add_library(Libnest2D::libnest2d_clipper_nlopt STATIC IMPORTED)
+
+set_target_properties(Libnest2D::libnest2d_clipper_nlopt PROPERTIES
+  INTERFACE_COMPILE_DEFINITIONS "LIBNEST2D_STATIC"
+  INTERFACE_LINK_LIBRARIES "Libnest2D::libnest2d_headeronly"
 )
 
 if(CMAKE_VERSION VERSION_LESS 3.0.0)

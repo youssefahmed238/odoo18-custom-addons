@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /odoo18/custom/addons/nesting_optimizer/libs/libnest2d
+CMAKE_SOURCE_DIR = /odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build
+CMAKE_BINARY_DIR = /odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,7 +87,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Devel\" \"Unspecified\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -132,9 +132,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build/CMakeFiles /odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/build/CMakeFiles /odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -162,41 +162,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named libnest2d_clipper_nlopt
+# Target rules for targets named polyclipping
 
 # Build rule for target.
-libnest2d_clipper_nlopt: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 libnest2d_clipper_nlopt
-.PHONY : libnest2d_clipper_nlopt
+polyclipping: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 polyclipping
+.PHONY : polyclipping
 
 # fast build rule for target.
-libnest2d_clipper_nlopt/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libnest2d_clipper_nlopt.dir/build.make CMakeFiles/libnest2d_clipper_nlopt.dir/build
-.PHONY : libnest2d_clipper_nlopt/fast
+polyclipping/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/polyclipping.dir/build.make CMakeFiles/polyclipping.dir/build
+.PHONY : polyclipping/fast
 
-src/libnest2d.o: src/libnest2d.cpp.o
-.PHONY : src/libnest2d.o
+clipper.o: clipper.cpp.o
+.PHONY : clipper.o
 
 # target to build an object file
-src/libnest2d.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libnest2d_clipper_nlopt.dir/build.make CMakeFiles/libnest2d_clipper_nlopt.dir/src/libnest2d.cpp.o
-.PHONY : src/libnest2d.cpp.o
+clipper.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/polyclipping.dir/build.make CMakeFiles/polyclipping.dir/clipper.cpp.o
+.PHONY : clipper.cpp.o
 
-src/libnest2d.i: src/libnest2d.cpp.i
-.PHONY : src/libnest2d.i
+clipper.i: clipper.cpp.i
+.PHONY : clipper.i
 
 # target to preprocess a source file
-src/libnest2d.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libnest2d_clipper_nlopt.dir/build.make CMakeFiles/libnest2d_clipper_nlopt.dir/src/libnest2d.cpp.i
-.PHONY : src/libnest2d.cpp.i
+clipper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/polyclipping.dir/build.make CMakeFiles/polyclipping.dir/clipper.cpp.i
+.PHONY : clipper.cpp.i
 
-src/libnest2d.s: src/libnest2d.cpp.s
-.PHONY : src/libnest2d.s
+clipper.s: clipper.cpp.s
+.PHONY : clipper.s
 
 # target to generate assembly for a file
-src/libnest2d.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libnest2d_clipper_nlopt.dir/build.make CMakeFiles/libnest2d_clipper_nlopt.dir/src/libnest2d.cpp.s
-.PHONY : src/libnest2d.cpp.s
+clipper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/polyclipping.dir/build.make CMakeFiles/polyclipping.dir/clipper.cpp.s
+.PHONY : clipper.cpp.s
 
 # Help Target
 help:
@@ -210,10 +210,10 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... libnest2d_clipper_nlopt"
-	@echo "... src/libnest2d.o"
-	@echo "... src/libnest2d.i"
-	@echo "... src/libnest2d.s"
+	@echo "... polyclipping"
+	@echo "... clipper.o"
+	@echo "... clipper.i"
+	@echo "... clipper.s"
 .PHONY : help
 
 

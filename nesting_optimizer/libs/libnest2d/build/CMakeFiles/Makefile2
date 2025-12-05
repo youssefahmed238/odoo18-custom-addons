@@ -63,6 +63,7 @@ CMAKE_BINARY_DIR = /odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/libnest2d_clipper_nlopt.dir/all
 all: include/libnest2d/backends/clipper/all
 all: include/libnest2d/optimizers/nlopt/all
 .PHONY : all
@@ -73,6 +74,7 @@ preinstall: include/libnest2d/optimizers/nlopt/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/libnest2d_clipper_nlopt.dir/clean
 clean: include/libnest2d/backends/clipper/clean
 clean: include/libnest2d/optimizers/nlopt/clean
 .PHONY : clean
@@ -106,6 +108,32 @@ include/libnest2d/optimizers/nlopt/preinstall:
 # Recursive "clean" directory target.
 include/libnest2d/optimizers/nlopt/clean:
 .PHONY : include/libnest2d/optimizers/nlopt/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/libnest2d_clipper_nlopt.dir
+
+# All Build rule for target.
+CMakeFiles/libnest2d_clipper_nlopt.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libnest2d_clipper_nlopt.dir/build.make CMakeFiles/libnest2d_clipper_nlopt.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libnest2d_clipper_nlopt.dir/build.make CMakeFiles/libnest2d_clipper_nlopt.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build/CMakeFiles --progress-num=1,2 "Built target libnest2d_clipper_nlopt"
+.PHONY : CMakeFiles/libnest2d_clipper_nlopt.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/libnest2d_clipper_nlopt.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/libnest2d_clipper_nlopt.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /odoo18/custom/addons/nesting_optimizer/libs/libnest2d/build/CMakeFiles 0
+.PHONY : CMakeFiles/libnest2d_clipper_nlopt.dir/rule
+
+# Convenience name for target.
+libnest2d_clipper_nlopt: CMakeFiles/libnest2d_clipper_nlopt.dir/rule
+.PHONY : libnest2d_clipper_nlopt
+
+# clean rule for target.
+CMakeFiles/libnest2d_clipper_nlopt.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libnest2d_clipper_nlopt.dir/build.make CMakeFiles/libnest2d_clipper_nlopt.dir/clean
+.PHONY : CMakeFiles/libnest2d_clipper_nlopt.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

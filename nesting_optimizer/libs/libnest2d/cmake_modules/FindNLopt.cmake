@@ -19,22 +19,32 @@ else()
     set(NLopt_BUILD_TYPE RELEASE)
 endif()
 
-set(NLOPT_CUSTOM_PATH "/odoo18/custom/addons/nesting_optimizer/libs/nlopt/build")
-
 FIND_PATH(NLopt_INCLUDE_DIRS nlopt.hpp
-    ${NLOPT_CUSTOM_PATH}
-    ${NLOPT_CUSTOM_PATH}/include
-    ${NLOPT_CUSTOM_PATH}/../include
-    /usr/local/include
+    $ENV{NLopt_PATH}
+    $ENV{NLopt_PATH}/cpp/
+    $ENV{NLopt_PATH}/include/
+    ${CMAKE_PREFIX_PATH}/include/nlopt
+    ${CMAKE_PREFIX_PATH}/include/
+    /opt/local/include/
+    /opt/local/include/nlopt/
+    /usr/local/include/
+    /usr/local/include/nlopt/
     /usr/include
-)
+    /usr/include/nlopt/)
 
 set(LIB_SEARCHDIRS 
-    ${NLOPT_CUSTOM_PATH}
-    ${NLOPT_CUSTOM_PATH}/lib
-    ${NLOPT_CUSTOM_PATH}/../lib
-    /usr/local/lib
-    /usr/lib
+    $ENV{NLopt_PATH}
+    $ENV{NLopt_PATH}/cpp/
+    $ENV{NLopt_PATH}/cpp/build/
+    $ENV{NLopt_PATH}/lib/
+    $ENV{NLopt_PATH}/lib/nlopt/
+    ${CMAKE_PREFIX_PATH}/lib/
+    ${CMAKE_PREFIX_PATH}/lib/nlopt/
+    /opt/local/lib/
+    /opt/local/lib/nlopt/
+    /usr/local/lib/
+    /usr/local/lib/nlopt/
+    /usr/lib/nlopt
 )
 
 set(_deb_postfix "d")

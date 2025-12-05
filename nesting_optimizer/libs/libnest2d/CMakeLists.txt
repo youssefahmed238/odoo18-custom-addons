@@ -5,6 +5,9 @@ project(Libnest2D)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED)
 
+# Set default CMAKE_PREFIX_PATH to local dependencies
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../dependencies/install")
+
 # Add our own cmake module path.
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules/)
 
@@ -17,7 +20,9 @@ option(LIBNEST2D_BUILD_UNITTESTS "If enabled, googletest framework will be downl
 
 option(BUILD_SHARED_LIBS "Build shared libs instead of static (applies for dependencies as well)" OFF)
 
-option(LIBNEST2D_HEADER_ONLY "If enabled static library will not be built." ON)
+option(LIBNEST2D_HEADER_ONLY "If enabled static library will not be built." OFF)
+
+option(RP_ENABLE_DOWNLOADING "Enable automatic downloading of dependencies" OFF)
 
 set(GEOMETRY_BACKENDS clipper boost eigen)
 set(LIBNEST2D_GEOMETRIES clipper CACHE STRING "Geometry backend")

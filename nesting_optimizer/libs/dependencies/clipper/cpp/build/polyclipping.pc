@@ -1,0 +1,13 @@
+prefix=/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install
+exec_prefix=/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install
+libdir=/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/lib
+sharedlibdir=/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/lib
+includedir=/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/include/polyclipping
+
+Name: polyclipping
+Description: polygon clipping library
+Version: 
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lpolyclipping
+Cflags: -I${includedir}

@@ -1,0 +1,5 @@
+/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/include/polyclipping/clipper.hpp
+/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/lib/libpolyclipping.so.22.0.0
+/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/lib/libpolyclipping.so.22
+/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/lib/libpolyclipping.so
+/odoo18/custom/addons/nesting_optimizer/libs/dependencies/clipper/cpp/../../install/share/pkgconfig/polyclipping.pc
