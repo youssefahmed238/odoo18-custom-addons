@@ -192,7 +192,7 @@ class FsnXyzReport(models.AbstractModel):
             sm.state = 'done'
             AND pp.active = TRUE
             AND pt.active = TRUE
-            AND pt.type = 'product'
+            AND pt.is_storable = TRUE
             AND svl.remaining_value IS NOT NULL
         """
         params = [

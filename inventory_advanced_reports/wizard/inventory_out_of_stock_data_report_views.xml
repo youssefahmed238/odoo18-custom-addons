@@ -16,7 +16,7 @@
         <field name="name">inventory.out.of.stock.data.report.view.tree</field>
         <field name="model">inventory.out.of.stock.data.report</field>
         <field name="arch" type="xml">
-            <tree string="Inventory Out Of Stock Analysis" create="False">
+            <list string="Inventory Out Of Stock Analysis" create="False">
                 <field name="company_id"/>
                 <field name="warehouse_id"/>
                 <field name="product_id"/>
@@ -34,7 +34,7 @@
                 <field name="out_of_stock_value"/>
                 <field name="turnover_ratio"/>
                 <field name="fsn_classification"/>
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

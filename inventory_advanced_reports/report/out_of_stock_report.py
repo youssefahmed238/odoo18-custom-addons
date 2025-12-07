@@ -202,7 +202,7 @@ class OutOfStockReport(models.AbstractModel):
                     ) sld_src ON sm.id = sld_src.move_id
                     WHERE pp.active = TRUE
                             AND pt.active = TRUE
-                            AND pt.type = 'product'
+                            AND pt.is_storable = TRUE
                                 """
         params = [
             start_date, end_date,

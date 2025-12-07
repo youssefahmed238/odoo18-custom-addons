@@ -246,7 +246,7 @@ class InventoryStockMovementReport(models.TransientModel):
             'type': 'ir.actions.report',
             'data': {'model': 'inventory.stock.movement.report',
                      'options': json.dumps
-                     (data, default=fields.date_utils.json_default),
+                     (data, default=str),
                      'output_format': 'xlsx',
                      'report_name': 'Excel Report',
                      },

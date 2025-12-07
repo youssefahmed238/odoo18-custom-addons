@@ -253,7 +253,7 @@ class InventoryFsnReport(models.TransientModel):
             'type': 'ir.actions.report',
             'data': {'model': 'inventory.fsn.report',
                      'options': json.dumps(
-                         data, default=fields.date_utils.json_default),
+                         data, default=str),
                      'output_format': 'xlsx',
                      'report_name': 'Excel Report',
                      },
@@ -329,13 +329,13 @@ class InventoryFsnReport(models.TransientModel):
             'inventory_advanced_reports.'
             'inventory_fsn_data_report_view_tree').id
         graph_report = self.env.context.get("graph_report", False)
-        report_views = [(tree_view_id, 'tree'),
+        report_views = [(tree_view_id, 'list'),
                         (graph_view_id, 'graph')]
-        view_mode = "tree,graph"
+        view_mode = "list,graph"
         if graph_report:
             report_views = [(graph_view_id, 'graph'),
-                            (tree_view_id, 'tree')]
-            view_mode = "graph,tree"
+                            (tree_view_id, 'list')]
+            view_mode = "graph,list"
         return {
             'name': _('Inventory FSN Report'),
             'domain': [('data_id', '=', self.id)],

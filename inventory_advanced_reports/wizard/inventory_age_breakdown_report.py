@@ -127,7 +127,7 @@ class InventoryAgeBreakdownReport(models.TransientModel):
                 SELECT EXTRACT(day FROM CURRENT_DATE - sm.date) AS days_between
             ) AS age ON true
             INNER JOIN stock_valuation_layer svl ON svl.stock_move_id = sm.id
-            WHERE pt.detailed_type = 'product'
+            WHERE pt.is_storable = True
                 AND sm.state = 'done'
                 AND svl.remaining_value IS NOT NULL
                 """
@@ -213,7 +213,7 @@ class InventoryAgeBreakdownReport(models.TransientModel):
             'type': 'ir.actions.report',
             'data': {'model': 'inventory.age.breakdown.report',
                      'options': json.dumps(
-                         data, default=fields.date_utils.json_default),
+                         data, default=str),
                      'output_format': 'xlsx',
                      'report_name': 'Excel Report',
                      },

@@ -218,7 +218,7 @@ class InventoryOutOfStockReport(models.TransientModel):
                 ) sld_src ON sm.id = sld_src.move_id
                 WHERE pp.active = TRUE
                         AND pt.active = TRUE
-                        AND pt.type = 'product'
+                        AND pt.is_storable = TRUE
                         """
         params = [
             self.start_date, self.end_date,
@@ -313,7 +313,7 @@ class InventoryOutOfStockReport(models.TransientModel):
             'type': 'ir.actions.report',
             'data': {'model': 'inventory.out.of.stock.report',
                      'options': json.dumps(
-                         data, default=fields.date_utils.json_default),
+                         data, default=str),
                      'output_format': 'xlsx',
                      'report_name': 'Excel Report',
                      },
@@ -411,13 +411,13 @@ class InventoryOutOfStockReport(models.TransientModel):
             'inventory_advanced_reports.'
             'inventory_out_of_stock_data_report_view_tree').id
         graph_report = self.env.context.get("graph_report", False)
-        report_views = [(tree_view_id, 'tree'),
+        report_views = [(tree_view_id, 'list'),
                         (graph_view_id, 'graph')]
-        view_mode = "tree,graph"
+        view_mode = "list,graph"
         if graph_report:
             report_views = [(graph_view_id, 'graph'),
-                            (tree_view_id, 'tree')]
-            view_mode = "graph,tree"
+                            (tree_view_id, 'list')]
+            view_mode = "graph,list"
         return {
             'name': _('Inventory Out Of Stock Report'),
             'domain': [('data_id', '=', self.id)],

@@ -21,7 +21,7 @@
 ###############################################################################
 {
     "name": "Advanced Inventory Reports",
-    "version": "17.0.1.0.0",
+    "version": "18.0.1.0.0",
     "category": 'Warehouse',
     "summary": """Helps to Manage different types of Inventory Reports like FSN
     Report, Out Of Stock Report, Inventory XYZ Report etc.""",
