@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Commission Management form view -->
+    <record id="view_commission_line_form" model="ir.ui.view">
+        <field name="name">commission.line.form</field>
+        <field name="model">commission.line</field>
+        <field name="arch" type="xml">
+            <form string="Commission Line" create="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="medical_policy_id" invisible="not medical_policy_id" readonly="1"/>
+                            <field name="life_policy_id" invisible="not life_policy_id" readonly="1"/>
+                            <field name="motor_policy_id" invisible="not motor_policy_id" readonly="1"/>
+                            <field name="fire_policy_id" invisible="not fire_policy_id" readonly="1"/>
+                            <field name="engineering_policy_id" invisible="not engineering_policy_id" readonly="1"/>
+                            <field name="misc_policy_id" invisible="not misc_policy_id" readonly="1"/>
+                            <field name="marine_policy_id" invisible="not marine_policy_id" readonly="1"/>
+
+                            <field name="contract_id" readonly="1"/>
+
+                            <field name="contract_insurer" readonly="1"/>
+
+                            <field name="contract_start_date" readonly="1"/>
+                            <field name="contract_end_date" readonly="1"/>
+
+                            <field name="insurance_line" readonly="1"/>
+                            <field name="insurance_product" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="basic" readonly="0"/>
+                            <field name="comp" readonly="0"/>
+                            <field name="transportation_comm" readonly="0"/>
+                            <field name="bonus" readonly="0"/>
+                            <field name="commission" readonly="0"/>
+
+                            <field name="total_amount" readonly="0"/>
+
+                            <field name="net_premium_egp" readonly="0"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Commission Management tree view -->
+    <record id="view_commission_line_tree" model="ir.ui.view">
+        <field name="name">commission.line.tree</field>
+        <field name="model">commission.line</field>
+        <field name="arch" type="xml">
+            <list string="Commission Lines" create="false">
+
+                <field name="policy_name"/>
+                <field name="contract_id"/>
+
+                <field name="contract_insurer"/>
+
+                <field name="contract_start_date"/>
+                <field name="contract_end_date"/>
+
+                <field name="insurance_line"/>
+                <field name="insurance_product"/>
+
+
+                <field name="basic"/>
+                <field name="comp"/>
+                <field name="transportation_comm"/>
+                <field name="bonus"/>
+                <field name="commission"/>
+
+                <field name="total_amount"/>
+
+                <field name="net_premium_egp"/>
+
+            </list>
+        </field>
+    </record>
+
+    <!-- Commission Management Search View -->
+    <record id="view_commission_line_search" model="ir.ui.view">
+        <field name="name">commission.line.search</field>
+        <field name="model">commission.line</field>
+        <field name="arch" type="xml">
+            <search string="Commission Lines">
+                <field name="policy_name"/>
+                <field name="contract_id"/>
+                <field name="contract_insurer"/>
+                <field name="insurance_line"/>
+                <field name="insurance_product"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_commission_management" model="ir.actions.act_window">
+        <field name="name">Commission Management</field>
+        <field name="res_model">commission.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

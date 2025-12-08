@@ -4,6 +4,7 @@ from odoo import models, fields, api
 class LifePolicy(models.Model):
     _inherit = 'life.policy'
 
+    apply_commission = fields.Boolean(string='Apply Commission', default=True)
     commission_line_ids = fields.One2many('commission.line', 'life_policy_id', compute='_compute_commission_lines',
                                           store=True)
 
@@ -11,21 +12,20 @@ class LifePolicy(models.Model):
     def _compute_commission_lines(self):
         for record in self:
             contract = self.env['insurance.contract'].search(
-                [('partner_id', '=', record.insurer.id), ('state', '=', 'confirm')])
+                [('partner_id', '=', record.insurer.id), ('state', '=', 'confirm'),
+                 ('start_date', '<=', record.create_date.date()),
+                 ('end_date', '>=', record.create_date.date())])
 
-            record.commission_line_ids = False
+            commission_line_ids = self.env['commission.line'].search(
+                [('contract_id', '=', contract.id),
+                 ('insurance_line.name', '=', 'Life'),
+                 ('insurance_product', '=', record.product.id)])
 
-            commission_line_ids = []
+            if record.commission_line_ids:
+                for line in record.commission_line_ids:
+                    line.policy_name = ''
 
-            for line in contract.line_ids:
-                if record.create_date and line.start_date <= record.create_date.date() <= line.end_date:
-                    if line.insurance_line.name == 'Life':
-                        if record.product.id in line.insurance_products.ids:
-                            commission_line = self.env['commission.line'].create({
-                                'life_policy_id': record.id,
-                                'contract_line_id': line.id,
-                            })
+            record.commission_line_ids = commission_line_ids
 
-                            commission_line_ids.append(commission_line.id)
-
-            record.commission_line_ids = self.env['commission.line'].search([('id', 'in', commission_line_ids)])
+            for line in record.commission_line_ids:
+                line.medical_policy_id = record.id

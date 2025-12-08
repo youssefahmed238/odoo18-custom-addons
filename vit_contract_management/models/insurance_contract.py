@@ -4,33 +4,77 @@ from odoo.exceptions import ValidationError
 
 class InsuranceContract(models.Model):
     _name = 'insurance.contract'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Insurance Contract'
 
-    name = fields.Char(default='New', readonly=True, store=True)
-    partner_id = fields.Many2one('res.partner', string='Insurer', required=True,
+    name = fields.Char(default='New', readonly=True, store=True, tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Insurer', required=True, tracking=True,
                                  domain=[('insurance_contract_id', '=', False)])
-    date = fields.Date(required=True, default=fields.Date.context_today)
+    date = fields.Date(required=True, default=fields.Date.context_today, tracking=True)
+
+    start_date = fields.Date(string='From', required=True, default=fields.Date.context_today, tracking=True)
+    end_date = fields.Date(string='To', required=True, tracking=True,
+                           default=lambda self: fields.Date.add(fields.Date.context_today(self), months=12))
 
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'In Progress'),
+        ('expired', 'Expired'),
         ('cancel', 'Cancelled'),
-    ], string='Status', default='draft', required=True)
+    ], string='Status', default='draft', required=True, tracking=True)
 
     line_ids = fields.One2many('insurance.contract.line', 'contract_id', string='Contract Lines')
 
+    @api.constrains('end_date', 'start_date')
+    def _check_dates(self):
+        for record in self:
+            if record.end_date <= record.start_date:
+                raise ValidationError("End date must be after start date.")
+            if record.end_date <= fields.Date.context_today(self):
+                raise ValidationError("End date must be after today's date.")
+
     @api.constrains('line_ids')
     def _check_overlapping_lines(self):
+        """ Ensure no overlapping insurance lines and products in contract lines. """
         for contract in self:
-            lines = contract.line_ids
-            for i, line1 in enumerate(lines):
-                for line2 in lines[i + 1:]:
-                    if (line1.start_date <= line2.start_date <= line1.end_date) or \
-                            (line1.start_date <= line2.end_date <= line1.end_date):
-                        if line1.insurance_line == line2.insurance_line and \
-                                set(line1.insurance_products.ids).intersection(set(line2.insurance_products.ids)):
-                            raise ValidationError(
-                                "Overlapping contract lines with the same insurance line and products in same date range are not allowed.")
+            seen = set()
+            for line in contract.line_ids:
+                for product in line.insurance_products:
+                    key = (line.insurance_line.id, product.id)
+                    if key in seen:
+                        raise ValidationError(f"Overlapping insurance line '{line.insurance_line.name}' "
+                                              f"with product '{product.name}' in contract lines.")
+                    seen.add(key)
+
+    @api.model
+    def check_expired_contracts(self):
+        today = fields.Date.context_today(self)
+
+        for contract in self:
+            if contract.state == 'confirm' and contract.end_date < today:
+                contract.action_expired()
+
+            # if 75% of the contract duration has passed, send notification
+            duration = (contract.end_date - contract.start_date).days
+            elapsed = (today - contract.start_date).days
+            if self.state == 'confirm' and (elapsed / duration) >= 0.75:
+                # send a pop-up notification to creator user of the contract
+                self.env['bus.bus']._sendone(
+                    (self._cr.dbname, 'res.partner', contract.create_uid.partner_id.id),
+                    'simple_notification',
+                    {
+                        'title': 'Contract Nearing Expiry',
+                        'message': f'The contract {contract.name} is nearing its expiry date ({contract.end_date}).',
+                        'sticky': True,
+                    }
+                )
+
+                # send message in chatter also
+                contract.message_post(
+                    body=f'this contract is nearing its expiry date ({contract.end_date}).',
+                    subject='Contract Nearing Expiry',
+                    message_type='notification'
+                )
 
     @api.model
     def create(self, vals):
@@ -58,6 +102,15 @@ class InsuranceContract(models.Model):
         self.partner_id.insurance_contract_id = self.id
         self.state = 'confirm'
 
+        self._check_dates()
+        self.check_expired_contracts()
+
+    def action_expired(self):
+        if self.partner_id.insurance_contract_id == self:
+            self.partner_id.insurance_contract_id = False
+
+        self.state = 'expired'
+
     def action_cancel(self):
         if self.partner_id.insurance_contract_id == self:
             self.partner_id.insurance_contract_id = False
@@ -71,15 +124,13 @@ class InsuranceContractLine(models.Model):
 
     contract_id = fields.Many2one('insurance.contract', string='Contract', required=True)
 
-    start_date = fields.Date(string='From', required=True)
-    end_date = fields.Date(string='To', required=True)
-
     insurance_line = fields.Many2one('policy.category', string='Insurance Line', required=True)
     insurance_products = fields.Many2many('policy.product', string='Insurance Products', required=True,
                                           domain="[('category_id', '=', insurance_line)]")
 
     basic = fields.Float(string='Basic %', required=True)
     comp = fields.Float(string='Comp %', required=True)
+    transportation_comm = fields.Float(string='Transportation %', required=True)
     bonus = fields.Float(string='Bonus %', required=True)
     commission = fields.Float(string='Commission %', required=True)
 
@@ -88,14 +139,8 @@ class InsuranceContractLine(models.Model):
     layer_3 = fields.Float(string='Layer 3 %', required=True)
     layer_4 = fields.Float(string='Layer 4 %', required=True)
 
-    @api.constrains('end_date', 'start_date')
-    def _check_dates(self):
-        for record in self:
-            if record.end_date < record.start_date:
-                raise ValidationError("End date must be after start date.")
-
     FIELDS_TO_CHECK = [
-        'basic', 'comp', 'bonus', 'commission',
+        'basic', 'comp', 'transportation_comm', 'bonus', 'commission',
         'layer_1', 'layer_2', 'layer_3', 'layer_4',
     ]
 
@@ -105,6 +150,7 @@ class InsuranceContractLine(models.Model):
             fields_to_check = {
                 'Basic %': record.basic,
                 'Comp %': record.comp,
+                'Transportation %': record.transportation_comm,
                 'Bonus %': record.bonus,
                 'Commission %': record.commission,
                 'Layer 1 %': record.layer_1,

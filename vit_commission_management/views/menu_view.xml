@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Commission Management Menu Item -->
+    <menuitem id="menu_commission_management"
+              name="Commission Management"
+              parent="account.account_management_menu"
+              action="vit_commission_management.action_commission_management"/>
+
+</odoo>

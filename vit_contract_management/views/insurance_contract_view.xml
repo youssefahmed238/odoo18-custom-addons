@@ -15,7 +15,7 @@
                             invisible="state == 'draft'"/>
 
                     <button name="action_confirm" string="Confirm" type="object"
-                            invisible="state in ['confirm', 'cancel']" class="oe_highlight"/>
+                            invisible="state in ['confirm', 'cancel', 'expired']" class="oe_highlight"/>
 
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -35,20 +35,22 @@
                             <field name="partner_id" readonly="state != 'draft'"/>
                             <field name="date" readonly="state != 'draft'"/>
                         </group>
+                        <group>
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
+                        </group>
                     </group>
 
                     <notebook>
                         <page string="Details">
                             <field name="line_ids" readonly="state != 'draft'">
                                 <list editable="bottom">
-                                    <field name="start_date"/>
-                                    <field name="end_date"/>
-
                                     <field name="insurance_line"/>
                                     <field name="insurance_products" widget='many2many_tags'/>
 
                                     <field name="basic"/>
                                     <field name="comp"/>
+                                    <field name="transportation_comm"/>
                                     <field name="bonus"/>
                                     <field name="commission"/>
 
@@ -61,6 +63,7 @@
                         </page>
                     </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -72,11 +75,15 @@
         <field name="arch" type="xml">
             <list string="Insurance Contracts">
                 <field name="name"/>
-                <field name="partner_id"/>
                 <field name="date"/>
-                <field name="state" widget="badge" decoration-danger="state == 'cancel'"
+                <field name="partner_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
-                       decoration-success="state == 'confirm'"/>
+                       decoration-success="state == 'confirm'"
+                       decoration-danger="state == 'expired'"
+                       decoration-warning="state == 'cancel'"/>
             </list>
         </field>
     </record>
@@ -93,6 +100,7 @@
 
                 <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                 <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirm')]"/>
+                <filter name="expired" string="Expired" domain="[('state', '=', 'expired')]"/>
                 <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
 
                 <group expand="0" string="Group By">
