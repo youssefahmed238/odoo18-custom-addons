@@ -58,23 +58,21 @@ class InsuranceContract(models.Model):
             duration = (contract.end_date - contract.start_date).days
             elapsed = (today - contract.start_date).days
             if self.state == 'confirm' and (elapsed / duration) >= 0.75:
-                # send a pop-up notification to creator user of the contract
-                self.env['bus.bus']._sendone(
-                    (self._cr.dbname, 'res.partner', contract.create_uid.partner_id.id),
-                    'simple_notification',
-                    {
-                        'title': 'Contract Nearing Expiry',
-                        'message': f'The contract {contract.name} is nearing its expiry date ({contract.end_date}).',
-                        'sticky': True,
-                    }
+
+                self.env['mail.activity'].create({
+                    'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
+                    'note': f'Contract {contract.name} is nearing expiry on {contract.end_date}',
+                    'user_id': contract.create_uid.id,
+                    'res_id': contract.id,
+                    'res_model_id': self.env['ir.model']._get('insurance.contract').id,
+                })
+
+                self.message_post(
+                    subject='Contract Nearing Expiry',
+                    body=f'The insurance contract {contract.name} is nearing its expiry date of {contract.end_date}.',
+                    message_type='email',
                 )
 
-                # send message in chatter also
-                contract.message_post(
-                    body=f'this contract is nearing its expiry date ({contract.end_date}).',
-                    subject='Contract Nearing Expiry',
-                    message_type='notification'
-                )
 
     @api.model
     def create(self, vals):
