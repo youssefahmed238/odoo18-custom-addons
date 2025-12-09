@@ -45,9 +45,9 @@ def test_1():
 
     shapes = []
 
-    # add_triangle_shape(21, shapes)
+    add_triangle_shape(12, shapes)
 
-    # add_rect_shape(9, shapes)
+    # add_rect_shape(15, shapes)
 
     pgrp = nest(shapes, box)
 
