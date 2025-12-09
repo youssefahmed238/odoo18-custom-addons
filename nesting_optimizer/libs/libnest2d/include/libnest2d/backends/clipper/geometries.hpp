@@ -322,6 +322,17 @@ merge(const TMultiShape<PolygonImpl>& shapes)
     bool closed = true;
     bool valid = true;
 
+    std::cout << "Contour points: " << path.Contour.size() << "\n";
+    for(auto &p : path.Contour)
+        std::cout << "(" << p.X << "," << p.Y << ") ";
+    std::cout << "\n";
+
+    for(auto &h : path.Holes) {
+        std::cout << "Hole points: " << h.size() << "\n";
+        for(auto &p : h) std::cout << "(" << p.X << "," << p.Y << ") ";
+        std::cout << "\n";
+    }
+
     for(auto& path : shapes) {
         valid &= clipper.AddPath(path.Contour, ClipperLib::ptSubject, closed);
 
