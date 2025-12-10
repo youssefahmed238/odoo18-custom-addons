@@ -8,22 +8,27 @@
         <field name="inherit_id" ref="vit_policy_management.marine_policy_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet/notebook/page[@name='policy_financial']" position="inside">
-                 <group>
-                    <field name="apply_commission"/>
-                </group>
-                <group string="Company Commission">
-                    <field name="commission_line_ids" readonly="apply_commission" nolabel="1">
+                 <group string="Company Commission">
+                    <group>
+                        <group>
+                            <field name="apply_commission"/>
+                        </group>
+                        <group>
+                            <field name="total_amount" invisible="apply_commission"/>
+                        </group>
+                    </group>
+                    <field name="commission_line_ids" readonly="1" nolabel="1" invisible="not apply_commission">
                         <list editable="bottom">
-                            <field name="basic_p" readonly="apply_commission"/>
-                            <field name="comp_p" readonly="apply_commission"/>
-                            <field name="transportation_comm_p" readonly="apply_commission"/>
-                            <field name="bonus_p" readonly="apply_commission"/>
-                            <field name="commission_p" readonly="apply_commission"/>
+                            <field name="basic_p"/>
+                            <field name="comp_p"/>
+                            <field name="transportation_comm_p"/>
+                            <field name="bonus_p"/>
+                            <field name="commission_p"/>
 
-                            <field name="layer_1_p" readonly="apply_commission"/>
-                            <field name="layer_2_p" readonly="apply_commission"/>
-                            <field name="layer_3_p" readonly="apply_commission"/>
-                            <field name="layer_4_p" readonly="apply_commission"/>
+                            <field name="layer_1_p"/>
+                            <field name="layer_2_p"/>
+                            <field name="layer_3_p"/>
+                            <field name="layer_4_p"/>
 
                             <field name="basic"/>
                             <field name="comp"/>

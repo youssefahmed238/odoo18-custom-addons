@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--  Inherit Invoice form view to add commission details  -->
+    <record id="view_move_form_inherit_commission" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.commission</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_shipping_id']" position="before">
+                <field name="medical_policy_id" invisible="not medical_policy_id" readonly="1"/>
+                <field name="life_policy_id" invisible="not life_policy_id" readonly="1"/>
+                <field name="motor_policy_id" invisible="not motor_policy_id" readonly="1"/>
+                <field name="fire_policy_id" invisible="not fire_policy_id" readonly="1"/>
+                <field name="engineering_policy_id" invisible="not engineering_policy_id" readonly="1"/>
+                <field name="misc_policy_id" invisible="not misc_policy_id" readonly="1"/>
+                <field name="marine_policy_id" invisible="not marine_policy_id" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='quantity']" position="attributes">
+                <attribute name="optional">0</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Create 5% Tax Group -->
+        <record id="account_tax_group_commission" model="account.tax.group">
+            <field name="name">Tax 5%</field>
+            <field name="country_id" ref="base.us"/>
+        </record>
+
+        <!-- Create 5% Sales Tax -->
+        <record id="account_tax_sale_5" model="account.tax">
+            <field name="name">5% Comm Tax</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">-5.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="tax_group_id" ref="vit_commission_management.account_tax_group_commission"/>
+        </record>
+
+        <!-- Create 5% Purchase Tax -->
+        <record id="account_tax_purchase_5" model="account.tax">
+            <field name="name">5% Comm Tax</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">-5.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="tax_group_id" ref="vit_commission_management.account_tax_group_commission"/>
+        </record>
+
+        <!-- Create Commission Product -->
+        <record id="product_commission_product" model="product.product">
+            <field name="name">Commission</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+            <field name="taxes_id" eval="[(6, 0, [ref('vit_commission_management.account_tax_sale_5')])]"/>
+            <field name="supplier_taxes_id" eval="[(6, 0, [ref('vit_commission_management.account_tax_purchase_5')])]"/>
+        </record>
+
+    </data>
+</odoo>

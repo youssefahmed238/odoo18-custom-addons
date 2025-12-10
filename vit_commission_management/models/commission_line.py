@@ -4,26 +4,27 @@ from odoo import models, fields, api
 class CommissionLine(models.Model):
     _name = 'commission.line'
     _description = 'Commission Line'
-    _rec_name = 'contract_id'
+    _rec_name = 'policy_name'
 
-    medical_policy_id = fields.Many2one('medical.policy', string='Policy')
-    life_policy_id = fields.Many2one('life.policy', string='Policy')
-    motor_policy_id = fields.Many2one('motor.policy', string='Policy')
-    fire_policy_id = fields.Many2one('fire.policy', string='Policy')
-    engineering_policy_id = fields.Many2one('engineering.policy', string='Policy')
-    misc_policy_id = fields.Many2one('misc.policy', string='Policy')
-    marine_policy_id = fields.Many2one('marine.policy', string='Policy')
+    medical_policy_id = fields.Many2one('medical.policy', string='Policy', ondelete='cascade')
+    life_policy_id = fields.Many2one('life.policy', string='Policy', ondelete='cascade')
+    motor_policy_id = fields.Many2one('motor.policy', string='Policy', ondelete='cascade')
+    fire_policy_id = fields.Many2one('fire.policy', string='Policy', ondelete='cascade')
+    engineering_policy_id = fields.Many2one('engineering.policy', string='Policy', ondelete='cascade')
+    misc_policy_id = fields.Many2one('misc.policy', string='Policy', ondelete='cascade')
+    marine_policy_id = fields.Many2one('marine.policy', string='Policy', ondelete='cascade')
 
     policy_name = fields.Char(string='Policy', compute='_get_policy_values', store=True)
+    insurer = fields.Many2one('res.partner', string='Insurer', compute='_get_policy_values', store=True)
 
-    contract_line_id = fields.Many2one('insurance.contract.line', string='Contract', required=True, ondelete='cascade')
-    insurance_line = fields.Many2one('policy.category', string='Insurance Line', required=True)
-    insurance_product = fields.Many2one('policy.product', string='Insurance Product', required=True)
+    apply_commission = fields.Boolean(string='Apply Commission', compute='_get_policy_values', store=True)
+    policy_total_amount = fields.Float(string='Policy Total Amount', compute='_get_policy_values', store=True)
 
-    contract_id = fields.Many2one('insurance.contract', string='Contract', related='contract_line_id.contract_id')
-    contract_insurer = fields.Many2one(string='Insurer', related='contract_id.partner_id')
-    contract_start_date = fields.Date(string='From', related='contract_id.start_date')
-    contract_end_date = fields.Date(string='To', related='contract_id.end_date')
+    net_premium_egp = fields.Float(string="Net Premium EGP", compute='_get_policy_values', store=True)
+
+    invoice_id = fields.Many2one('account.move', string='Invoice')
+
+    contract_line_id = fields.Many2one('insurance.contract.line', string='Contract', ondelete='cascade')
 
     basic_p = fields.Float(string='Basic %', related='contract_line_id.basic', readonly=False)
     comp_p = fields.Float(string='Comp %', related='contract_line_id.comp', readonly=False)
@@ -45,75 +46,77 @@ class CommissionLine(models.Model):
 
     total_amount = fields.Float(string='Total Amount', compute='_compute_values', store=True)
 
-    apply_commission = fields.Boolean(string='Apply Commission', compute='_get_policy_values', store=True)
-    net_premium_egp = fields.Float(string="Net Premium EGP", compute='_get_policy_values', store=True)
+    def _get_policy(self):
+        return (
+                self.medical_policy_id or self.life_policy_id or self.motor_policy_id or
+                self.fire_policy_id or self.engineering_policy_id or
+                self.misc_policy_id or self.marine_policy_id
+        )
 
-    @api.depends('medical_policy_id.name',
-                 'life_policy_id.name',
-                 'motor_policy_id.name',
-                 'fire_policy_id.name',
-                 'engineering_policy_id.name',
-                 'misc_policy_id.name',
-                 'marine_policy_id.name',
-
-                 'medical_policy_id.net_premium_egp',
-                 'life_policy_id.net_premium_egp',
-                 'motor_policy_id.net_premium_egp',
-                 'fire_policy_id.net_premium_egp',
-                 'engineering_policy_id.net_premium_egp',
-                 'misc_policy_id.net_premium_egp',
-                 'marine_policy_id.net_premium_egp',
-
-                 'medical_policy_id.apply_commission',
-                 'life_policy_id.apply_commission',
-                 'motor_policy_id.apply_commission',
-                 'fire_policy_id.apply_commission',
-                 'engineering_policy_id.apply_commission',
-                 'misc_policy_id.apply_commission',
-                 'marine_policy_id.apply_commission',
-                 )
+    @api.depends(*(f"{rel}.{field}" for rel in [
+        'medical_policy_id', 'life_policy_id', 'motor_policy_id',
+        'fire_policy_id', 'engineering_policy_id', 'misc_policy_id', 'marine_policy_id'
+    ] for field in ['insurer', 'net_premium_egp', 'apply_commission', 'total_amount']))
     def _get_policy_values(self):
         for record in self:
-            if record.medical_policy_id:
-                record.policy_name = record.medical_policy_id.name
-                record.apply_commission = record.medical_policy_id.apply_commission
-                record.net_premium_egp = record.medical_policy_id.net_premium_egp
-            elif record.life_policy_id:
-                record.policy_name = record.life_policy_id.name
-                record.apply_commission = record.life_policy_id.apply_commission
-                record.net_premium_egp = record.life_policy_id.net_premium_egp
-            elif record.motor_policy_id:
-                record.policy_name = record.motor_policy_id.name
-                record.apply_commission = record.motor_policy_id.apply_commission
-                record.net_premium_egp = record.motor_policy_id.net_premium_egp
-            elif record.fire_policy_id:
-                record.policy_name = record.fire_policy_id.name
-                record.apply_commission = record.fire_policy_id.apply_commission
-                record.net_premium_egp = record.fire_policy_id.net_premium_egp
-            elif record.engineering_policy_id:
-                record.policy_name = record.engineering_policy_id.name
-                record.apply_commission = record.engineering_policy_id.apply_commission
-                record.net_premium_egp = record.engineering_policy_id.net_premium_egp
-            elif record.misc_policy_id:
-                record.policy_name = record.misc_policy_id.name
-                record.apply_commission = record.misc_policy_id.apply_commission
-                record.net_premium_egp = record.misc_policy_id.net_premium_egp
-            elif record.marine_policy_id:
-                record.policy_name = record.marine_policy_id.name
-                record.apply_commission = record.marine_policy_id.apply_commission
-                record.net_premium_egp = record.marine_policy_id.net_premium_egp
+            policy = record._get_policy()
+
+            if policy:
+                record.policy_name = policy.name
+                record.insurer = policy.insurer
+                record.apply_commission = policy.apply_commission
+                record.policy_total_amount = policy.total_amount
+                record.net_premium_egp = policy.net_premium_egp
             else:
                 record.net_premium_egp = 0
 
-    @api.depends('net_premium_egp', 'basic_p', 'comp_p',
-                 'transportation_comm_p', 'bonus_p', 'commission_p',)
+    @api.depends(
+        'net_premium_egp', 'apply_commission',
+        'basic_p', 'comp_p', 'transportation_comm_p',
+        'bonus_p', 'commission_p'
+    )
     def _compute_values(self):
         for record in self:
-            total = 0
-            for field in ['basic', 'comp', 'transportation_comm', 'bonus', 'commission']:
-                percentage = getattr(record.contract_line_id, field)
-                value = (record.net_premium_egp * percentage) / 100
-                total += value
-                setattr(record, field, value)
+            if record.apply_commission and record.contract_line_id:
+                record.basic = (record.net_premium_egp * record.basic_p) / 100
+                record.comp = (record.net_premium_egp * record.comp_p) / 100
+                record.transportation_comm = (record.net_premium_egp * record.transportation_comm_p) / 100
+                record.bonus = (record.net_premium_egp * record.bonus_p) / 100
+                record.commission = (record.net_premium_egp * record.commission_p) / 100
 
-            record.total_amount = total
+                record.total_amount = (
+                        record.basic + record.comp +
+                        record.transportation_comm + record.bonus +
+                        record.commission
+                )
+            else:
+                record.total_amount = record.policy_total_amount
+
+            for line in record.invoice_id.invoice_line_ids:
+                if line.product_id == self.env.ref('vit_commission_management.product_commission_product'):
+                    line.price_unit = record.total_amount
+
+    @api.model
+    def create(self, vals):
+        """ Override create to create invoice when commission line is created """
+        commission_line = super(CommissionLine, self).create(vals)
+
+        commission_line.invoice_id = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'commission_line_id': commission_line.id,
+            'medical_policy_id': commission_line.medical_policy_id.id,
+            'life_policy_id': commission_line.life_policy_id.id,
+            'motor_policy_id': commission_line.motor_policy_id.id,
+            'fire_policy_id': commission_line.fire_policy_id.id,
+            'engineering_policy_id': commission_line.engineering_policy_id.id,
+            'misc_policy_id': commission_line.misc_policy_id.id,
+            'marine_policy_id': commission_line.marine_policy_id.id,
+            'partner_id': commission_line.insurer.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.env.ref('vit_commission_management.product_commission_product').id,
+                'quantity': 1,
+                'price_unit': commission_line.total_amount,
+            })],
+        })
+
+        return commission_line
