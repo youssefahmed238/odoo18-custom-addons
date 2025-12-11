@@ -29,7 +29,12 @@
 
                                 <field name="category_code" invisible="1"/>
 
-                                <field name="policy_number" readonly="state != 'draft'"/>
+                                <field name="medical_policy_number" readonly="state != 'draft'" invisible="category_code != 'Medical'"/>
+                                <field name="life_policy_number" readonly="state != 'draft'" invisible="category_code != 'Life'"/>
+                                <field name="motor_policy_number" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="fire_policy_number" readonly="state != 'draft'" invisible="category_code != 'Fire'"/>
+                                <field name="eng_policy_number" readonly="state != 'draft'" invisible="category_code != 'Engineering'"/>
+                                <field name="misc_policy_number" readonly="state != 'draft'" invisible="category_code != 'MISC'"/>
 
                             </group>
 
