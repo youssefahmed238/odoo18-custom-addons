@@ -472,21 +472,21 @@ def add_triangle_shape(n, shapes):
         shapes.append(item)
 
 def test_1():
-    sheet_w = 1000
-    sheet_h = 1000
+    sheet_w = 420
+    sheet_h = 420
     box = Box(sheet_w * MM, sheet_h * MM)
 
     shapes = []
     add_triangle_shape(4, shapes)
-    add_rect_shape(1, shapes)
+    # add_rect_shape(4, shapes)
 
     pgrp = nest(shapes, box,
                 placer_type=PlacerType.NFP,
-                selector_type=SelectorType.FirstFit,
+                selector_type=SelectorType.DJDHeuristic,
                 spacing=0.0)
 
     # Print reliable waste calculation results
-    waste_data = calculate_waste_analysis_with_dims(pgrp, box, sheet_w, sheet_h)
+    # waste_data = calculate_waste_analysis_with_dims(pgrp, box, sheet_w, sheet_h)
 
     # Single plot with blue shapes and red waste areas
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -505,19 +505,19 @@ def test_1():
             all_points.extend(points)
 
         # Find cutting boundary using reliable convex hull approach
-        if len(all_points) >= 3:
-            cutting_boundary = find_cutting_boundary(all_points, sheet_w, sheet_h)
-
-            if cutting_boundary:
-                # Draw cutting boundary as red dashed line
-                boundary_polygon = patches.Polygon(cutting_boundary, closed=True, fill=False,
-                                                 edgecolor='red', linewidth=2, linestyle='--', alpha=0.8)
-                ax.add_patch(boundary_polygon)
-
-                # Fill entire cutting area with light red (waste area)
-                waste_fill = patches.Polygon(cutting_boundary, closed=True, fill=True,
-                                           facecolor='red', alpha=0.2, edgecolor='none')
-                ax.add_patch(waste_fill)
+        # if len(all_points) >= 3:
+        #     cutting_boundary = find_cutting_boundary(all_points, sheet_w, sheet_h)
+        #
+        #     if cutting_boundary:
+        #         # Draw cutting boundary as red dashed line
+        #         boundary_polygon = patches.Polygon(cutting_boundary, closed=True, fill=False,
+        #                                          edgecolor='red', linewidth=2, linestyle='--', alpha=0.8)
+        #         ax.add_patch(boundary_polygon)
+        #
+        #         # Fill entire cutting area with light red (waste area)
+        #         waste_fill = patches.Polygon(cutting_boundary, closed=True, fill=True,
+        #                                    facecolor='red', alpha=0.2, edgecolor='none')
+        #         ax.add_patch(waste_fill)
 
         # Draw blue shapes ON TOP of waste areas (so actual shapes are not red)
         for item in bin_items:
@@ -528,15 +528,15 @@ def test_1():
                                           facecolor='blue', edgecolor='black', alpha=0.8, linewidth=1)
             ax.add_patch(shape_polygon)
 
-    ax.set_title(f'Cutting Boundary Analysis - Efficiency: {waste_data["cutting_efficiency"]:.1f}%')
+    # ax.set_title(f'Cutting Boundary Analysis - Efficiency: {waste_data["cutting_efficiency"]:.1f}%')
     ax.grid(True, alpha=0.3)
 
     # Add legend
-    from matplotlib.lines import Line2D
+    # from matplotlib.lines import Line2D
     legend_elements = [
         patches.Patch(facecolor='blue', alpha=0.8, label='Actual Shapes'),
-        patches.Patch(facecolor='red', alpha=0.2, label='Waste Areas'),
-        Line2D([0], [0], color='red', linewidth=2, linestyle='--', label='Cutting Boundary')
+        # patches.Patch(facecolor='red', alpha=0.2, label='Waste Areas'),
+        # Line2D([0], [0], color='red', linewidth=2, linestyle='--', label='Cutting Boundary')
     ]
     ax.legend(handles=legend_elements, loc='upper right')
 
