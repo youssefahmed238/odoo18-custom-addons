@@ -26,9 +26,32 @@ using BottomLeftPlacer = libnest2d::BottomLeftPlacer;
 using FirstFitSelection = libnest2d::FirstFitSelection;
 using DJDHeuristic  = libnest2d::DJDHeuristic;
 
+// Create custom enums since they don't exist in the library
+enum class PlacerType {
+    NFP,
+    BottomLeft
+};
+
+enum class SelectorType {
+    FirstFit,
+    DJDHeuristic
+};
+
 PYBIND11_MODULE(nest2D, m)
 {
     m.doc() = "2D irregular bin packaging and nesting for python";
+
+    // make enums for placers
+    py::enum_<PlacerType>(m, "PlacerType", "Type of placer algorithm")
+        .value("NFP", PlacerType::NFP)
+        .value("BottomLeft", PlacerType::BottomLeft)
+        .export_values();
+
+    // make enums for selectors
+    py::enum_<SelectorType>(m, "SelectorType", "Type of selector algorithm")
+        .value("FirstFit", SelectorType::FirstFit)
+        .value("DJDHeuristic", SelectorType::DJDHeuristic)
+        .export_values();
 
     py::class_<Point>(m, "Point", "2D Point")
         .def(py::init<int, int>(),  py::arg("x"), py::arg("y"))
@@ -89,49 +112,111 @@ PYBIND11_MODULE(nest2D, m)
         )
         ;
 
-    // The nest function takes two parameters input and box
+    // The nest function takes parameters input, box, placer_type, selector_type, and spacing
     // see lib/libnest2d/include/libnest2d/libnest2d.hpp
-    m.def("nest", [](std::vector<Item>& input, const Box& box) {
-            // Create NestConfig with enhanced rotation settings
-            libnest2d::NestConfig<NfpPlacer, DJDHeuristic> config;
+    m.def("nest", [](std::vector<Item>& input, const Box& box,
+                     PlacerType placer_type,
+                     SelectorType selector_type,
+                     double spacing) -> py::object {
 
-            // Configure more rotation angles for better nesting results
-            config.placer_config.rotations = {};
-            for (int angle = 0; angle < 360; angle += 1) {
-                config.placer_config.rotations.push_back(angle);
+        PackGroup pgrp;
+        size_t bins = 0;
+
+        // Convert spacing to library units
+        auto distance = libnest2d::mm(spacing);
+
+        // Handle different placer and selector combinations with optimized configs
+        if (placer_type == PlacerType::NFP) {
+            if (selector_type == SelectorType::FirstFit) {
+                // NFP placer with FirstFit selector
+                libnest2d::NestConfig<NfpPlacer, FirstFitSelection> config;
+
+                // Configure rotation angles for better nesting results
+                config.placer_config.rotations = {};
+                for (int angle = 0; angle < 360; angle += 1) { // 1-degree precision for better results
+                    config.placer_config.rotations.push_back(angle);
+                }
+
+                // Maximize accuracy for best results and reduced calculation errors
+                config.placer_config.accuracy = 0.98f;
+                config.placer_config.parallel = true;
+                config.placer_config.explore_holes = true;
+
+                // Set alignment to bottom left
+                config.placer_config.alignment = NfpPlacer::Config::Alignment::BOTTOM_LEFT;
+
+                bins = libnest2d::nest<NfpPlacer, FirstFitSelection>(
+                    input, box, distance, config);
+
+            } else if (selector_type == SelectorType::DJDHeuristic) {
+                // NFP placer with DJD selector
+                libnest2d::NestConfig<NfpPlacer, DJDHeuristic> config;
+
+                // Configure rotation angles for better calculations
+                config.placer_config.rotations = {};
+                for (int angle = 0; angle < 360; angle += 1) { // More precise rotation
+                    config.placer_config.rotations.push_back(angle);
+                }
+
+                // Optimize for better calculations
+                config.placer_config.accuracy = 0.98f;
+                config.placer_config.parallel = true;
+                config.placer_config.explore_holes = true;
+
+                // Set alignment to bottom left
+                config.placer_config.alignment = NfpPlacer::Config::Alignment::BOTTOM_LEFT;
+
+                // Optimize DJD selector for better waste calculation
+                config.selector_config.try_pairs = true;
+                config.selector_config.try_triplets = true;
+                config.selector_config.initial_fill_proportion = 0.4;
+                config.selector_config.waste_increment = 0.05;
+                config.selector_config.allow_parallel = true;
+                config.selector_config.force_parallel = false;
+
+                bins = libnest2d::nest<NfpPlacer, DJDHeuristic>(
+                    input, box, distance, config);
             }
+        } else if (placer_type == PlacerType::BottomLeft) {
+            if (selector_type == SelectorType::FirstFit) {
+                // BottomLeft placer with FirstFit selector
+                libnest2d::NestConfig<BottomLeftPlacer, FirstFitSelection> config;
 
-            // Increase accuracy for better results
-            config.placer_config.accuracy = 0.95f;
+                bins = libnest2d::nest<BottomLeftPlacer, FirstFitSelection>(
+                    input, box, distance, config);
 
-            // Enable parallel processing for faster computation
-            config.placer_config.parallel = true;
+            } else if (selector_type == SelectorType::DJDHeuristic) {
+                // BottomLeft placer with DJD selector
+                libnest2d::NestConfig<BottomLeftPlacer, DJDHeuristic> config;
 
-            // Configure selector for better optimization
-            config.selector_config.allow_parallel = true;
+                // Optimize DJD selector for better waste calculation accuracy
+                config.selector_config.try_pairs = true;
+                config.selector_config.try_triplets = true;
+                config.selector_config.initial_fill_proportion = 0.35;
+                config.selector_config.waste_increment = 0.05;
+                config.selector_config.allow_parallel = true;
+                config.selector_config.force_parallel = false;
 
-            // Alignment left bottom
-            config.placer_config.alignment = config.placer_config.Alignment::BOTTOM_LEFT;
-
-            size_t bins = libnest2d::nest<NfpPlacer, DJDHeuristic>(
-                input,
-                box,
-                libnest2d::mm(0),
-                config);
-
-            PackGroup pgrp(bins);
-
-            for (Item &itm : input) {
-                if (itm.binId() >= 0) pgrp[size_t(itm.binId())].emplace_back(itm);
+                bins = libnest2d::nest<BottomLeftPlacer, DJDHeuristic>(
+                    input, box, distance, config);
             }
+        }
 
-            py::object obj = py::cast(pgrp);
-            return obj;
-        },
-        py::arg("input"),
-        py::arg("box"),
-        "Nest and pack the input items into the box bin."
-        )
+        // Create PackGroup from results
+        pgrp = PackGroup(bins);
+        for (Item &itm : input) {
+            if (itm.binId() >= 0) pgrp[size_t(itm.binId())].emplace_back(itm);
+        }
+
+        return py::cast(pgrp);
+    },
+    py::arg("input"),
+    py::arg("box"),
+    py::arg("placer_type") = PlacerType::NFP,
+    py::arg("selector_type") = SelectorType::DJDHeuristic,
+    py::arg("spacing") = 0.0,
+    "Nest and pack the input items into the box bin with specified algorithms and spacing."
+    )
         ;
 
     py::class_<SVGWriter>(m, "SVGWriter", "SVGWriter tools to write pack_group to SVG.")
