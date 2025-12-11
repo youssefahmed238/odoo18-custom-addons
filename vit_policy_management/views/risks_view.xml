@@ -35,6 +35,7 @@
                                 <field name="fire_policy_number" readonly="state != 'draft'" invisible="category_code != 'Fire'"/>
                                 <field name="eng_policy_number" readonly="state != 'draft'" invisible="category_code != 'Engineering'"/>
                                 <field name="misc_policy_number" readonly="state != 'draft'" invisible="category_code != 'MISC'"/>
+                                <field name="marine_policy_number" readonly="state != 'draft'" invisible="category_code != 'Marine'"/>
 
                             </group>
 

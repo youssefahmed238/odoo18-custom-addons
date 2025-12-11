@@ -110,9 +110,11 @@ class MarinePolicy(models.Model):
         copy=False,
     )
 
-    risks_ids = fields.One2many('risks.line', 'marine_risks_id')
-    risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'marine_risks_id')
-    risks_policy_premium_summary_ids = fields.One2many('risks.line', 'marine_risks_id')
+    policy_risks_ids = fields.One2many('policy.risks', 'marine_policy_number', domain=[('state', '=', 'approved')])
+
+    # risks_ids = fields.One2many('risks.line', 'marine_risks_id')
+    # risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'marine_risks_id')
+    # risks_policy_premium_summary_ids = fields.One2many('risks.line', 'marine_risks_id')
 
     instalment_ids = fields.One2many('instalment.line', 'marine_policy_id')
 

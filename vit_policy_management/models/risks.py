@@ -47,23 +47,6 @@ class PolicyRisks(models.Model):
         copy=False,
     )
 
-    @api.onchange('category')
-    def _onchange_category(self):
-        if self.category:
-            return {
-                'domain': {
-                    'policy_number': [
-                        ('category', '=', self.category.id)
-                    ]
-                }
-            }
-        else:
-            return {
-                'domain': {
-                    'policy_number': []
-                }
-            }
-
     def set_to_draft(self):
         self.state = 'draft'
 
