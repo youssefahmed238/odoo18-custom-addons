@@ -1,13 +1,43 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class PolicyRisks(models.Model):
     _name = "policy.risks"
     _description = "Policy Risks"
 
-    name = fields.Char(string="Name")
-    policy_number = fields.Char(string="Policy Number")
+    name = fields.Char( string="Name", required=True)
 
-    cover_line_id = fields.One2many('policy.cover.line', 'risks_id', string='Cover Line')
+    category = fields.Many2one('policy.category',string="Category")
+
+    policy_number = fields.Many2one(
+        'medical.policy',
+        string="Policy Number",
+        domain="[('category', '=', category)]")
+
+    category_code = fields.Char(related="category.name", store=False)
+
+
+
+    #  --------------------  fields Motor  --------------------
+
+    possession = fields.Char("Possession")
+    plate_number = fields.Char("Plate Number")
+    maker = fields.Char("Maker")
+    model = fields.Char("Model")
+    color = fields.Char("Color")
+    number_of_seats = fields.Integer("Number of Seats")
+    year = fields.Integer("Year")
+    body_type = fields.Char("Body Type")
+    usage = fields.Char("Usage")
+    cc = fields.Char("CC")
+    chassis_number = fields.Char("Chassis Number")
+    engine_number = fields.Char("Engine Number")
+    fuel_type = fields.Char("Fuel Type")
+    radio = fields.Boolean("Radio")
+    air_conditioner = fields.Boolean("Air Conditioner")
+    road_side = fields.Boolean("Road Side")
+
+
+
 
 
 
@@ -20,6 +50,23 @@ class PolicyRisks(models.Model):
         default='draft',
         copy=False,
     )
+
+    @api.onchange('category')
+    def _onchange_category(self):
+        if self.category:
+            return {
+                'domain': {
+                    'policy_number': [
+                        ('category', '=', self.category.id)
+                    ]
+                }
+            }
+        else:
+            return {
+                'domain': {
+                    'policy_number': []
+                }
+            }
 
     def set_to_draft(self):
         self.state = 'draft'

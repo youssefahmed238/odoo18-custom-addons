@@ -17,11 +17,17 @@
                         <button name="set_to_approved" string="Approved" type="object" class="oe_highlight"
                                 state="approved" invisible="state in ['approved', 'cancel', 'delivered']"/>
 
-                        <button name="create_sub_life_policy" string="Create Sub Policy" type="object"
+                        <button name="create_endorsement" string="Create Sub Policy" type="object"
                                 class="oe_highlight" invisible="state not in ['approved'] or parent_id"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
                                readonly="1"/>
+
+
+                        <button name="sum_item" string="Calculating installments" type="object"
+                                class="oe_highlight"/>
+.
+                        
                     </header>
 
                     <sheet>
@@ -39,17 +45,19 @@
 
                         <div class="oe_title">
                             <h3>
-                                <field name="name"/>
+                                <field name="name" placeholder="Policy Name"/>
                             </h3>
                         </div>
 
                         <group>
                             <group>
                                 <field name="create_date" readonly="state != 'draft'" />
+                                <field name="life_sequences" readonly="state != 'draft'" />
                                 <field name="sum_insured" readonly="state != 'draft'" />
-                                <field name="current" readonly="state != 'draft'" />
-                                <field name="ifrs_group_name" readonly="state != 'draft'" />
-                                <field name="ifrs_group_code" readonly="state != 'draft'" />
+                                <field name="category" readonly="state != 'draft'" />
+<!--                                <field name="current" readonly="state != 'draft'" />-->
+<!--                                <field name="ifrs_group_name" readonly="state != 'draft'" />-->
+<!--                                <field name="ifrs_group_code" readonly="state != 'draft'" />-->
                                 <field name="create_by" readonly="state != 'draft'" />
                             </group>
                             <group>
@@ -99,6 +107,7 @@
                                         <field name="parent" readonly="state != 'draft'"/>
                                         <field name="invoice" readonly="state != 'draft'"/>
                                         <field name="endorsement_reason" readonly="state != 'draft'"/>
+                                        <field name="text_reason" readonly="state != 'draft'"/>
                                     </group>
 
                                     <!-- group 6 -->
@@ -158,7 +167,7 @@
                                         <field name="net_premium_egp" readonly="state != 'draft'" />
                                         <field name="reg_premium" readonly="state != 'draft'" />
                                         <field name="payment_on" readonly="state != 'draft'" />
-                                        <field name="payment_freq" readonly="state != 'draft'" />
+                                        <field name="payment_freq" invisible="payment_on == False" readonly="state != 'draft'"/>
 <!--                                        <field name="years" readonly="state != 'draft'" />-->
                                         <field name="create_certificate_puc" readonly="state != 'draft'" />
 

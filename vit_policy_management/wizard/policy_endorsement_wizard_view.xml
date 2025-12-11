@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_policy_endorsement_wizard" model="ir.ui.view">
+        <field name="name">policy.endorsement.wizard.form</field>
+        <field name="model">policy.endorsement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Endorsement">
+                <group>
+                    <field name="policy_ref" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="transaction_type"/>
+                    <field name="effective_date_from"/>
+                    <field name="endorsement_reason"/>
+                    <field name="text_reason"/>
+                </group>
+
+                <footer>
+                    <button string="Confirm" name="action_confirm"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

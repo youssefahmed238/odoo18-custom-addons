@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="policy_payment_method_form_view">
+        <field name="name">policy.payment.method.form.view</field>
+        <field name="model">policy.payment.method</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="policy_payment_method_list_view">
+        <field name="name">policy.payment.method.list.view</field>
+        <field name="model">policy.payment.method</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="policy_payment_method_search_view">
+        <field name="name">policy.payment.method.search</field>
+        <field name="model">policy.payment.method</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_policy_payment_method" model="ir.actions.act_window">
+        <field name="name">Payment Method</field>
+        <field name="res_model">policy.payment.method</field>
+        <field name="view_mode">list,form</field>
+        <field name="help">Payment Method list.</field>
+    </record>
+    <menuitem id="menu_item_policy_payment_method" name="Payment Method" parent="menu_policy_configuration"
+              action="action_policy_payment_method" sequence="15"/>
+
+
+</odoo>

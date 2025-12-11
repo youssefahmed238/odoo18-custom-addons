@@ -24,27 +24,43 @@
                         <group>
                             <group>
                                 <field name="name" readonly="state != 'draft'"/>
+
+                                <field name="category" readonly="state != 'draft'"/>
+
+                                <field name="category_code" invisible="1"/>
+
                                 <field name="policy_number" readonly="state != 'draft'"/>
+
                             </group>
+
                             <group>
+
+                            </group>
+
+                            <group string="car Details" invisible="category_code != 'Motor'">
+                                <field name="possession" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="plate_number" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="maker" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="model" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="color" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="number_of_seats" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="year" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="body_type" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="usage" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="cc" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="chassis_number" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="engine_number" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="fuel_type" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="radio" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="air_conditioner" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+                                <field name="road_side" readonly="state != 'draft'" invisible="category_code != 'Motor'"/>
+
 
                             </group>
                         </group>
 
 
-                        <notebook>
-                            <page name="cover" string="Covers">
-                                <field name="cover_line_id">
-                                    <list>
-                                        <field name="curr" readonly="parent.state != 'draft'"/>
-                                        <field name="cover" readonly="parent.state != 'draft'"/>
-                                        <field name="si_now" readonly="parent.state != 'draft'"/>
-                                        <field name="rate" readonly="parent.state != 'draft'"/>
-                                        <field name="net_premium" readonly="parent.state != 'draft'"/>
-                                    </list>
-                                </field>
-                            </page>
-                        </notebook>
+
 
                     </sheet>
                 </form>
@@ -84,7 +100,7 @@
         <menuitem id="menu_policy_management" name="Policy Management" sequence="10"/>
 
         <menuitem id="menu_item_risks" name="Risks" parent="menu_policy_management"
-              action="action_policy_risks"/>
+                  action="action_policy_risks"/>
 
     </data>
 </odoo>

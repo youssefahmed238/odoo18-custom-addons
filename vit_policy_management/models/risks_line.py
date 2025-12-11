@@ -22,3 +22,27 @@ class RisksLine(models.Model):
     engineering_risks_id = fields.Many2one("engineering.policy", string="engineering")
 
 
+    po_risks_id = fields.Many2one("policy.risks", string="Risks")
+
+    category = fields.Many2one(
+        related='po_risks_id.category',
+        string="Category",
+        store=True
+    )
+
+    category_name = fields.Char(
+        related='po_risks_id.category.name',
+        string="Category Name",
+        store=True
+    )
+
+
+
+    car_name = fields.Char("Car Name")
+    car_number = fields.Char("Car Number")
+    fire_name = fields.Char("Fire Name")
+    fire_number = fields.Char("Fire Number")
+    life_name = fields.Char("Lient Name")
+    life_number = fields.Char("Lient Number")
+
+

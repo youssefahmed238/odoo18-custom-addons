@@ -1,9 +1,22 @@
 from odoo import models, fields, api
+from dateutil.relativedelta import relativedelta
+
 
 class EngineeringPolicy(models.Model):
     _name = "engineering.policy"
 
-    name = fields.Char(readonly=True)
+    _sequence_code = "engineering.policy.seq"
+    _sequence_field = "engineering_sequences"
+
+    name = fields.Char(required=True)
+    engineering_sequences = fields.Char(string="Sequences",readonly=True)
+
+    category = fields.Many2one(
+        'policy.category',
+        string="Category",
+        default=lambda self: self._default_engineering_category(),
+    )
+
 
     sum_insured = fields.Integer(string="Sum insured")
     current = fields.Boolean(default=False, string="Current Version")
@@ -33,7 +46,7 @@ class EngineeringPolicy(models.Model):
     effective_date_from = fields.Date(string="Effective Date From")
     effective_date_to = fields.Date(string="Effective Date To")
     period_in_days = fields.Integer(string="Period In Days", compute='_compute_total_days', readonly=True)
-    payment_method = fields.Char(string="Payment Method")
+    payment_method = fields.Many2one("policy.payment.method" ,string="Payment Method")
 
     # -------- group 3 -------------
     branch = fields.Many2one('account.analytic.account', string="Branch")
@@ -61,6 +74,7 @@ class EngineeringPolicy(models.Model):
     parent = fields.Many2one('res.partner', string="Parent")
     invoice = fields.Many2one('account.move', string="Invoice")
     endorsement_reason = fields.Text(string="Endorsement Reason")
+    text_reason = fields.Text(string="Text Reason")
 
     # -------- group 6 -------------
     version = fields.Integer(string="Version")
@@ -75,7 +89,12 @@ class EngineeringPolicy(models.Model):
     net_premium_egp = fields.Float(string="Net Premium EGP")
     reg_premium = fields.Float(string="Regulator Premium")
     payment_on = fields.Boolean(string="Payment on Instalments")
-    payment_freq = fields.Boolean(string="Payment Freq")
+    payment_freq = fields.Selection([
+        ('annually', 'Annually'),
+        ('semiannually', 'Semiannually'),
+        ('quarterly', 'Quarterly'),
+        ('monthly', 'Monthly'),
+    ], string="Payment Frequency")
     # years = fields.Integer(string="Years")
     create_certificate_puc = fields.Boolean(string="Create Certificate PUC")
 
@@ -102,24 +121,35 @@ class EngineeringPolicy(models.Model):
 
     #   ------------------- Helper Fields ----------------------
 
-    parent_id = fields.Many2one('life.policy', string="Parent Policy")
-    child_ids = fields.One2many('life.policy', 'parent_id', string="Sub Policies")
+    parent_id = fields.Many2one('engineering.policy', string="Parent Policy")
+    child_ids = fields.One2many('engineering.policy', 'parent_id', string="Sub Policies")
+
     child_count = fields.Integer(string="Children Count", compute='_compute_child_count')
 
     @api.model
     def create(self, vals):
-        name = self.env['ir.sequence'].next_by_code('engineering.policy.seq')
-        vals.update({
-            'name': name,
-            'create_date': fields.datetime.today(),
-            'create_by': self.env.uid
-        })
+        seq_code = getattr(self, "_sequence_code")
+        seq_field = getattr(self, "_sequence_field")
 
-        res = super(EngineeringPolicy, self).create(vals)
+        new_seq = self.env["ir.sequence"].next_by_code(seq_code)
+        parent_id = vals.get("parent_id")
 
-        res.name = res.parent_id.name + ' / ' + name if res.parent_id else name
+        if parent_id:
+            parent = self.browse(parent_id)
+            full_seq = f"{parent[seq_field]} / {new_seq}"
+        else:
+            full_seq = new_seq
 
-        return res
+        vals[seq_field] = full_seq
+        vals["create_date"] = fields.datetime.now()
+        vals["create_by"] = self.env.uid
+
+        return super(EngineeringPolicy, self).create(vals)
+
+    def _default_engineering_category(self):
+        return self.env['policy.category'].search([
+            ('name', '=', 'Engineering')
+        ], limit=1)
 
     def _compute_child_count(self):
         """Compute the number of child policies"""
@@ -169,19 +199,18 @@ class EngineeringPolicy(models.Model):
                 'context': {'default_parent_id': self.id},
             }
 
-    def create_sub_engineering_policy(self):
-        """Action to create a sub engineering policy"""
+    def create_endorsement(self):
         self.ensure_one()
-
-        default_vals = {
-            'name': f"{self.name} / ",
-            'policy_number': self.policy_number,
-            'sum_insured': self.sum_insured,
-            'current': False,
-            'ifrs_group_name': self.ifrs_group_name,
-            'ifrs_group_code': self.ifrs_group_code,
-            'parent_id': self.id,
-            'state': 'draft',
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Create Endorsement",
+            "res_model": "policy.endorsement.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_policy_ref": f"{self._name},{self.id}",
+                "default_name": self.name,
+            },
         }
 
         return {
@@ -220,3 +249,72 @@ class EngineeringPolicy(models.Model):
                 rec.period_in_days = delta.days + 1
             else:
                 rec.period_in_days = 0
+
+
+    def sum_item(self):
+        for rec in self:
+            # Fill policy_premium_summary_charges_ids
+            rec.policy_premium_summary_charges_ids.unlink()
+    
+            summary_vals = [
+                (0, 0, {
+                    'name': 'Gross Premium EGP',
+                    'value': rec.gross_premium_egp or 0,
+                }),
+                (0, 0, {
+                    'name': 'Net Premium EGP',
+                    'value': rec.net_premium_egp or 0,
+                }),
+            ]
+    
+            rec.write({
+                'policy_premium_summary_charges_ids': summary_vals
+            })
+    
+            # Generate instalment lines if payment_on is True
+            if rec.payment_on and rec.payment_freq and rec.gross_premium_egp:
+    
+                # Delete old instalments
+                rec.instalment_ids.unlink()
+    
+                # Map payment frequency to months
+                freq_to_months = {
+                    'annually': 1,
+                    'semiannually': 2,
+                    'quarterly': 4,
+                    'monthly': 12,
+                }
+    
+                # Determine the number of periods (months)
+                months = freq_to_months.get(rec.payment_freq, 1)
+    
+                # If quarterly is selected, adjust months to 4 and ensure 4 installments
+                if rec.payment_freq == 'quarterly':
+                    months = 4
+                    instalments_count = 4
+                else:
+                    instalments_count = months
+    
+                # Calculate instalment amount
+                instalment_amount = rec.gross_premium_egp / instalments_count
+    
+                instalments = []
+                start_date = rec.effective_date_from or fields.Date.today()
+    
+                for i in range(instalments_count):
+                    # If quarterly, make sure the instalment date is 4 months apart
+                    if rec.payment_freq == 'quarterly':
+                        instalment_date = start_date + relativedelta(months=4 * i)
+                    else:
+                        instalment_date = start_date + relativedelta(months=i)
+    
+                    instalments.append((0, 0, {
+                        'instalment_date': instalment_date,
+                        'instalment_gross': instalment_amount,
+                        'instalment_net': instalment_amount, 
+                        'medical_policy_id': rec.id,
+                    }))
+    
+                rec.write({
+                    'instalment_ids': instalments
+                })

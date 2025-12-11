@@ -47,3 +47,8 @@ access_risks_line,risks.line,model_risks_line,,1,1,1,1
 access_instalment_line,instalment.line,model_instalment_line,,1,1,1,1
 
 access_insurance_policy_premium_summary,insurance.policy.premium.summary,model_insurance_policy_premium_summary,,1,1,1,1
+
+access_policy_payment_method,policy.payment.method,model_policy_payment_method,,1,1,1,1
+
+access_policy_endorsement_wizard,access_policy_endorsement_wizard,model_policy_endorsement_wizard,,1,1,1,1
+

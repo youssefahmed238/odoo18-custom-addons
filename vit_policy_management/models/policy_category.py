@@ -5,3 +5,4 @@ class PolicyCategory(models.Model):
 
     name = fields.Char(required=True)
 
+

@@ -1,7 +1,7 @@
 {
     'name': "Policy Management",
     'author': 'VarietyIT, Ahmed Mohamed',
-    'version': '18.2',
+    'version': '18.1',
     'depends': [
         'base', 'web', 'board', 'product', 'hr'
     ],
@@ -22,6 +22,7 @@
         'views/policy_category_view.xml',
         'views/insurance_for_view.xml',
         'views/policy_product_view.xml',
+        'views/policy_payment_method_view.xml',
 
         # Medical Menu
         'views/medical_policy_view.xml',
@@ -57,6 +58,9 @@
         'views/marine_policy_view.xml',
         'views/marine_due_renewal_view.xml',
         'views/marine_risks_view.xml',
+
+        # wizard
+        'wizard/policy_endorsement_wizard_view.xml',
     ],
 
 
