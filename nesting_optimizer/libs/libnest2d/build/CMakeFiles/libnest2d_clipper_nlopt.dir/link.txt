@@ -1,2 +1,0 @@
-/usr/bin/ar qc libnest2d_clipper_nlopt.a CMakeFiles/libnest2d_clipper_nlopt.dir/src/libnest2d.cpp.o
-/usr/bin/ranlib libnest2d_clipper_nlopt.a

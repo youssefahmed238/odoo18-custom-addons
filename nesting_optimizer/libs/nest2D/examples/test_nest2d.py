@@ -450,24 +450,24 @@ def calculate_waste_analysis_with_dims(pgrp, box, sheet_w, sheet_h):
 
 def add_rect_shape(n, shapes):
     for i in range(n):
-        # rectangle shape 100 * 100
+        # Rectangle shape 100 x 100 - defined from bottom-left corner
         item = Item([
-            Point(-50000000, 50000000),
-            Point(50000000, 50000000),
-            Point(50000000, -50000000),
-            Point(-50000000, -50000000),
-            Point(-50000000, 50000000)
+            Point(0, 100000000),        # bottom-left to top-left
+            Point(100000000, 100000000), # top-left to top-right
+            Point(100000000, 0),         # top-right to bottom-right
+            Point(0, 0),                 # bottom-right to bottom-left
+            Point(0, 100000000)          # close the shape
         ])
         shapes.append(item)
 
 def add_triangle_shape(n, shapes):
     for i in range(n):
-        # triangle shape 95 * 68 * 68
+        # Right triangle shape 95 x 95 - proper triangle from bottom-left corner
         item = Item([
-            Point(-47500000, 32660000),
-            Point(47500000, 32660000),
-            Point(47500000, -2 * 32660000),
-            Point(-47500000, 32660000)
+            Point(0, 68 * MM),
+            Point(68 * MM, 68 * MM),
+            Point(68 * MM, 0),
+            Point(0, 68 * MM)
         ])
         shapes.append(item)
 
@@ -478,12 +478,12 @@ def test_1():
 
     shapes = []
     add_triangle_shape(4, shapes)
-    # add_rect_shape(4, shapes)
+    add_rect_shape(1, shapes)
 
     pgrp = nest(shapes, box,
                 placer_type=PlacerType.NFP,
-                selector_type=SelectorType.DJDHeuristic,
-                spacing=0.0)
+                selector_type=SelectorType.FirstFit,
+                spacing=5)
 
     # Print reliable waste calculation results
     # waste_data = calculate_waste_analysis_with_dims(pgrp, box, sheet_w, sheet_h)
@@ -502,6 +502,7 @@ def test_1():
         for item in bin_items:
             vertices = item.get_vertices()
             points = [(pt.x / MM, pt.y / MM) for pt in vertices]
+            print(points)
             all_points.extend(points)
 
         # Find cutting boundary using reliable convex hull approach

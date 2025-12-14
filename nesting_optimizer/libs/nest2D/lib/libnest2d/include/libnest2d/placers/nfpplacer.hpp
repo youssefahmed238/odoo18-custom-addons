@@ -68,6 +68,11 @@ struct NfpPConfig {
      */
     std::function<double(const _Item<RawShape>&)> object_function;
 
+    // NEW: ADVANCED OBJECTIVE FUNCTION WITH PILE CONTEXT ⭐
+    // This receives the current item AND the merged pile of already placed shapes
+    // Use this to calculate gaps, overlaps, and compactness metrics
+    std::function<double(const _Item<RawShape>&,
+                        const nfp::Shapes<RawShape>&)> object_function_with_pile;
     /**
      * @brief The quality of search for an optimal placement.
      * This is a compromise slider between quality and speed. Zero is the
@@ -374,9 +379,9 @@ Circle minimizeCircle(const RawShape& sh) {
 
 
     opt::StopCriteria stopcr;
-    stopcr.max_iterations = 30;
-    stopcr.relative_score_difference = 1e-3;
-    opt::TOptimizer<opt::Method::L_SUBPLEX> solver(stopcr);
+    stopcr.max_iterations = 50;  // Reduced for genetic algorithm
+    stopcr.relative_score_difference = 1e-4;  // Less tight for genetic
+    opt::TOptimizer<opt::Method::G_GENETIC> solver(stopcr);
 
     std::vector<double> dists(ctr.size(), 0);
 
@@ -594,12 +599,13 @@ private:
             relpos(pos), nfpidx(nidx), hidx(holeidx) {}
     };
 
-    class Optimizer: public opt::TOptimizer<opt::Method::L_SUBPLEX> {
+    class Optimizer: public opt::TOptimizer<opt::Method::G_GENETIC> {
     public:
         Optimizer(float accuracy = 1.f) {
             opt::StopCriteria stopcr;
-            stopcr.max_iterations = unsigned(std::floor(1000 * accuracy));
-            stopcr.relative_score_difference = 1e-20;
+            // Genetic algorithms need fewer iterations but more population diversity
+            stopcr.max_iterations = unsigned(std::floor(1000 * accuracy)); // Reduced for genetic
+            stopcr.relative_score_difference = 1e-20; // Less tight tolerance for genetic
             this->stopcr_ = stopcr;
         }
     };
@@ -637,7 +643,15 @@ private:
         // This is the kernel part of the object function that is
         // customizable by the library client
         std::function<double(const Item&)> _objfunc;
-        if(config_.object_function) _objfunc = config_.object_function;
+
+        // PRIORITY 1: Use advanced objective function with pile context if provided
+        if(config_.object_function_with_pile) {
+            // Wrap the advanced function to match the expected signature
+            _objfunc = [this](const Item& item) {
+                return config_.object_function_with_pile(item, merged_pile_);
+            };
+        }
+        else if(config_.object_function) _objfunc = config_.object_function;
         else {
 
             // Inside check has to be strict if no alignment was enabled
@@ -663,6 +677,7 @@ private:
 
                 double score = pl::distance(ibb.center(),
                                             binbb.center());
+
                 score /= norm;
 
                 score += ins_check(fullbb);
