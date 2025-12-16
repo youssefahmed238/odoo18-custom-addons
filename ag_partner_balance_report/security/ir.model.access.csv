@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_partner_balance_report,partner.balance.report,model_partner_balance_report,base.group_user,1,1,1,1
+access_report_partner_balance_view_user,report.ag_partner_balance_report.partner_balance_report_view,model_report_ag_partner_balance_report_partner_balance_report_view,base.group_user,1,0,0,0

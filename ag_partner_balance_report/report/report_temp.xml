@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_mar_report_landscape" model="report.paperformat">
+            <field name="name">Marcoms A4 Paper Format landscape</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">50</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">45</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+        <!--        <report id="partner_balance_report"-->
+        <!--                model="partner.balance.report"-->
+        <!--                string="Partner Balance"-->
+        <!--                report_type="qweb-pdf"-->
+        <!--                name="ag_partner_balance_report.partner_balance_report_view"-->
+        <!--                paperformat="paperformat_mar_report_landscape"-->
+        <!--                menu="False"/>-->
+<!--        <report-->
+<!--                id="partner_balance_report"-->
+<!--                string="Partner Balance Report"-->
+<!--                model="partner.balance.report"-->
+<!--                report_type="qweb-pdf"-->
+<!--                name="ag_partner_balance_report.partner_balance_report_view"-->
+<!--                file="ag_partner_balance_report.partner_balance_report_view"-->
+<!--                print_report_name="'Partner Balance Report - %s' % (object.id)"-->
+<!--                paperformat="paperformat_mar_report_landscape"-->
+<!--        />-->
+
+        <record id="partner_balance_report" model="ir.actions.report">
+            <field name="name">Partner Balance Report</field>
+            <field name="model">partner.balance.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">ag_partner_balance_report.partner_balance_report_view</field>
+            <field name="report_file">ag_partner_balance_report.partner_balance_report_view</field>
+            <field name="paperformat_id" ref="ag_partner_balance_report.paperformat_mar_report_landscape"/>
+        </record>
+
+
+    </data>
+</odoo>
