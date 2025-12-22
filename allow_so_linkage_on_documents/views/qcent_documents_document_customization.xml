@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- documents search view -->
+    <record id="document_view_search_inherit_documents_purchase" model="ir.ui.view">
+        <field name="name">documents.view.search.inherit.documents_purchase</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search//field[@name='partner_id']" position="after">
+                <field name="custom_sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
