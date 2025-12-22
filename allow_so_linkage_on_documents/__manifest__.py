@@ -16,8 +16,9 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'allow_so_linkage_on_documents/static/src/views/inspector/custom_document_inspector.js',
-            'allow_so_linkage_on_documents/static/src/views/inspector/custom_document_inspector.xml',
+            'allow_so_linkage_on_documents/static/src/js/documents_details_panel.js',
+            'allow_so_linkage_on_documents/static/src/xml/documents_details_panel.xml',
+            'allow_so_linkage_on_documents/static/src/scss/documents_details_panel.scss',
         ]
     },
     'images': [

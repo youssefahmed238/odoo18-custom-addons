@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="allow_so_linkage_on_documents.DocumentsDetailsPanelInherit"
+       t-inherit="documents.DocumentsDetailsPanel"
+       t-inherit-mode="extension">
+
+        <!-- Add Sale Order field as a new row after the Owner/Contact section -->
+        <xpath expr="//div[hasclass('basic-info')][1]" position="after">
+            <!-- Sale Order Information -->
+            <div class="basic-info mb-3 d-flex justify-content-start">
+                <div class="d-flex me-2 align-items-center">
+                    <span class="fw-bold me-2">Sale Order</span>
+                    <div class="o_field_widget o_field_many2one">
+                        <Many2OneField
+                            name="'custom_sale_order_id'"
+                            record="record"
+                            readonly="userPermissionViewOnly"
+                            canOpen="false"
+                            canCreate="false"
+                            canQuickCreate="false"
+                            canCreateEdit="false"
+                        />
+                    </div>
+                </div>
+            </div>
+
+        </xpath>
+
+    </t>
+
+</templates>

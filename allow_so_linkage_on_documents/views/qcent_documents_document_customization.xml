@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <!-- documents search view -->
     <record id="document_view_search_inherit_documents_purchase" model="ir.ui.view">
         <field name="name">documents.view.search.inherit.documents_purchase</field>
@@ -11,6 +12,31 @@
             </xpath>
         </field>
     </record>
+
+    <!-- documents detail view -->
+    <record id="document_view_form_inherit_documents_purchase" model="ir.ui.view">
+        <field name="name">documents.view.form.inherit.documents_purchase</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_form_details"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="custom_sale_order_id" readonly="not context.get('editable')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add to kanban view to ensure field is always loaded -->
+    <record id="document_view_kanban_inherit_documents_purchase" model="ir.ui.view">
+        <field name="name">documents.view.kanban.inherit.documents_purchase</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="custom_sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
 
 
