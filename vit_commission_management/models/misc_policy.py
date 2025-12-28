@@ -5,16 +5,23 @@ class MISCPolicy(models.Model):
     _inherit = 'misc.policy'
 
     apply_commission = fields.Boolean(string='Apply Commission', default=True)
-    total_amount = fields.Float(string='Total Amount', readonly=False, store=True)
+    total_amount = fields.Float(string='Total Amount', compute='_set_total_amount_from_total_amount_p',
+                                inverse='_set_total_amount_p_from_total_amount', readonly=False, store=True)
+    total_amount_p = fields.Float(string='Total Amount %', compute='_set_total_amount_p_from_total_amount',
+                                  inverse='_set_total_amount_from_total_amount_p', readonly=False, store=True)
+
     commission_line_ids = fields.One2many('commission.line', 'misc_policy_id', store=True)
 
-    @api.constrains('total_amount', 'net_premium_egp')
+    @api.constrains('total_amount', 'total_amount_p', 'net_premium_egp', 'apply_commission')
     def _check_total_amount(self):
         for record in self:
-            if record.total_amount < 0:
+            if record.total_amount < 0 or record.total_amount_p < 0:
                 raise ValueError("Total Amount cannot be negative.")
-            elif record.total_amount > record.net_premium_egp:
+            elif record.total_amount > record.net_premium_egp and not record.apply_commission:
                 raise ValueError("Total Amount cannot exceed Net Premium EGP.")
+            elif record.total_amount_p > 100 and not record.apply_commission:
+                raise ValueError("Total Amount % cannot exceed 100%.")
+
 
     def _get_contract_line(self):
         self.ensure_one()
@@ -33,6 +40,19 @@ class MISCPolicy(models.Model):
             ('insurance_line.name', '=', 'MISC'),
             ('insurance_products', 'in', self.product.id)
         ])
+
+    @api.depends('total_amount', 'net_premium_egp')
+    def _set_total_amount_p_from_total_amount(self):
+        for record in self:
+            if record.net_premium_egp > 0:
+                record.total_amount_p = (record.total_amount / record.net_premium_egp) * 100
+            else:
+                record.total_amount_p = 0.0
+
+    @api.depends('total_amount_p', 'net_premium_egp')
+    def _set_total_amount_from_total_amount_p(self):
+        for record in self:
+            record.total_amount = (record.total_amount_p / 100) * record.net_premium_egp
 
     def _sync_commission(self):
         for record in self:

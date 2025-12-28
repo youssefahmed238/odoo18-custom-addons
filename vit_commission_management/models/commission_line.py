@@ -45,6 +45,7 @@ class CommissionLine(models.Model):
     commission = fields.Float(string='Commission', compute='_compute_values', store=True)
 
     total_amount = fields.Float(string='Total Amount', compute='_compute_values', store=True)
+    total_amount_p = fields.Float(string='Total Amount %', compute='_compute_values', store=True)
 
     def _get_policy(self):
         return (
@@ -89,8 +90,10 @@ class CommissionLine(models.Model):
                         record.transportation_comm + record.bonus +
                         record.commission
                 )
+                record.total_amount_p = (record.total_amount / record.net_premium_egp) * 100 if record.net_premium_egp else 0
             else:
                 record.total_amount = record.policy_total_amount
+                record.total_amount_p = (record.total_amount / record.net_premium_egp) * 100 if record.net_premium_egp else 0
 
             for line in record.invoice_id.invoice_line_ids:
                 if line.product_id == self.env.ref('vit_commission_management.product_commission_product'):

@@ -11,6 +11,7 @@
                 <field name="insurer"/>
                 <field name="invoice_id" invisible="1"/>
                 <field name="total_amount"/>
+                <field name="total_amount_p"/>
             </list>
         </field>
     </record>
@@ -24,6 +25,7 @@
                 <field name="policy_name"/>
                 <field name="insurer"/>
                 <field name="total_amount"/>
+                <field name="total_amount_p"/>
             </search>
         </field>
     </record>
