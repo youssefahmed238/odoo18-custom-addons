@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_picking_thermal">
+            <t t-set="report_type" t-value="'html'"/>
+            <t t-if="not thermal_width">
+                <t t-set="thermal_width" t-value="user.thermal_size or '80mm'"/>
+            </t>
+
+            <style type="text/css">
+                @page {
+                size: auto;
+                margin: 0 !important;
+                }
+
+                .my_container {
+                width:
+                <t t-esc="thermal_width"/>
+                !important;
+                }
+            </style>
+
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <link rel="stylesheet" href="/stock_thermal_reports/static/src/css/thermal_style.css"/>
+
+                        <center class="thermal-report-page">
+                            <div class="my_container">
+
+                                <!-- Company Logo and Info -->
+                                <div style="width: 45%; margin: 0 auto;">
+                                    <img t-att-src="'data:image/png;base64,' + o.company_id.logo.decode()"
+                                         style="width:100%"/>
+                                </div>
+
+                                <div style="font-size: 14px; font-weight: bold; margin-top: 5px;">
+                                    <t t-esc="o.company_id.name"/>
+                                </div>
+
+                                <div style="margin-top: 5px; font-size: 11px;">
+                                    <div t-if="o.company_id.phone">
+                                        📞
+                                        <t t-esc="o.company_id.phone"/>
+                                    </div>
+                                </div>
+
+                                <!-- Document Name and Barcode -->
+                                <div class="thermal-section">
+                                    <div style="font-size: 16px; font-weight: bold; margin: 10px 0;">
+                                        <t t-esc="o.name"/>
+                                    </div>
+                                    <div class="thermal-barcode">
+                                        <div t-field="o.name"
+                                             t-options="{'widget': 'barcode', 'width': 300, 'height': 50, 'img_style': 'width:100%;height:40px;'}"/>
+                                    </div>
+                                </div>
+
+                                <!-- Addresses Section -->
+                                <div class="thermal-section" t-if="o.should_print_delivery_address() or o.partner_id">
+                                    <!-- Delivery/Outgoing Address -->
+                                    <div t-if="o.should_print_delivery_address()"
+                                         style="text-align: left; margin-bottom: 10px;">
+                                        <div class="thermal-label">Delivery Address:</div>
+                                        <div style="font-size: 10px; margin-top: 3px;">
+                                            <div t-out="o.move_ids[0].partner_id or o.partner_id"
+                                                 t-options='{"widget": "contact", "fields": ["name", "address", "phone"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Warehouse Address for non-internal operations -->
+                                    <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id"
+                                         style="text-align: left; margin-bottom: 10px;">
+                                        <div class="thermal-label">Warehouse Address:</div>
+                                        <div style="font-size: 10px; margin-top: 3px;">
+                                            <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                                                 t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Partner Address Based on Operation Type -->
+                                    <t t-set="show_partner" t-value="False"/>
+                                    <t t-set="partner_label" t-value="''"/>
+
+                                    <div t-if="o.picking_type_id.code=='incoming' and o.partner_id"
+                                         style="text-align: left;">
+                                        <t t-set="show_partner" t-value="True"/>
+                                        <t t-set="partner_label" t-value="'Vendor Address:'"/>
+                                    </div>
+
+                                    <div t-elif="o.picking_type_id.code=='internal' and o.partner_id"
+                                         style="text-align: left;">
+                                        <t t-set="show_partner" t-value="True"/>
+                                        <t t-set="partner_label" t-value="'Warehouse Address:'"/>
+                                    </div>
+
+                                    <div t-elif="o.picking_type_id.code=='outgoing' and o.partner_id and o.partner_id != o.partner_id.commercial_partner_id"
+                                         style="text-align: left;">
+                                        <t t-set="show_partner" t-value="True"/>
+                                        <t t-set="partner_label" t-value="'Customer Address:'"/>
+                                    </div>
+
+                                    <div t-if="show_partner" style="text-align: left;">
+                                        <div class="thermal-label">
+                                            <t t-esc="partner_label"/>
+                                        </div>
+                                        <div style="font-size: 10px; margin-top: 3px;">
+                                            <div t-field="o.partner_id.commercial_partner_id"
+                                                 t-options='{"widget": "contact", "fields": ["name", "address", "phone", "vat"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Document Information -->
+                                <div class="thermal-section" style="text-align: left;">
+                                    <div class="thermal-row" t-if="o.origin">
+                                        <span class="thermal-label">Order:</span>
+                                        <span class="thermal-value" t-field="o.origin"/>
+                                    </div>
+                                    <div class="thermal-row">
+                                        <span class="thermal-label">Status:</span>
+                                        <span class="thermal-value" t-field="o.state"/>
+                                    </div>
+                                    <div class="thermal-row" t-if="o.scheduled_date">
+                                        <span class="thermal-label">Scheduled Date:</span>
+                                        <span class="thermal-value" t-field="o.scheduled_date"/>
+                                    </div>
+                                </div>
+
+                                <!-- Products Table -->
+                                <div t-if="o.move_line_ids and o.move_ids_without_package" class="thermal-section">
+                                    <t t-set="has_barcode"
+                                       t-value="any(move_line.product_id and move_line.product_id.sudo().barcode or move_line.package_id for move_line in o.move_line_ids)"/>
+                                    <t t-set="has_serial_number"
+                                       t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)"
+                                       groups="stock.group_production_lot"/>
+
+                                    <table class="thermal-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left; width:50%;">Product</th>
+                                                <th style="text-align: center; width:30%;">Qty</th>
+                                                <th t-if="o.picking_type_id.code != 'incoming'"
+                                                    groups="stock.group_stock_multi_locations"
+                                                    style="text-align: left;">From
+                                                </th>
+                                                <th t-if="o.picking_type_id.code != 'outgoing'"
+                                                    groups="stock.group_stock_multi_locations"
+                                                    style="text-align: left;">To
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))"
+                                               t-as="ml">
+                                                <tr>
+                                                    <!-- Product Column -->
+                                                    <td>
+                                                        <div class="thermal-product-name">
+                                                            <span t-field="ml.product_id.display_name"/>
+                                                        </div>
+                                                        <div t-if="ml.product_id.description_picking"
+                                                             class="thermal-product-desc">
+                                                            <span t-field="ml.product_id.description_picking"/>
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- Quantity Column -->
+                                                    <td class="thermal-qty"
+                                                        style="white-space: normal !important;">
+                                                        <span t-field="ml.quantity"/>
+                                                        <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                                        <div t-if="ml.move_id.product_packaging_id"
+                                                             style="font-size: 9px;">
+                                                            (
+                                                            <span t-field="ml.product_packaging_qty"
+                                                                  t-options='{"widget": "integer"}'/>
+                                                            <span t-field="ml.move_id.product_packaging_id.name"/>)
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- From Location Column -->
+                                                    <td t-if="o.picking_type_id.code != 'incoming'"
+                                                        groups="stock.group_stock_multi_locations"
+                                                        style="font-size: 9px;">
+                                                        <span t-esc="ml.location_id.display_name"/>
+                                                        <t t-if="ml.package_id">
+                                                            <br/>
+                                                            <span t-field="ml.package_id"/>
+                                                        </t>
+                                                    </td>
+
+                                                    <!-- To Location Column -->
+                                                    <td t-if="o.picking_type_id.code != 'outgoing'"
+                                                        groups="stock.group_stock_multi_locations"
+                                                        style="font-size: 9px;">
+                                                        <span t-field="ml.location_dest_id"/>
+                                                        <t t-if="ml.result_package_id">
+                                                            <br/>
+                                                            <span t-field="ml.result_package_id"/>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Serial Number Row -->
+                                                <tr t-if="has_serial_number and (ml.lot_id or ml.lot_name)">
+                                                    <td colspan="4" class="thermal-barcode">
+                                                        <div style="font-size: 9px; font-weight: bold;">Lot/Serial:
+                                                        </div>
+                                                        <span t-esc="ml.lot_id.name or ml.lot_name"
+                                                              t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 300, 'height': 50, 'img_style': 'width:100%;height:30px;'}"/>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Product Barcode Row -->
+                                                <tr t-if="has_barcode and ml.product_id and ml.product_id.barcode">
+                                                    <td colspan="4" class="thermal-barcode">
+                                                        <div t-field="ml.product_id.barcode"
+                                                             t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 300, 'height': 50, 'img_style': 'width:100%;height:30px;'}"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Package Level Table -->
+                                <div t-if="o.package_level_ids and o.picking_type_entire_packs and o.state in ['assigned', 'done']"
+                                     class="thermal-section">
+                                    <div class="thermal-label" style="text-align: center; margin-bottom: 5px;">
+                                        PACKAGES
+                                    </div>
+
+                                    <t t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)"
+                                       t-as="package">
+                                        <div style="text-align: left; border-bottom: 1px dotted #ccc; padding: 5px 0;">
+                                            <t t-set="package" t-value="package.with_context(picking_id=o.id)"/>
+
+                                            <!-- Package Barcode -->
+                                            <div class="thermal-barcode">
+                                                <div t-field="package.package_id.name"
+                                                     t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 300, 'height': 50, 'img_style': 'width:100%;height:35px;'}"/>
+                                            </div>
+
+                                            <!-- Package Locations -->
+                                            <div t-if="o.picking_type_id.code != 'incoming'"
+                                                 groups="stock.group_stock_multi_locations" class="thermal-row">
+                                                <span>From:</span>
+                                                <span t-field="package.location_id"/>
+                                            </div>
+
+                                            <div t-if="o.picking_type_id.code != 'outgoing'"
+                                                 groups="stock.group_stock_multi_locations" class="thermal-row">
+                                                <span>To:</span>
+                                                <span t-field="package.location_dest_id"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+
+                                <!-- Warning Messages -->
+                                <t t-set="no_reserved_product"
+                                   t-value="o.move_ids.filtered(lambda x: x.product_uom_qty != x.quantity and x.move_line_ids and x.state!='done')"/>
+                                <div t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"
+                                     class="thermal-warning">
+                                    ⚠ Not all products reserved. Check availability.
+                                </div>
+
+                                <!-- Notes -->
+                                <div t-if="o.note" class="thermal-section thermal-note">
+                                    <div class="thermal-label">Notes:</div>
+                                    <p t-field="o.note" style="margin-top: 3px;"/>
+                                </div>
+
+                            </div>
+                        </center>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

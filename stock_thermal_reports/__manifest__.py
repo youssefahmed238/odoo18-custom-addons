@@ -6,6 +6,8 @@
     'depends': ['stock', 'thermal_base'],
     'data': [
         'reports/stock_report_views.xml',
+        'reports/report_picking_thermal.xml',
+        'reports/report_deliveryslip_thermal.xml',
     ],
     'installable': True,
     'application': False,

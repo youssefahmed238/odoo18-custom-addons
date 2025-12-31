@@ -1,0 +1,130 @@
+/* =========================
+   THERMAL REPORT STYLESHEET
+   for Odoo Picking Reports
+========================= */
+
+/* =========================
+   FONT & BASE
+========================= */
+@font-face {
+    font-family: 'Inconsolata-Regular';
+    src: url('/thermal_invoice_report/static/src/fonts/Inconsolata-Regular.ttf') format('truetype');
+}
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+}
+
+body {
+    font-family: 'Inconsolata-Regular', monospace;
+    font-size: 11px;
+}
+
+/* =========================
+   LAYOUT CONTAINER
+========================= */
+.thermal-report-page {
+    width: 100%;
+    text-align: center;
+}
+
+.my_container {
+    /* Width set dynamically via inline style with thermal_width variable */
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inconsolata-Regular', monospace;
+}
+
+/* =========================
+   SECTIONS & ROWS
+========================= */
+.thermal-section {
+    margin: 6px 0;
+    padding: 6px 0;
+    border-bottom: 1px dashed #000;
+}
+
+.thermal-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    margin: 2px 0;
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+.thermal-label {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.thermal-value {
+    font-size: 11px;
+}
+
+/* =========================
+   PRODUCT TABLE
+========================= */
+.thermal-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 10px;
+    margin-top: 10px;
+}
+
+.thermal-table thead th {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding: 5px 2px;
+}
+
+.thermal-table tbody td {
+    padding: 4px 2px;
+}
+
+.thermal-table tbody tr {
+    border-bottom: 1px dashed #ccc;
+}
+
+.thermal-product-name {
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.thermal-product-desc {
+    font-size: 9px;
+    color: #666;
+}
+
+.thermal-qty {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* =========================
+   BARCODE
+========================= */
+.thermal-barcode {
+    margin: 4px 0;
+    text-align: center;
+}
+
+/* =========================
+   WARNINGS & NOTES
+========================= */
+.thermal-warning {
+    text-align: center;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.thermal-note {
+    font-size: 10px;
+    text-align: left;
+}

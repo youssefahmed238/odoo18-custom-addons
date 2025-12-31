@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_deliveryslip_thermal">
+            <t t-set="report_type" t-value="'html'"/>
+            <t t-if="not thermal_width">
+                <t t-set="thermal_width" t-value="user.thermal_size or '80mm'"/>
+            </t>
+
+            <style type="text/css">
+                @page {
+                size: auto;
+                margin: 0 !important;
+                }
+
+                .my_container {
+                width:
+                <t t-esc="thermal_width"/>
+                !important;
+                }
+            </style>
+
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <link rel="stylesheet" href="/stock_thermal_reports/static/src/css/thermal_style.css"/>
+
+                        <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())"/>
+                        <t t-set="partner"
+                           t-value="o.partner_id or (o.move_ids and o.move_ids[0].partner_id) or False"/>
+
+                        <center class="thermal-report-page">
+                            <div class="my_container">
+
+                                <!-- Company Logo and Info -->
+                                <div style="width: 45%; margin: 0 auto;">
+                                    <img t-att-src="'data:image/png;base64,' + o.company_id.logo.decode()"
+                                         style="width:100%"/>
+                                </div>
+
+                                <div style="font-size: 14px; font-weight: bold; margin-top: 5px;">
+                                    <t t-esc="o.company_id.name"/>
+                                </div>
+
+                                <div style="margin-top: 5px; font-size: 11px;">
+                                    <div t-if="o.company_id.phone">
+                                        📞
+                                        <t t-esc="o.company_id.phone"/>
+                                    </div>
+                                </div>
+
+                                <!-- Document Name -->
+                                <div class="thermal-section">
+                                    <div style="font-size: 16px; font-weight: bold; margin: 10px 0;">
+                                        <t t-esc="o.name"/>
+                                    </div>
+                                </div>
+
+                                <!-- Addresses Section -->
+                                <div class="thermal-section">
+                                    <!-- Delivery Address -->
+                                    <div t-if="o.should_print_delivery_address()"
+                                         style="text-align: left; margin-bottom: 10px;">
+                                        <div class="thermal-label">Delivery Address:</div>
+                                        <div style="font-size: 10px; margin-top: 3px;">
+                                            <div t-out="o.move_ids[0].partner_id or o.partner_id"
+                                                 t-options='{"widget": "contact", "fields": ["name", "address", "phone"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Warehouse Address -->
+                                    <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id"
+                                         style="text-align: left; margin-bottom: 10px;">
+                                        <div class="thermal-label">Warehouse Address:</div>
+                                        <div style="font-size: 10px; margin-top: 3px;">
+                                            <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                                                 t-options='{"widget": "contact", "fields": ["name", "address", "phone"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Customer/Vendor Address -->
+                                    <t t-set="show_partner" t-value="False"/>
+                                    <t t-set="partner_label" t-value="''"/>
+
+                                    <div t-if="o.picking_type_id.code=='incoming' and partner"
+                                         style="text-align: left;">
+                                        <t t-set="show_partner" t-value="True"/>
+                                        <t t-set="partner_label" t-value="'Vendor Address:'"/>
+                                    </div>
+
+                                    <div t-elif="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id"
+                                         style="text-align: left;">
+                                        <t t-set="show_partner" t-value="True"/>
+                                        <t t-set="partner_label" t-value="'Customer Address:'"/>
+                                    </div>
+
+                                    <div t-if="show_partner" style="text-align: left;">
+                                        <div class="thermal-label">
+                                            <t t-esc="partner_label"/>
+                                        </div>
+                                        <div style="font-size: 10px; margin-top: 3px;">
+                                            <div t-field="partner.commercial_partner_id"
+                                                 t-options='{"widget": "contact", "fields": ["name", "address", "phone", "vat"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Document Information -->
+                                <div class="thermal-section" style="text-align: left;">
+                                    <div class="thermal-row" t-if="o.origin">
+                                        <span class="thermal-label">Order:</span>
+                                        <span class="thermal-value" t-field="o.origin"/>
+                                    </div>
+                                    <div class="thermal-row" t-if="o.state">
+                                        <span class="thermal-label">Shipping Date:</span>
+                                        <span class="thermal-value">
+                                            <div t-if="o.state == 'done'" t-field="o.date_done"/>
+                                            <div t-else="" t-field="o.scheduled_date"/>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Products Table - NOT DONE State -->
+                                <div t-if="o.state != 'done'" class="thermal-section">
+                                    <t t-set="lines" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty)"/>
+
+                                    <table class="thermal-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left; width:50%;">Product</th>
+                                                <th style="text-align: center; width:25%;">Ordered</th>
+                                                <th style="text-align: center; width:25%;">Delivered</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="lines" t-as="move">
+                                                <td>
+                                                    <div class="thermal-product-name">
+                                                        <span t-field="move.product_id"/>
+                                                    </div>
+                                                    <div t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name"
+                                                         class="thermal-product-desc">
+                                                        <span t-field="move.description_picking"/>
+                                                    </div>
+                                                </td>
+                                                <td class="thermal-qty">
+                                                    <span t-field="move.product_uom_qty"/>
+                                                    <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                                    <div t-if="move.product_packaging_id" style="font-size: 9px;">
+                                                        (
+                                                        <span t-field="move.product_packaging_qty"
+                                                              t-options='{"widget": "integer"}'/>
+                                                        <span t-field="move.product_packaging_id"/>)
+                                                    </div>
+                                                </td>
+                                                <td class="thermal-qty">
+                                                    <span t-field="move.quantity"/>
+                                                    <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                                    <div t-if="move.product_packaging_id" style="font-size: 9px;">
+                                                        (
+                                                        <span t-field="move.product_packaging_quantity"
+                                                              t-options='{"widget": "integer"}'/>
+                                                        <span t-field="move.product_packaging_id"/>)
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Products Table - DONE State -->
+                                <div t-if="o.move_line_ids and o.state == 'done'" class="thermal-section">
+                                    <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')"
+                                       groups="stock.group_lot_on_delivery_slip"/>
+
+                                    <table class="thermal-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left; width:50%;">Product</th>
+                                                <th style="text-align: center; width:25%;" t-if="not has_serial_number">
+                                                    Ordered
+                                                </th>
+                                                <th style="text-align: center; width:25%;" t-else="">Lot/Serial</th>
+                                                <th style="text-align: center; width:25%;">Delivered</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- With Packages -->
+                                            <t t-if="o.has_packages">
+                                                <t t-set="packages"
+                                                   t-value="o.move_line_ids.mapped('result_package_id')"/>
+                                                <t t-foreach="packages" t-as="package">
+                                                    <!-- Package Header -->
+                                                    <tr style="background-color: #f0f0f0;">
+                                                        <td colspan="3" style="font-weight: bold; padding: 5px 2px;">
+                                                            📦
+                                                            <span t-field="package.name"/>
+                                                        </td>
+                                                    </tr>
+
+                                                    <t t-set="package_move_lines"
+                                                       t-value="o.move_line_ids.filtered(lambda l: l.result_package_id == package)"/>
+
+                                                    <!-- With Serial Numbers -->
+                                                    <t t-if="has_serial_number">
+                                                        <tr t-foreach="package_move_lines" t-as="move_line">
+                                                            <td>
+                                                                <div class="thermal-product-name">
+                                                                    <span t-field="move_line.product_id"/>
+                                                                </div>
+                                                                <t t-set="description"
+                                                                   t-value="move_line.move_id.description_picking"/>
+                                                                <div t-if="description and description != move_line.product_id.display_name and description != move_line.product_id.name"
+                                                                     class="thermal-product-desc">
+                                                                    <span t-esc="description"/>
+                                                                </div>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <span t-field="move_line.lot_id.name"/>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <span t-field="move_line.quantity"/>
+                                                                <span t-field="move_line.product_uom_id"/>
+                                                                <div t-if="move_line.move_id.product_packaging_id"
+                                                                     groups="product.group_stock_packaging"
+                                                                     style="font-size: 9px;">
+                                                                    (
+                                                                    <span t-field="move_line.product_packaging_qty"
+                                                                          t-options='{"widget": "integer"}'/>
+                                                                    <span t-field="move_line.move_id.product_packaging_id.display_name"/>
+                                                                    )
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+
+                                                    <!-- Without Serial Numbers - Aggregated -->
+                                                    <t t-else="">
+                                                        <t t-set="aggregated_lines"
+                                                           t-value="package_move_lines._get_aggregated_product_quantities(strict=True)"/>
+                                                        <tr t-foreach="aggregated_lines" t-as="line">
+                                                            <td>
+                                                                <div class="thermal-product-name">
+                                                                    <span t-esc="aggregated_lines[line]['name']"/>
+                                                                </div>
+                                                                <div t-if="aggregated_lines[line]['description']"
+                                                                     class="thermal-product-desc">
+                                                                    <span t-esc="aggregated_lines[line]['description']"/>
+                                                                </div>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <span t-esc="aggregated_lines[line]['qty_ordered']"
+                                                                      t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                                                                <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                                                                <div t-if="aggregated_lines[line]['packaging'].name"
+                                                                     style="font-size: 9px;">
+                                                                    (
+                                                                    <span t-out="aggregated_lines[line]['packaging_qty']"
+                                                                          t-options='{"widget": "integer"}'/>
+                                                                    <span t-out="aggregated_lines[line]['packaging'].name"/>
+                                                                    )
+                                                                </div>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <t t-if="aggregated_lines[line]['quantity']">
+                                                                    <span t-esc="aggregated_lines[line]['quantity']"
+                                                                          t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                                                                    <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                                                                    <div t-if="aggregated_lines[line]['packaging'].name"
+                                                                         style="font-size: 9px;">
+                                                                        (
+                                                                        <span t-out="aggregated_lines[line]['packaging_quantity']"
+                                                                              t-options='{"widget": "integer"}'/>
+                                                                        <span t-out="aggregated_lines[line]['packaging'].name"/>
+                                                                        )
+                                                                    </div>
+                                                                </t>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+
+                                                <!-- Products without packages -->
+                                                <t t-set="move_lines"
+                                                   t-value="o.move_line_ids.filtered(lambda l: not l.result_package_id)"/>
+                                                <t t-set="aggregated_lines"
+                                                   t-value="o.move_line_ids._get_aggregated_product_quantities(except_package=True)"/>
+
+                                                <t t-if="move_lines or aggregated_lines">
+                                                    <tr style="background-color: #f0f0f0;">
+                                                        <td colspan="3" style="font-weight: bold; padding: 5px 2px;">
+                                                            Products with no package
+                                                        </td>
+                                                    </tr>
+
+                                                    <t t-if="has_serial_number">
+                                                        <tr t-foreach="move_lines" t-as="move_line">
+                                                            <td>
+                                                                <div class="thermal-product-name">
+                                                                    <span t-field="move_line.product_id"/>
+                                                                </div>
+                                                                <t t-set="description"
+                                                                   t-value="move_line.move_id.description_picking"/>
+                                                                <div t-if="description and description != move_line.product_id.display_name and description != move_line.product_id.name"
+                                                                     class="thermal-product-desc">
+                                                                    <span t-esc="description"/>
+                                                                </div>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <span t-field="move_line.lot_id.name"/>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <span t-field="move_line.quantity"/>
+                                                                <span t-field="move_line.product_uom_id"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+
+                                                    <t t-elif="aggregated_lines">
+                                                        <tr t-foreach="aggregated_lines" t-as="line">
+                                                            <td>
+                                                                <div class="thermal-product-name">
+                                                                    <span t-esc="aggregated_lines[line]['name']"/>
+                                                                </div>
+                                                                <div t-if="aggregated_lines[line]['description']"
+                                                                     class="thermal-product-desc">
+                                                                    <span t-esc="aggregated_lines[line]['description']"/>
+                                                                </div>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <span t-esc="aggregated_lines[line]['qty_ordered']"
+                                                                      t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                                                                <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                                                            </td>
+                                                            <td class="thermal-qty">
+                                                                <t t-if="aggregated_lines[line]['quantity']">
+                                                                    <span t-esc="aggregated_lines[line]['quantity']"
+                                                                          t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                                                                    <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                                                                </t>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+
+                                            <!-- Without Packages -->
+                                            <t t-else="">
+                                                <!-- With Serial Numbers -->
+                                                <t t-if="has_serial_number">
+                                                    <tr t-foreach="o.move_line_ids" t-as="move_line">
+                                                        <td>
+                                                            <div class="thermal-product-name">
+                                                                <span t-field="move_line.product_id"/>
+                                                            </div>
+                                                            <t t-set="description"
+                                                               t-value="move_line.move_id.description_picking"/>
+                                                            <div t-if="description and description != move_line.product_id.display_name and description != move_line.product_id.name"
+                                                                 class="thermal-product-desc">
+                                                                <span t-esc="description"/>
+                                                            </div>
+                                                        </td>
+                                                        <td class="thermal-qty">
+                                                            <span t-field="move_line.lot_id.name"/>
+                                                        </td>
+                                                        <td class="thermal-qty">
+                                                            <span t-field="move_line.quantity"/>
+                                                            <span t-field="move_line.product_uom_id"/>
+                                                            <div t-if="move_line.move_id.product_packaging_id"
+                                                                 groups="product.group_stock_packaging"
+                                                                 style="font-size: 9px;">
+                                                                (
+                                                                <span t-field="move_line.product_packaging_qty"
+                                                                      t-options='{"widget": "integer"}'/>
+                                                                <span t-field="move_line.move_id.product_packaging_id.display_name"/>
+                                                                )
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+
+                                                <!-- Without Serial Numbers - Aggregated -->
+                                                <t t-else="">
+                                                    <t t-set="aggregated_lines"
+                                                       t-value="o.move_line_ids._get_aggregated_product_quantities()"/>
+                                                    <tr t-foreach="aggregated_lines" t-as="line">
+                                                        <td>
+                                                            <div class="thermal-product-name">
+                                                                <span t-esc="aggregated_lines[line]['name']"/>
+                                                            </div>
+                                                            <div t-if="aggregated_lines[line]['description']"
+                                                                 class="thermal-product-desc">
+                                                                <span t-esc="aggregated_lines[line]['description']"/>
+                                                            </div>
+                                                        </td>
+                                                        <td class="thermal-qty">
+                                                            <span t-esc="aggregated_lines[line]['qty_ordered']"
+                                                                  t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                                                            <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                                                            <div t-if="aggregated_lines[line]['packaging'].name"
+                                                                 style="font-size: 9px;">
+                                                                (
+                                                                <span t-out="aggregated_lines[line]['packaging_qty']"
+                                                                      t-options='{"widget": "integer"}'/>
+                                                                <span t-out="aggregated_lines[line]['packaging'].name"/>
+                                                                )
+                                                            </div>
+                                                        </td>
+                                                        <td class="thermal-qty">
+                                                            <t t-if="aggregated_lines[line]['quantity']">
+                                                                <span t-esc="aggregated_lines[line]['quantity']"
+                                                                      t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                                                                <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                                                                <div t-if="aggregated_lines[line]['packaging'].name"
+                                                                     style="font-size: 9px;">
+                                                                    (
+                                                                    <span t-out="aggregated_lines[line]['packaging_quantity']"
+                                                                          t-options='{"widget": "integer"}'/>
+                                                                    <span t-out="aggregated_lines[line]['packaging'].name"/>
+                                                                    )
+                                                                </div>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Backorders -->
+                                <t t-set="backorders"
+                                   t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
+                                <div t-if="o.backorder_ids and backorders" class="thermal-section">
+                                    <div class="thermal-label" style="margin-bottom: 5px;">Remaining quantities not yet
+                                        delivered:
+                                    </div>
+
+                                    <table class="thermal-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left; width:70%;">Product</th>
+                                                <th style="text-align: center; width:30%;">Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="backorders.mapped('move_ids').filtered(lambda x: x.product_uom_qty)"
+                                                t-as="bo_line">
+                                                <td>
+                                                    <div class="thermal-product-name">
+                                                        <span t-field="bo_line.product_id"/>
+                                                    </div>
+                                                    <div t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name"
+                                                         class="thermal-product-desc">
+                                                        <span t-field="bo_line.description_picking"/>
+                                                    </div>
+                                                </td>
+                                                <td class="thermal-qty">
+                                                    <span t-field="bo_line.product_uom_qty"/>
+                                                    <span t-field="bo_line.product_uom" groups="uom.group_uom"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Signature -->
+                                <div t-if="o.signature" class="thermal-section" style="text-align: center;">
+                                    <div class="thermal-label" style="margin-bottom: 5px;">Signature</div>
+                                    <img t-att-src="image_data_uri(o.signature)"
+                                         style="max-height: 60px; max-width: 100%;"/>
+                                    <div t-if="o.partner_id.name" style="font-size: 10px; margin-top: 3px;">
+                                        <span t-field="o.partner_id.name"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </center>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

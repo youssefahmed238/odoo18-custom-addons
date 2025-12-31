@@ -16,7 +16,7 @@
             <field name="binding_type">report</field>
         </record>
 
-        <!-- Thermal report for Delivery Slip -->
+        <!-- Thermal report for Delivery Slip-->
         <record id="action_report_delivery_thermal" model="ir.actions.report">
             <field name="name">Delivery Slip (Thermal)</field>
             <field name="model">stock.picking</field>
