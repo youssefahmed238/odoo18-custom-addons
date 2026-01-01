@@ -1,0 +1,54 @@
+<odoo>
+    <record id="view_account_installation_list" model="ir.ui.view">
+        <field name="name">account.installation.list</field>
+        <field name="model">account.installation</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_installation_form" model="ir.ui.view">
+        <field name="name">account.installation.form</field>
+        <field name="model">account.installation</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+
+                    <group>
+                        <field name="installation_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="installation_date"/>
+                                <field name="installation_net"/>
+                                <field name="installation_gross"/>
+                                <field name="due_date"/>
+                                <field name="payment_method"/>
+                                <field name="amount_paid"/>
+                                <field name="remaining_amount"/>
+
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_installation" model="ir.actions.act_window">
+        <field name="name">Installation</field>
+        <field name="res_model">account.installation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <menuitem id="menu_installation_root"
+              name="All Premium"
+              parent="account.menu_finance_configuration"
+              action="action_account_installation"
+              sequence="50"/>
+
+</odoo>

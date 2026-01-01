@@ -16,11 +16,15 @@
                         <button name="set_to_approved" string="Approved" type="object" class="oe_highlight"
                                 state="approved" invisible="state in ['approved', 'cancel', 'delivered']"/>
 
-                        <button name="create_endorsement" string="Create Sub Policy" type="object"
+                        <button name="create_endorsement" string="Endorsement" type="object"
                                 class="oe_highlight" invisible="state not in ['approved'] or parent_id"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
                                readonly="1"/>
+
+                        <button name="set_to_draft" string="Reset To Draft" type="object"
+                                invisible="state in 'draft' "/>
+
                         <button name="sum_item" string="Calculating installments" type="object"
                                 class="oe_highlight"/>
 
@@ -73,6 +77,7 @@
                                         <field name="kay_account" readonly="state != 'draft'"/>
                                         <field name="insured" readonly="state != 'draft'"/>
                                         <field name="tpa_partner" readonly="state != 'draft'"/>
+                                        <field name="in_favor_of" readonly="state != 'draft'"/>
                                     </group>
                                     <!-- group 2 -->
                                     <group>
@@ -132,9 +137,8 @@
                             <page name="risk_details" string="Risk Details">
                                 <group string="Risks">
                                     <field name="policy_risks_ids" nolabel="1">
-                                        <list editable="bottom" create="0" edit="0" delete="0">
+                                        <list editable="bottom" create="1" edit="0" delete="0">
                                             <field name="name"/>
-
                                             <field name="possession"/>
                                             <field name="plate_number"/>
                                             <field name="maker"/>

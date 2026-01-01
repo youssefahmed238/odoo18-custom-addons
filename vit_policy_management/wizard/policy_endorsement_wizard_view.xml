@@ -5,7 +5,7 @@
         <field name="arch" type="xml">
             <form string="Endorsement">
                 <group>
-                    <field name="policy_ref" readonly="1"/>
+<!--                    <field name="policy_ref" readonly="1"/>-->
                     <field name="name" readonly="1"/>
                     <field name="transaction_type"/>
                     <field name="effective_date_from"/>

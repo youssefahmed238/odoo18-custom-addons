@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 class MarinePolicy(models.Model):
     _name = "marine.policy"
+    _inherit = ['policy.installation.mixin']
 
     _sequence_code = "marine.policy.seq"
     _sequence_field = "marine_sequences"
@@ -32,6 +33,7 @@ class MarinePolicy(models.Model):
     kay_account = fields.Char(string="Kay Account")
     insured = fields.Many2one('res.partner', string="Insured")
     tpa_partner = fields.Many2one('res.partner', string="TPA Partner")
+    in_favor_of = fields.Many2one('res.partner', string="In Favor Of")
 
     # -------- group 2 -------------
     curr = fields.Many2one('res.currency', string="Currency")
@@ -231,6 +233,9 @@ class MarinePolicy(models.Model):
                 'approved_on': fields.Datetime.now(),
             })
 
+            # 🔥 ONE LINE ONLY
+            rec._create_installation()
+
     @api.depends('effective_date_from', 'effective_date_to')
     def _compute_total_days(self):
         for rec in self:
@@ -291,6 +296,7 @@ class MarinePolicy(models.Model):
     
                 # Calculate instalment amount
                 instalment_amount = rec.gross_premium_egp / instalments_count
+                instalment_net = rec.net_premium_egp / instalments_count
     
                 instalments = []
                 start_date = rec.effective_date_from or fields.Date.today()
@@ -301,14 +307,14 @@ class MarinePolicy(models.Model):
                         instalment_date = start_date + relativedelta(months=4 * i)
                     else:
                         instalment_date = start_date + relativedelta(months=i)
-    
+
                     instalments.append((0, 0, {
                         'instalment_date': instalment_date,
                         'instalment_gross': instalment_amount,
-                        'instalment_net': instalment_amount,
-                        'medical_policy_id': rec.id,
+                        'instalment_net': instalment_net,
+                        'marine_policy_id': rec.id,
                     }))
-    
+
                 rec.write({
                     'instalment_ids': instalments
                 })

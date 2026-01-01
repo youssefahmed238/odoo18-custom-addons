@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 class EngineeringPolicy(models.Model):
     _name = "engineering.policy"
+    _inherit = ['policy.installation.mixin']
 
     _sequence_code = "engineering.policy.seq"
     _sequence_field = "engineering_sequences"
@@ -33,6 +34,7 @@ class EngineeringPolicy(models.Model):
     kay_account = fields.Char(string="Kay Account")
     insured = fields.Many2one('res.partner', string="Insured")
     tpa_partner = fields.Many2one('res.partner', string="TPA Partner")
+    in_favor_of = fields.Many2one('res.partner', string="In Favor Of")
 
     # -------- group 2 -------------
     curr = fields.Many2one('res.currency', string="Currency")
@@ -102,6 +104,29 @@ class EngineeringPolicy(models.Model):
     gross_premium_egp = fields.Integer(string="Gross Premium EGP")
     gross_rate = fields.Integer(string="Gross Rate")
 
+    net_before_parent_amount = fields.Float(string="Net Before Parent Amount", readonly=True)
+    gross_before_parent_amount = fields.Float(string="Gross Before Parent Amount", readonly=True)
+
+    net_after_parent_amount = fields.Float(string="Net After Parent Amount", readonly=True)
+    gross_after_parent_amount = fields.Float(string="Gross After Parent Amount", readonly=True)
+
+
+    @api.onchange('net_premium_egp', 'net_before_parent_amount')
+    def _onchange_net_premium_egp(self):
+        """ Automatically update net_after_parent_amount when net_premium_egp is changed. """
+        if self.net_premium_egp and self.net_before_parent_amount is not None:
+            self.net_after_parent_amount = self.net_premium_egp + self.net_before_parent_amount
+
+    @api.onchange('gross_premium_egp', 'gross_before_parent_amount')
+    def _onchange_gross_premium_egp(self):
+        """ Automatically update gross_after_parent_amount when gross_premium_egp is changed. """
+        if self.gross_premium_egp and self.gross_before_parent_amount is not None:
+            self.gross_after_parent_amount = self.gross_premium_egp + self.gross_before_parent_amount
+
+
+
+
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approved', 'Approved'),
@@ -127,6 +152,9 @@ class EngineeringPolicy(models.Model):
     child_ids = fields.One2many('engineering.policy', 'parent_id', string="Sub Policies")
 
     child_count = fields.Integer(string="Children Count", compute='_compute_child_count')
+
+
+
 
     @api.model
     def create(self, vals):
@@ -242,6 +270,9 @@ class EngineeringPolicy(models.Model):
                 'approved_on': fields.Datetime.now(),
             })
 
+            # 🔥 ONE LINE ONLY
+            rec._create_installation()
+
 
     @api.depends('effective_date_from', 'effective_date_to')
     def _compute_total_days(self):
@@ -299,7 +330,8 @@ class EngineeringPolicy(models.Model):
     
                 # Calculate instalment amount
                 instalment_amount = rec.gross_premium_egp / instalments_count
-    
+                instalment_net = rec.net_premium_egp / instalments_count
+
                 instalments = []
                 start_date = rec.effective_date_from or fields.Date.today()
     
@@ -309,14 +341,14 @@ class EngineeringPolicy(models.Model):
                         instalment_date = start_date + relativedelta(months=4 * i)
                     else:
                         instalment_date = start_date + relativedelta(months=i)
-    
+
                     instalments.append((0, 0, {
                         'instalment_date': instalment_date,
                         'instalment_gross': instalment_amount,
-                        'instalment_net': instalment_amount, 
-                        'medical_policy_id': rec.id,
+                        'instalment_net': instalment_net,
+                        'engineering_policy_id': rec.id,
                     }))
-    
+
                 rec.write({
                     'instalment_ids': instalments
                 })

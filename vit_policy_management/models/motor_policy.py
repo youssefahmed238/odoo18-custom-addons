@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 class MotorPolicy(models.Model):
     _name = "motor.policy"
+    _inherit = ['policy.installation.mixin']
 
     _sequence_code = "motor.policy.seq"
     _sequence_field = "motor_sequences"
@@ -32,6 +33,7 @@ class MotorPolicy(models.Model):
     kay_account = fields.Char(string="Kay Account")
     insured = fields.Many2one('res.partner', string="Insured")
     tpa_partner = fields.Many2one('res.partner', string="TPA Partner")
+    in_favor_of = fields.Many2one('res.partner', string="In Favor Of")
 
     # -------- group 2 -------------
     curr = fields.Many2one('res.currency', string="Currency")
@@ -109,7 +111,7 @@ class MotorPolicy(models.Model):
         copy=False,
     )
 
-    policy_risks_ids = fields.One2many('policy.risks', 'motor_policy_number', domain=[('state', '=', 'approved')])
+    policy_risks_ids = fields.One2many('policy.risks', 'motor_policy_number')
 
     # risks_ids = fields.One2many('risks.line', 'motor_risks_id')
     # risks_policy_risks_premium_summary_ids = fields.One2many('risks.line', 'motor_risks_id')
@@ -231,6 +233,14 @@ class MotorPolicy(models.Model):
     def set_to_cancel(self):
         self.state = 'cancel'
 
+    # def set_to_approved(self):
+    #     for rec in self:
+    #         rec.write({
+    #             'state': 'approved',
+    #             'approved_by': self.env.user.id,
+    #             'approved_on': fields.Datetime.now(),
+    #         })
+
     def set_to_approved(self):
         for rec in self:
             rec.write({
@@ -238,6 +248,9 @@ class MotorPolicy(models.Model):
                 'approved_by': self.env.user.id,
                 'approved_on': fields.Datetime.now(),
             })
+
+            # 🔥 ONE LINE ONLY
+            rec._create_installation()
 
     @api.depends('effective_date_from', 'effective_date_to')
     def _compute_total_days(self):
@@ -297,7 +310,9 @@ class MotorPolicy(models.Model):
     
                 # Calculate instalment amount
                 instalment_amount = rec.gross_premium_egp / instalments_count
-    
+
+                instalment_net = rec.net_premium_egp / instalments_count
+
                 instalments = []
                 start_date = rec.effective_date_from or fields.Date.today()
     
@@ -307,14 +322,14 @@ class MotorPolicy(models.Model):
                         instalment_date = start_date + relativedelta(months=4 * i)
                     else:
                         instalment_date = start_date + relativedelta(months=i)
-    
+
                     instalments.append((0, 0, {
                         'instalment_date': instalment_date,
                         'instalment_gross': instalment_amount,
-                        'instalment_net': instalment_amount,
-                        'medical_policy_id': rec.id,
+                        'instalment_net': instalment_net,
+                        'motor_policy_id': rec.id,  # ✅ CORRECT
                     }))
-    
+
                 rec.write({
                     'instalment_ids': instalments
                 })

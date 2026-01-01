@@ -1,3 +1,4 @@
+from . import account_installation_line
 from . import medical_policy
 from . import policy_category
 from . import insurance_for
@@ -23,3 +24,5 @@ from . import risks_line
 from . import instalment_line
 from . import insurance_policy_premium_summary
 from . import policy_payment_method
+from . import account_installation
+

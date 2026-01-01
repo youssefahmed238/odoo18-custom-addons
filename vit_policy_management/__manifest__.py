@@ -3,7 +3,7 @@
     'author': 'VarietyIT, Ahmed Mohamed',
     'version': '18.1',
     'depends': [
-        'base', 'web', 'board', 'product', 'hr'
+        'base', 'web', 'board', 'product', 'hr', 'account'
     ],
     'data': [
         #  Security File
@@ -61,6 +61,9 @@
 
         # wizard
         'wizard/policy_endorsement_wizard_view.xml',
+
+        # Account Menu
+        'views/account_installation_views.xml',
     ],
 
 

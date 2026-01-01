@@ -16,14 +16,17 @@
                         <button name="set_to_approved" string="Approved" type="object" class="oe_highlight"
                                 state="approved" invisible="state in ['approved', 'cancel', 'delivered']"/>
 
+                        <button name="set_to_draft" string="Reset To Draft" type="object"
+                                invisible="state in 'draft' "/>
+
                         <button name="create_endorsement" string="Endorsement" type="object"
                                 class="oe_highlight" invisible="state not in ['approved'] or parent_id"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
+                        <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved,Reset To Draft"
                                readonly="1"/>
 
                         <button name="sum_item" string="Calculating installments" type="object"
-                                class="oe_highlight"/>
+                                class="oe_highlight" invisible="state in 'approved'"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -70,6 +73,7 @@
                                         <field name="kay_account" readonly="state != 'draft'"/>
                                         <field name="insured" readonly="state != 'draft'"/>
                                         <field name="tpa_partner" readonly="state != 'draft'"/>
+                                        <field name="in_favor_of" readonly="state != 'draft'"/>
                                     </group>
                                     <!-- group 2 -->
                                     <group>
@@ -123,33 +127,6 @@
                                     </field>
                                 </group>
 
-                                <!--                                <group string="Policy Risks Premium Summary">-->
-                                <!--                                    <field name="risks_policy_risks_premium_summary_ids" nolabel="1">-->
-                                <!--                                        <list editable="bottom">-->
-                                <!--                                            <field name="risks_id"/>-->
-                                <!--                                            <field name="currency"/>-->
-                                <!--                                            <field name="lob"/>-->
-                                <!--                                            <field name="si_before"/>-->
-                                <!--                                            <field name="si_addition"/>-->
-                                <!--                                            <field name="si_now"/>-->
-                                <!--                                            <field name="premium"/>-->
-
-                                <!--                                        </list>-->
-                                <!--                                    </field>-->
-                                <!--                                </group>-->
-
-                                <!--                                <group string="Policy Premium Summary">-->
-                                <!--                                    <field name="risks_policy_premium_summary_ids" nolabel="1">-->
-                                <!--                                        <list editable="bottom">-->
-                                <!--                                            <field name="currency"/>-->
-                                <!--                                            <field name="lob"/>-->
-                                <!--                                            <field name="si_before"/>-->
-                                <!--                                            <field name="si_addition"/>-->
-                                <!--                                            <field name="si_now"/>-->
-                                <!--                                            <field name="premium"/>-->
-                                <!--                                        </list>-->
-                                <!--                                    </field>-->
-                                <!--                                </group>-->
                             </page>
 
 
@@ -159,6 +136,9 @@
                                         <field name="net_premium" readonly="state != 'draft'" />
                                         <field name="net_premium_egp" readonly="state != 'draft'" />
                                         <field name="reg_premium" readonly="state != 'draft'" />
+                                        <field name="net_before_parent_amount" readonly="state != 'draft'" invisible="not parent_id"/>
+                                        <field name="net_after_parent_amount" readonly="state != 'draft'" invisible="not parent_id"/>
+
                                         <field name="payment_on" readonly="state != 'draft'" />
                                         <field name="payment_freq" invisible="payment_on == False" readonly="state != 'draft'"/>
 <!--                                        <field name="years" readonly="state != 'draft'" />-->
@@ -169,6 +149,8 @@
                                         <field name="gross_premium" readonly="state != 'draft'" />
                                         <field name="gross_premium_egp" readonly="state != 'draft'" />
                                         <field name="gross_rate" readonly="state != 'draft'" />
+                                        <field name="gross_before_parent_amount" readonly="state != 'draft'" invisible="not parent_id"/>
+                                        <field name="gross_after_parent_amount" readonly="state != 'draft'" invisible="not parent_id"/>
 
                                     </group>
                                 </group>

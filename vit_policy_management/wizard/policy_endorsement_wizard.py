@@ -25,8 +25,8 @@ class PolicyEndorsementWizard(models.TransientModel):
     ], required=True)
 
     effective_date_from = fields.Date(required=True)
-    endorsement_reason = fields.Text()
-    text_reason = fields.Text()
+    endorsement_reason = fields.Char()
+    text_reason = fields.Char()
 
     # ----------------------------------------------------
     # POLICY MODEL DETECTION
@@ -52,6 +52,10 @@ class PolicyEndorsementWizard(models.TransientModel):
         if not policy:
             raise UserError("No policy selected.")
 
+        # Store the original values for net_premium_egp and gross_premium_egp
+        net_premium_egp = policy.net_premium_egp
+        gross_premium_egp = policy.gross_premium_egp
+
         # Create values for new endorsement
         new_vals = {
             "name": f"{policy.name} - Endorsement",
@@ -67,6 +71,14 @@ class PolicyEndorsementWizard(models.TransientModel):
             "customer": policy.customer.id,
             "business_source_id": policy.business_source_id.id,
             "insured": policy.insured.id,
+
+            # Set the new fields with zero values
+            "net_premium_egp": 0,
+            "gross_premium_egp": 0,
+
+            # Store the original values in the new fields
+            "net_before_parent_amount": net_premium_egp,
+            "gross_before_parent_amount": gross_premium_egp,
         }
 
         # Copy original policy → new endorsement

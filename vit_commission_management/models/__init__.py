@@ -1,6 +1,8 @@
 from . import commission_line
 from . import account_move
 
+from . import account_installation_line
+
 from . import medical_policy
 from . import life_policy
 from . import motor_policy

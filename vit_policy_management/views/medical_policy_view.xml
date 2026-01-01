@@ -22,6 +22,9 @@
                         <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved"
                                readonly="1"/>
 
+                        <button name="set_to_draft" string="Reset To Draft" type="object"
+                                invisible="state in 'draft' "/>
+
                         <button name="sum_item" string="Calculating installments" type="object"
                                 class="oe_highlight"/>
                     </header>
@@ -74,6 +77,8 @@
                                         <field name="kay_account" readonly="state != 'draft'"/>
                                         <field name="insured" readonly="state != 'draft'"/>
                                         <field name="tpa_partner" readonly="state != 'draft'"/>
+                                        <field name="in_favor_of" readonly="state != 'draft'"/>
+
                                     </group>
                                     <!-- group 2 -->
                                     <group>

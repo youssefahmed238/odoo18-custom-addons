@@ -52,3 +52,8 @@ access_policy_payment_method,policy.payment.method,model_policy_payment_method,,
 
 access_policy_endorsement_wizard,access_policy_endorsement_wizard,model_policy_endorsement_wizard,,1,1,1,1
 
+access_account_installation,account.installation,model_account_installation,,1,1,1,1
+
+access_account_installation_line,account.installation.line,model_account_installation_line,,1,1,1,1
+
+
