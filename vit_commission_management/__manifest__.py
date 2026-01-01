@@ -12,6 +12,8 @@
 
         # Inherited Views
         'views/account_move_view.xml',
+        'views/account_installation_view.xml',
+
         'views/medical_policy_view.xml',
         'views/life_policy_view.xml',
         'views/motor_policy_view.xml',

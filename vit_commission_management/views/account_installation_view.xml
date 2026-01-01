@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit account installation Form View -->
+    <record id="view_account_installation_form_inherit_commission" model="ir.ui.view">
+        <field name="name">account.installation.form.inherit.commission</field>
+        <field name="model">account.installation</field>
+        <field name="inherit_id" ref="vit_policy_management.view_account_installation_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='installation_ids']/list/field[@name='payment_method']"
+                   position="after">
+                <field name="total_amount_p"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
