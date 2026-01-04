@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add thermal printer settings to My Profile (user preferences) -->
+    <record id="view_users_form_simple_modif_inherit_thermal_base" model="ir.ui.view">
+        <field name="name">res.users.preferences.inherit.thermal.base</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='preferences']//field[@name='tz']" position="after">
+                <field name="using_thermal_printer" widget="boolean_toggle"/>
+                <field name="thermal_size" invisible="not using_thermal_printer" widget="radio"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

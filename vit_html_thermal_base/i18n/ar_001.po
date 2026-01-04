@@ -1,0 +1,46 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* vit_html_thermal_base
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-04 19:51+0000\n"
+"PO-Revision-Date: 2026-01-04 19:51+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: vit_html_thermal_base
+#: model:ir.model.fields.selection,name:vit_html_thermal_base.selection__res_users__thermal_size__58mm
+msgid "2 Inch (58 mm)"
+msgstr "2 بوصة (58 مم)"
+
+#. module: vit_html_thermal_base
+#: model:ir.model.fields.selection,name:vit_html_thermal_base.selection__res_users__thermal_size__80mm
+msgid "3 Inch (80 mm)"
+msgstr "3 بوصة (80 مم)"
+
+#. module: vit_html_thermal_base
+#: model:ir.model.fields.selection,name:vit_html_thermal_base.selection__res_users__thermal_size__104mm
+msgid "4 Inch (104 mm)"
+msgstr "4 بوصة (104 مم)"
+
+#. module: vit_html_thermal_base
+#: model:ir.model.fields,field_description:vit_html_thermal_base.field_res_users__thermal_size
+msgid "Printer Size"
+msgstr "مقاس ورق الطابعة الحرارية"
+
+#. module: vit_html_thermal_base
+#: model:ir.model,name:vit_html_thermal_base.model_res_users
+msgid "User"
+msgstr "المستخدم"
+
+#. module: vit_html_thermal_base
+#: model:ir.model.fields,field_description:vit_html_thermal_base.field_res_users__using_thermal_printer
+msgid "Using Thermal Printer"
+msgstr "استخدام الطابعة الحرارية"
