@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_sale_order_thermal" model="ir.actions.report">
+            <field name="name">Sales Order (Thermal)</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">vit_html_thermal_so.report_sale_order_thermal</field>
+            <field name="report_file">vit_html_thermal_so.report_sale_order_thermal</field>
+            <field name="print_report_name">'Sales Order - %s - %s' % (object.partner_id.name or '', object.name)</field>
+        </record>
+
+    </data>
+</odoo>

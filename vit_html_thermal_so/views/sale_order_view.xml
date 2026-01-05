@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Sale Order Form View to add Thermal Print Button -->
+    <record id="view_order_form_inherit_thermal" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.thermal</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="print_order_thermal_report" type="object" string="Order Thermal Print"
+                    icon="fa-print" invisible="not using_thermal_printer"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
