@@ -8,11 +8,11 @@
                 <t t-set="thermal_width" t-value="user.thermal_size or '80mm'"/>
             </t>
 
-            <script type="text/javascript">
-                window.onload = function () {
-                window.print();
-                };
-            </script>
+<!--            <script type="text/javascript">-->
+<!--                window.onload = function () {-->
+<!--                window.print();-->
+<!--                };-->
+<!--            </script>-->
 
             <style type="text/css">
                 @page {
@@ -47,9 +47,9 @@
                         <div class="thermal-section">
                             <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
                             <div style="font-size: 16px; font-weight: bold; margin: 10px 0;">
-                                <span t-if="is_proforma">Pro-Forma Invoice #</span>
-                                <span t-elif="o.state in ['draft','sent']">Quotation #</span>
-                                <span t-else="">Order #</span>
+                                <span t-if="is_proforma">Pro-Forma Invoice # / الفاتورة الأولية # </span>
+                                <span t-elif="o.state in ['draft','sent']">Quotation # / عرض السعر # </span>
+                                <span t-else="">Order # / طلب الشراء # </span>
                                 <span t-field="o.name"/>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                             <p t-if="o.partner_id.vat" style="margin-top: 3px;">
                                 <t t-if="o.company_id.account_fiscal_country_id.vat_label"
                                    t-out="o.company_id.account_fiscal_country_id.vat_label"/>
-                                <t t-else="">Tax ID</t>:
+                                <t t-else="">Tax ID / الرقم الضريبي: </t>
                                 <span t-field="o.partner_id.vat"/>
                             </p>
                         </div>
@@ -72,10 +72,10 @@
 
                             <div class="thermal-label">
                                 <t t-if="o.partner_shipping_id == o.partner_invoice_id">
-                                    Invoicing and Shipping Address
+                                    Invoicing and Shipping Address / عنوان الفوترة والشحن
                                 </t>
                                 <t t-else="">
-                                    Invoicing Address
+                                    Invoicing Address / عنوان الفوترة
                                 </t>
                             </div>
                             <div t-field="o.partner_invoice_id"
@@ -84,7 +84,7 @@
 
                             <div t-if="o.partner_shipping_id != o.partner_invoice_id"
                                  style="margin-top: 8px;">
-                                <div class="thermal-label">Shipping Address</div>
+                                <div class="thermal-label">Shipping Address / عنوان الشحن</div>
                                 <div t-field="o.partner_shipping_id"
                                      t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'
                                      style="font-size: 10px; margin-top: 3px;"/>
@@ -92,26 +92,34 @@
                         </div>
 
                         <!-- Document Information -->
-                        <div class="thermal-section" style="text-align: left;">
+                        <div class="thermal-section" style="margin-bottom: 5px;">
                             <div class="thermal-row" t-if="o.client_order_ref">
-                                <span class="thermal-label">Your Reference:</span>
+                                <span class="thermal-label" style="text-align: left;">Your Reference:</span>
                                 <span class="thermal-value" t-field="o.client_order_ref"/>
+                                <span class="thermal-label" style="text-align: right;">مرجعكم:</span>
                             </div>
-                            <div class="thermal-row" t-if="o.date_order">
-                                <span class="thermal-label">
+                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.date_order">
+                                <span class="thermal-label" style="text-align: left;">
                                     <t t-if="is_proforma">Issued Date:</t>
                                     <t t-elif="o.state in ['draft', 'sent']">Quotation Date:</t>
                                     <t t-else="">Order Date:</t>
                                 </span>
                                 <span class="thermal-value" t-field="o.date_order" t-options='{"widget": "date"}'/>
+                                <span class="thermal-label" style="text-align: right;">
+                                    <t t-if="is_proforma">:تاريخ الإصدار</t>
+                                    <t t-elif="o.state in ['draft', 'sent']">:تاريخ عرض السعر</t>
+                                    <t t-else="">:  تاريخ الطلب</t>
+                                </span>
                             </div>
-                            <div class="thermal-row" t-if="o.validity_date and o.state in ['draft', 'sent']">
-                                <span class="thermal-label">Expiration:</span>
+                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.validity_date and o.state in ['draft', 'sent']">
+                                <span class="thermal-label" style="text-align: left;">Expiration:</span>
                                 <span class="thermal-value" t-field="o.validity_date"/>
+                                <span class="thermal-label" style="text-align: right;">:تاريخ الانتهاء</span>
                             </div>
-                            <div class="thermal-row" t-if="o.user_id.name">
-                                <span class="thermal-label">Salesperson:</span>
+                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.user_id.name">
+                                <span class="thermal-label" style="text-align: left;">Salesperson:</span>
                                 <span class="thermal-value" t-field="o.user_id"/>
+                                <span class="thermal-label" style="text-align: right;">:مندوب المبيعات</span>
                             </div>
                         </div>
 
@@ -124,12 +132,26 @@
                                 <thead>
                                     <tr>
                                         <th style="text-align: center; width: 3%;">#</th>
-                                        <th style="text-align: left; width: 22%">Description</th>
-                                        <th style="text-align: center; width: 15%">Quantity</th>
-                                        <th style="text-align: center; width: 15%">Unit Price</th>
-                                        <th t-if="display_discount" style="text-align: center; width: 10%">Disc</th>
-                                        <th style="text-align: center; width: 10%">Taxes</th>
-                                        <th style="text-align: center;">Amount</th>
+                                        <th style="text-align: left; width: 20%">
+                                            <span>الوصف</span>
+                                            <span>Desc</span>
+                                        </th>
+                                        <th style="text-align: center; width: 10%">
+                                            <span>الكمية</span>
+                                            <span>Qty</span>
+                                        </th>
+                                        <th style="text-align: center; width: 20%">
+                                            <span>السعر</span>
+                                            <span>Price</span>
+                                        </th>
+                                        <th t-if="display_discount" style="text-align: center; width: 20%">
+                                            <span>الخصم %</span>
+                                            <span>Disc %</span>
+                                        </th>
+                                        <th style="text-align: center;">
+                                            <span>الإجمالي</span>
+                                            <span>Total</span>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -153,24 +175,12 @@
                                                 </td>
                                                 <td style="text-align: right; white-space: normal;">
                                                     <span t-field="line.product_uom_qty"/>
-                                                    <span t-field="line.product_uom" groups="uom.group_uom"/>
-                                                    <div t-if="line.product_packaging_id" style="font-size: 9px;">
-                                                        (
-                                                        <span t-field="line.product_packaging_qty"
-                                                              t-options='{"widget": "integer"}'/>
-                                                        <span t-field="line.product_packaging_id"/>)
-                                                    </div>
                                                 </td>
                                                 <td style="text-align: center; white-space: nowrap;">
                                                     <span t-field="line.price_unit"/>
                                                 </td>
                                                 <td t-if="display_discount" style="text-align: center;">
                                                     <span t-field="line.discount"/>
-                                                </td>
-                                                <t t-set="taxes"
-                                                   t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/>
-                                                <td style="text-align: center; font-size: 9px;">
-                                                    <span t-out="taxes"/>
                                                 </td>
                                                 <td t-if="not line.is_downpayment"
                                                     style="text-align: center; font-weight: bold; overflow-wrap: anywhere;">
@@ -205,7 +215,7 @@
                                             <t t-set="current_section" t-value="None"/>
                                             <tr style="font-weight: bold; border-top: 1px solid #000;">
                                                 <td colspan="99" style="text-align: right; padding: 5px 2px;">
-                                                    <strong style="margin-right: 10px;">Subtotal</strong>
+                                                    <strong style="margin-right: 10px;">Subtotal / المجموع الفرعي:</strong>
                                                     <span t-out="current_subtotal"
                                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                                 </td>
@@ -278,7 +288,7 @@
 
                         <!-- Signature -->
                         <div t-if="o.signature" class="thermal-section" style="text-align: center;">
-                            <div class="thermal-label">Signature</div>
+                            <div class="thermal-label">Signature / التوقيع</div>
                             <div style="margin: 5px 0;">
                                 <img t-att-src="image_data_uri(o.signature)" style="max-height: 3cm; max-width: 6cm;"/>
                             </div>
@@ -290,7 +300,7 @@
                         <!-- Order Notes -->
                         <div t-if="o.note" class="thermal-section" style="font-size: 10px;">
                             <div class="thermal-row" style="justify-content: left;">
-                                <span class="thermal-label">Order Note:</span>
+                                <span class="thermal-label">Order Note / ملاحظة الطلب:</span>
                                 <span class="thermal-value" t-field="o.note"/>
                             </div>
                         </div>
@@ -299,7 +309,7 @@
                         <div t-if="not is_html_empty(o.payment_term_id.note)"
                              class="thermal-section" style="font-size: 10px;">
                             <div class="thermal-row" style="justify-content: left;">
-                                <span class="thermal-label">Payment Terms:</span>
+                                <span class="thermal-label">Payment Terms / شروط الدفع:</span>
                                 <span t-field="o.payment_term_id.note"/>
                             </div>
                         </div>
@@ -308,7 +318,7 @@
                         <div t-if="o.fiscal_position_id and not is_html_empty(o.fiscal_position_id.sudo().note)"
                              class="thermal-section" style="font-size: 10px;">
                             <div class="thermal-row" style="justify-content: left;">
-                                <span class="thermal-label">Fiscal Position Remark:</span>
+                                <span class="thermal-label">Fiscal Position Remark / ملاحظة الوضع الضريبي:</span>
                                 <span t-field="o.fiscal_position_id.sudo().note"/>
                             </div>
                         </div>
@@ -347,7 +357,7 @@
 
             <!-- Total Amount -->
             <div class="thermal-row total">
-                <strong>Total</strong>
+                <strong>Total / المجموع:</strong>
                 <strong class="right">
                     <t t-out="tax_totals['total_amount_currency']"
                        t-options='{"widget": "monetary", "display_currency": currency}'/>

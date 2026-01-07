@@ -7,8 +7,8 @@
             <field name="name">Picking Operations (Thermal)</field>
             <field name="model">stock.picking</field>
             <field name="report_type">qweb-html</field>
-            <field name="report_name">stock_thermal_reports.report_picking_thermal</field>
-            <field name="report_file">stock_thermal_reports.report_picking_thermal</field>
+            <field name="report_name">vit_html_thermal_stock.report_picking_thermal</field>
+            <field name="report_file">vit_html_thermal_stock.report_picking_thermal</field>
             <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '',
                 object.name)
             </field>
@@ -19,8 +19,8 @@
             <field name="name">Delivery Slip (Thermal)</field>
             <field name="model">stock.picking</field>
             <field name="report_type">qweb-html</field>
-            <field name="report_name">stock_thermal_reports.report_deliveryslip_thermal</field>
-            <field name="report_file">stock_thermal_reports.report_deliveryslip_thermal</field>
+            <field name="report_name">vit_html_thermal_stock.report_deliveryslip_thermal</field>
+            <field name="report_file">vit_html_thermal_stock.report_deliveryslip_thermal</field>
             <field name="print_report_name">'Delivery Slip - %s - %s' % (object.partner_id.name or '',
                 object.name)
             </field>

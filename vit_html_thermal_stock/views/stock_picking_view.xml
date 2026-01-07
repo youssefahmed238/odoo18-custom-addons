@@ -9,9 +9,11 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="print_picking_thermal_report" type="object"
-                    string="Print Picking Operations (Thermal)"/>
+                        string="Print Picking Operations Thermal Report" icon="fa-print"
+                        invisible="not using_thermal_printer"/>
                 <button name="print_delivery_thermal_report" type="object"
-                    string="Print Delivery Slip (Thermal)"/>
+                        string="Print Delivery Slip Thermal Report" icon="fa-print"
+                        invisible="not using_thermal_printer"/>
 
             </xpath>
         </field>

@@ -11,11 +11,6 @@
         'reports/report_picking_thermal.xml',
         'reports/report_deliveryslip_thermal.xml',
     ],
-    'assets': {
-        'web.assets_backend': [
-            'stock_thermal_reports/static/src/js/report_action_override.js',
-        ],
-    },
     'installable': True,
     'application': False,
     'auto_install': False,

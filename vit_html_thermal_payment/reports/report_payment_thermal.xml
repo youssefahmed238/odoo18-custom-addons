@@ -51,45 +51,58 @@
                                 <span t-field="o.payment_receipt_title"/>:
                                 <span t-field="o.name"/>
                             </div>
+                            <div style="font-size: 14; font-weight: bold; margin: 10px 0;">
+                                <span>إيصال الدفع</span>:
+                                <span t-field="o.name"/>
+                            </div>
                         </div>
 
                         <!-- Payment Information -->
-                        <div class="thermal-section" style="text-align: left;">
-                            <div class="thermal-row" t-if="o.date">
-                                <span class="thermal-label">Payment Date:</span>
+                        <div class="thermal-section">
+                            <div class="thermal-row" style="margin-bottom:5px" t-if="o.date">
+                                <span class="thermal-label" style="text-align: left;">Payment Date:</span>
                                 <span class="thermal-value" t-field="o.date"/>
+                                <span class="thermal-label" style="text-align: right;">:تاريخ الدفع</span>
                             </div>
 
-                            <div class="thermal-row" t-if="o.partner_type">
+                            <div class="thermal-row" style="margin-bottom:5px" t-if="o.partner_type">
                                 <span class="thermal-label">
                                     <t t-if="o.partner_type == 'customer'">Customer:</t>
                                     <t t-else="">Vendor:</t>
                                 </span>
                                 <span class="thermal-value" t-field="o.partner_id"/>
-                            </div>
-
-                            <div class="thermal-row"
-                                 t-if="values['display_payment_method'] and o.payment_method_id">
-                                <span class="thermal-label">Payment Method:</span>
-                                <span class="thermal-value" t-field="o.payment_method_id.name"/>
-                            </div>
-
-                            <div class="thermal-row" t-if="o.amount">
-                                <span class="thermal-label">Payment Amount:</span>
-                                <span class="thermal-value">
-                                    <span t-field="o.amount"
-                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                <span class="thermal-label" style="text-align: right;">
+                                    <t t-if="o.partner_type == 'customer'">:العميل</t>
+                                    <t t-else="">:المورد</t>
                                 </span>
                             </div>
 
+                            <div class="thermal-row" style="margin-bottom:5px"
+                                 t-if="values['display_payment_method'] and o.payment_method_id">
+                                <span class="thermal-label" style="text-align: left;">Payment Method:</span>
+                                <span class="thermal-value" t-field="o.payment_method_id.name"/>
+                                <span class="thermal-label" style="text-align: right;">:طريقة الدفع</span>
+                            </div>
+
+                            <div class="thermal-row" style="margin-bottom:5px" t-if="o.amount">
+                                <span class="thermal-label" style="text-align: left;">Payment Amount:</span>
+                                <span class="thermal-value" style="padding-top: 5px;">
+                                    <span t-field="o.amount"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </span>
+                                <span class="thermal-label" style="text-align: right;">:مبلغ الدفع</span>
+                            </div>
+
                             <div class="thermal-row" t-if="o.memo">
-                                <span class="thermal-label">Memo:</span>
+                                <span class="thermal-label" style="text-align: left;">Memo:</span>
                                 <span class="thermal-value" t-field="o.memo"/>
+                                <span class="thermal-label" style="text-align: right;">:مذكرة</span>
                             </div>
                         </div>
 
                         <!-- Invoices Table -->
-                        <div t-if="values['display_invoices']" class="thermal-section">
+                        <div t-if="values['display_invoices'] and o.reconciled_invoice_ids or o.reconciled_bill_ids"
+                             class="thermal-section">
                             <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
 
                             <!-- Check if invoices include different currencies -->
@@ -101,18 +114,29 @@
 
                             <div class="thermal-label"
                                  style="font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 5px;">
-                                Related Invoices
+                                Related Invoices / فاتورات ذات صلة
                             </div>
 
                             <table class="thermal-table">
                                 <thead>
                                     <tr>
-                                        <th style="text-align:left; width:5%;">#</th>
-                                        <th style="text-align: left; width: 20%;">Date</th>
-                                        <th style="text-align: left; width: 30%;">Number</th>
-                                        <th style="text-align: left; width: 20%;">Ref</th>
-                                        <th t-if="otherCurrency" style="text-align: right; width: 25%;">Amt in Curr</th>
-                                        <th style="text-align: right; width: 25%;">Amount</th>
+                                        <th style="text-align:left; width:3%;">#</th>
+                                        <th style="text-align: left; width: 20%;">
+                                            <span style="margin-bottom:1px">التاريخ</span>
+                                            <span>Date</span>
+                                        </th>
+                                        <th style="text-align: center; width: 30%;">
+                                            <span style="margin-bottom:1px">الرقم</span>
+                                            <span>Number</span>
+                                        </th>
+                                        <th style="text-align: center; width: 20%;">
+                                            <span style="margin-bottom:1px">المرجع</span>
+                                            <span>Ref</span>
+                                        </th>
+                                        <th style="text-align: center; width: 25%;">
+                                            <span style="margin-bottom:1px">المبلغ</span>
+                                            <span>Amount</span>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -135,8 +159,7 @@
                                                 <td style="word-wrap: break-word; white-space: normal; vertical-align: top; font-size: 9px;">
                                                     <span t-field="inv.ref"/>
                                                 </td>
-                                                <td t-if="otherCurrency"/>
-                                                <td style="text-align: right; white-space: nowrap; vertical-align: top;">
+                                                <td style="text-align: center; overflow-wrap: anywhere; vertical-align: top;">
                                                     <span t-field="inv.amount_total"/>
                                                 </td>
                                             </tr>
@@ -165,16 +188,8 @@
                                                 <t t-set="currencyPayment" t-value="payment.currency_id"/>
                                                 <t t-set="currencyInvoice" t-value="inv.currency_id"/>
 
-                                                <!-- Amount In Currency (if different) -->
-                                                <td t-if="otherCurrency"
-                                                    style="text-align: right; white-space: nowrap; vertical-align: top;">
-                                                    <span t-if="currencyPayment != currencyInvoice"
-                                                          t-out="amountPayment"
-                                                          t-options="{'widget': 'monetary', 'display_currency': currencyPayment}"/>
-                                                </td>
-
                                                 <!-- Amount In Invoice Currency -->
-                                                <td style="text-align: right; white-space: nowrap; vertical-align: top;">
+                                                <td style="text-align: center   ; overflow-wrap: anywhere; vertical-align: top;">
                                                     <span t-out="amountInvoice"
                                                           t-options="{'widget': 'monetary', 'display_currency': currencyInvoice}"/>
                                                 </td>
@@ -187,12 +202,11 @@
                                                     <t t-set="line_sequence" t-value="line_sequence + 1"/>
                                                 </td>
                                                 <td colspan="2" style="word-wrap: break-word; white-space: normal;">
-                                                    Due Amount for
+                                                    Due Amount for / المبلغ المستحق لـ
                                                     <span t-field="inv.name"/>
                                                 </td>
                                                 <td/>
-                                                <td t-if="otherCurrency"/>
-                                                <td style="text-align: right; white-space: nowrap;">
+                                                <td style="text-align: center; overflow-wrap: anywhere;">
                                                     <span t-field="inv.amount_residual"/>
                                                 </td>
                                             </tr>

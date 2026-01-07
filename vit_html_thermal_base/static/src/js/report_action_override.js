@@ -16,8 +16,11 @@ patch(ReportAction.prototype, {
 
             'vit_html_thermal_payment.report_payment_thermal',
 
-            'stock_thermal_reports.report_picking_thermal',
-            'stock_thermal_reports.report_deliveryslip_thermal',
+            'vit_html_thermal_warehouse_products.report_warehouse_product_thermal',
+
+            'vit_html_thermal_stock.report_picking_thermal',
+
+            'vit_html_thermal_stock.report_deliveryslip_thermal',
         ];
 
         if (this.props.report_name && thermalReports.includes(this.props.report_name)) {

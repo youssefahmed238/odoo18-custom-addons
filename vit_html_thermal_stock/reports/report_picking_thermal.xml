@@ -66,7 +66,7 @@
                             <!-- Delivery/Outgoing Address -->
                             <div t-if="o.should_print_delivery_address()"
                                  style="text-align: left; margin-bottom: 10px;">
-                                <div class="thermal-label">Delivery Address:</div>
+                                <div class="thermal-label">Delivery Address / عنوان التسليم:</div>
                                 <div style="font-size: 10px; margin-top: 3px;">
                                     <div t-out="o.move_ids[0].partner_id or o.partner_id"
                                          t-options='{"widget": "contact", "fields": ["name", "address", "phone"], "no_marker": True}'/>
@@ -76,7 +76,7 @@
                             <!-- Warehouse Address for non-internal operations -->
                             <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id"
                                  style="text-align: left; margin-bottom: 10px;">
-                                <div class="thermal-label">Warehouse Address:</div>
+                                <div class="thermal-label">Warehouse Address / عنوان المستودع:</div>
                                 <div style="font-size: 10px; margin-top: 3px;">
                                     <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                          t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
@@ -117,18 +117,21 @@
                         </div>
 
                         <!-- Document Information -->
-                        <div class="thermal-section" style="text-align: left;">
-                            <div class="thermal-row" t-if="o.origin">
-                                <span class="thermal-label">Order:</span>
+                        <div class="thermal-section">
+                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.origin">
+                                <span class="thermal-label" style="text-align: left;">Order:</span>
                                 <span class="thermal-value" t-field="o.origin"/>
+                                <span class="thermal-label" style="text-align: right;">:الطلب</span>
                             </div>
-                            <div class="thermal-row">
-                                <span class="thermal-label">Status:</span>
+                            <div class="thermal-row" style="margin-bottom: 5px;">
+                                <span class="thermal-label" style="text-align: left;">Status:</span>
                                 <span class="thermal-value" t-field="o.state"/>
+                                <span class="thermal-label" style="text-align: right;">:الحالة</span>
                             </div>
-                            <div class="thermal-row" t-if="o.scheduled_date">
-                                <span class="thermal-label">Scheduled Date:</span>
+                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.scheduled_date">
+                                <span class="thermal-label" style="text-align: left;">Scheduled Date:</span>
                                 <span class="thermal-value" t-field="o.scheduled_date"/>
+                                <span class="thermal-label" style="text-align: right;">:التاريخ المحدد</span>
                             </div>
                         </div>
 
@@ -143,22 +146,40 @@
                             <table class="thermal-table">
                                 <thead>
                                     <tr>
-                                        <th style="text-align: left; width:50%;">Product</th>
-                                        <th style="text-align: center; width:30%;">Qty</th>
+                                        <th style="text-align: center; width: 5%;">#</th>
+                                        <th style="text-align: left; width:40%;">
+                                            <div>المنتج</div>
+                                            <div>Product</div>
+                                        </th>
+                                        <th style="text-align: center; width:30%;">
+                                            <div>الكمية</div>
+                                            <div>Qty</div>
+                                        </th>
                                         <th t-if="o.picking_type_id.code != 'incoming'"
                                             groups="stock.group_stock_multi_locations"
-                                            style="text-align: left;">From
+                                            style="text-align: center;">
+                                            <div>من</div>
+                                            <div>From</div>
                                         </th>
                                         <th t-if="o.picking_type_id.code != 'outgoing'"
                                             groups="stock.group_stock_multi_locations"
-                                            style="text-align: left;">To
+                                            style="text-align: center;">
+                                            <div>إلى</div>
+                                            <div>To</div>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <t t-set="seq" t-value="1"/>
                                     <t t-foreach="o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))"
                                        t-as="ml">
                                         <tr>
+                                            <!-- Sequence Number Column -->
+                                            <td class="thermal-qty" style="text-align: center;">
+                                                <span t-esc="seq"/>
+                                                <t t-set="seq" t-value="seq + 1"/>
+                                            </td>
+
                                             <!-- Product Column -->
                                             <td>
                                                 <div class="thermal-product-name">
@@ -210,7 +231,8 @@
                                         <!-- Serial Number Row -->
                                         <tr t-if="has_serial_number and (ml.lot_id or ml.lot_name)">
                                             <td colspan="4" class="thermal-barcode">
-                                                <div style="font-size: 9px; font-weight: bold;">Lot/Serial:
+                                                <div style="font-size: 9px; font-weight: bold;">Lot/Serial / رقم
+                                                    الدفعة/الرقم التسلسلي:
                                                 </div>
                                                 <span t-esc="ml.lot_id.name or ml.lot_name"
                                                       t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 300, 'height': 50, 'img_style': 'width:100%;height:30px;'}"/>
@@ -233,7 +255,7 @@
                         <div t-if="o.package_level_ids and o.picking_type_entire_packs and o.state in ['assigned', 'done']"
                              class="thermal-section">
                             <div class="thermal-label" style="text-align: center; margin-bottom: 5px;">
-                                PACKAGES
+                                PACKAGES / الطرود
                             </div>
 
                             <t t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)"
@@ -250,13 +272,13 @@
                                     <!-- Package Locations -->
                                     <div t-if="o.picking_type_id.code != 'incoming'"
                                          groups="stock.group_stock_multi_locations" class="thermal-row">
-                                        <span>From:</span>
+                                        <span>From / من:</span>
                                         <span t-field="package.location_id"/>
                                     </div>
 
                                     <div t-if="o.picking_type_id.code != 'outgoing'"
                                          groups="stock.group_stock_multi_locations" class="thermal-row">
-                                        <span>To:</span>
+                                        <span>To / إلى:</span>
                                         <span t-field="package.location_dest_id"/>
                                     </div>
                                 </div>
@@ -268,12 +290,13 @@
                            t-value="o.move_ids.filtered(lambda x: x.product_uom_qty != x.quantity and x.move_line_ids and x.state!='done')"/>
                         <div t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"
                              class="thermal-warning">
-                            ⚠ Not all products reserved. Check availability.
+                            <div>⚠ Not all products reserved. Check availability.</div>
+                            <div>لم يتم حجز جميع المنتجات. تحقق من التوافر.</div>
                         </div>
 
                         <!-- Notes -->
                         <div t-if="o.note" class="thermal-section thermal-note">
-                            <div class="thermal-label">Notes:</div>
+                            <div class="thermal-label">Notes / ملاحظات:</div>
                             <p t-field="o.note" style="margin-top: 3px;"/>
                         </div>
 

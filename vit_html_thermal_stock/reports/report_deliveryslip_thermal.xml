@@ -30,7 +30,7 @@
             <t t-call="web.html_container">
                 <t t-call="web.basic_layout">
                     <t t-foreach="docs" t-as="o">
-                        <link rel="stylesheet" href="/stock_thermal_reports/static/src/css/thermal_style.css"/>
+                        <link rel="stylesheet" href="/vit_html_thermal_base/static/src/css/thermal_style.css"/>
 
                         <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())"/>
                         <t t-set="partner"
@@ -68,7 +68,7 @@
                                     <!-- Delivery Address -->
                                     <div t-if="o.should_print_delivery_address()"
                                          style="text-align: left; margin-bottom: 10px;">
-                                        <div class="thermal-label">Delivery Address:</div>
+                                        <div class="thermal-label">Delivery Address / عنوان التسليم:</div>
                                         <div style="font-size: 10px; margin-top: 3px;">
                                             <div t-out="o.move_ids[0].partner_id or o.partner_id"
                                                  t-options='{"widget": "contact", "fields": ["name", "address", "phone"], "no_marker": True}'/>
@@ -78,7 +78,7 @@
                                     <!-- Warehouse Address -->
                                     <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id"
                                          style="text-align: left; margin-bottom: 10px;">
-                                        <div class="thermal-label">Warehouse Address:</div>
+                                        <div class="thermal-label">Warehouse Address / عنوان المستودع:</div>
                                         <div style="font-size: 10px; margin-top: 3px;">
                                             <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                                  t-options='{"widget": "contact", "fields": ["name", "address", "phone"], "no_marker": True}'/>
@@ -113,17 +113,19 @@
                                 </div>
 
                                 <!-- Document Information -->
-                                <div class="thermal-section" style="text-align: left;">
-                                    <div class="thermal-row" t-if="o.origin">
-                                        <span class="thermal-label">Order:</span>
+                                <div class="thermal-section">
+                                    <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.origin">
+                                        <span class="thermal-label" style="text-align: left;">Order:</span>
                                         <span class="thermal-value" t-field="o.origin"/>
+                                        <span class="thermal-label" style="text-align: right;">:طلب</span>
                                     </div>
-                                    <div class="thermal-row" t-if="o.state">
-                                        <span class="thermal-label">Shipping Date:</span>
+                                    <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.state">
+                                        <span class="thermal-label" style="text-align: left;">Shipping Date:</span>
                                         <span class="thermal-value">
                                             <div t-if="o.state == 'done'" t-field="o.date_done"/>
                                             <div t-else="" t-field="o.scheduled_date"/>
                                         </span>
+                                        <span class="thermal-label" style="text-align: right;">:تاريخ الشحن</span>
                                     </div>
                                 </div>
 
@@ -134,13 +136,26 @@
                                     <table class="thermal-table">
                                         <thead>
                                             <tr>
-                                                <th style="text-align: left; width:50%;">Product</th>
-                                                <th style="text-align: center; width:25%;">Ordered</th>
-                                                <th style="text-align: center; width:25%;">Delivered</th>
+                                                <th style="text-align: center; width: 5%;">#</th>
+                                                <th style="text-align: left; width:25%;">
+                                                    <div>المنتج</div>
+                                                    <div>Product</div>
+                                                </th>
+                                                <th style="text-align: center; width:30%;">
+                                                    <div>مطلوب</div>
+                                                    <div>Ordered</div>
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    <div>تم التسليم</div>
+                                                    <div>Delivered</div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr t-foreach="lines" t-as="move">
+                                                <td style="text-align: center;">
+                                                    <span t-esc="move_index + 1"/>
+                                                </td>
                                                 <td>
                                                     <div class="thermal-product-name">
                                                         <span t-field="move.product_id"/>
@@ -183,12 +198,23 @@
                                     <table class="thermal-table">
                                         <thead>
                                             <tr>
-                                                <th style="text-align: left; width:50%;">Product</th>
-                                                <th style="text-align: center; width:25%;" t-if="not has_serial_number">
-                                                    Ordered
+                                                <th style="text-align: center; width:5%;">#</th>
+                                                <th style="text-align: left; width:30%;">
+                                                    <div>المنتج</div>
+                                                    <div>Product</div>
                                                 </th>
-                                                <th style="text-align: center; width:25%;" t-else="">Lot/Serial</th>
-                                                <th style="text-align: center; width:25%;">Delivered</th>
+                                                <th style="text-align: center; width:25%;" t-if="not has_serial_number">
+                                                    <div>مطلوب</div>
+                                                    <div>Ordered</div>
+                                                </th>
+                                                <th style="text-align: center; width:25%;" t-else="">
+                                                    <div>الرقم التسلسلي</div>
+                                                    <div>Lot/Serial</div>
+                                                </th>
+                                                <th style="text-align: center; width:25%;">
+                                                    <div>تم التسليم</div>
+                                                    <div>Delivered</div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -196,10 +222,11 @@
                                             <t t-if="o.has_packages">
                                                 <t t-set="packages"
                                                    t-value="o.move_line_ids.mapped('result_package_id')"/>
+                                                <t t-set="move_index" t-value="1"/>
                                                 <t t-foreach="packages" t-as="package">
                                                     <!-- Package Header -->
                                                     <tr style="background-color: #f0f0f0;">
-                                                        <td colspan="3" style="font-weight: bold; padding: 5px 2px;">
+                                                        <td colspan="4" style="font-weight: bold; padding: 5px 2px;">
                                                             📦
                                                             <span t-field="package.name"/>
                                                         </td>
@@ -211,6 +238,9 @@
                                                     <!-- With Serial Numbers -->
                                                     <t t-if="has_serial_number">
                                                         <tr t-foreach="package_move_lines" t-as="move_line">
+                                                            <td>
+                                                                <span t-esc="move_line_index + 1"/>
+                                                            </td>
                                                             <td>
                                                                 <div class="thermal-product-name">
                                                                     <span t-field="move_line.product_id"/>
@@ -246,6 +276,10 @@
                                                         <t t-set="aggregated_lines"
                                                            t-value="package_move_lines._get_aggregated_product_quantities(strict=True)"/>
                                                         <tr t-foreach="aggregated_lines" t-as="line">
+                                                            <td>
+                                                                <span t-esc="line_index + 1"/>
+                                                            </td>
+
                                                             <td>
                                                                 <div class="thermal-product-name">
                                                                     <span t-esc="aggregated_lines[line]['name']"/>
@@ -295,13 +329,16 @@
 
                                                 <t t-if="move_lines or aggregated_lines">
                                                     <tr style="background-color: #f0f0f0;">
-                                                        <td colspan="3" style="font-weight: bold; padding: 5px 2px;">
+                                                        <td colspan="4" style="font-weight: bold; padding: 5px 2px;">
                                                             Products with no package
                                                         </td>
                                                     </tr>
 
                                                     <t t-if="has_serial_number">
                                                         <tr t-foreach="move_lines" t-as="move_line">
+                                                            <td>
+                                                                <span t-esc="move_line_index + 1"/>
+                                                            </td>
                                                             <td>
                                                                 <div class="thermal-product-name">
                                                                     <span t-field="move_line.product_id"/>
@@ -325,6 +362,9 @@
 
                                                     <t t-elif="aggregated_lines">
                                                         <tr t-foreach="aggregated_lines" t-as="line">
+                                                            <td>
+                                                                <span t-esc="line_index + 1"/>
+                                                            </td>
                                                             <td>
                                                                 <div class="thermal-product-name">
                                                                     <span t-esc="aggregated_lines[line]['name']"/>
@@ -356,6 +396,9 @@
                                                 <!-- With Serial Numbers -->
                                                 <t t-if="has_serial_number">
                                                     <tr t-foreach="o.move_line_ids" t-as="move_line">
+                                                        <td>
+                                                            <span t-esc="move_line_index + 1"/>
+                                                        </td>
                                                         <td>
                                                             <div class="thermal-product-name">
                                                                 <span t-field="move_line.product_id"/>
@@ -391,6 +434,9 @@
                                                     <t t-set="aggregated_lines"
                                                        t-value="o.move_line_ids._get_aggregated_product_quantities()"/>
                                                     <tr t-foreach="aggregated_lines" t-as="line">
+                                                        <td>
+                                                            <span t-esc="line_index + 1"/>
+                                                        </td>
                                                         <td>
                                                             <div class="thermal-product-name">
                                                                 <span t-esc="aggregated_lines[line]['name']"/>
@@ -440,19 +486,29 @@
                                    t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
                                 <div t-if="o.backorder_ids and backorders" class="thermal-section">
                                     <div class="thermal-label" style="margin-bottom: 5px;">Remaining quantities not yet
-                                        delivered:
+                                        delivered / الكميات المتبقية التي لم يتم تسليمها بعد:
                                     </div>
 
                                     <table class="thermal-table">
                                         <thead>
                                             <tr>
-                                                <th style="text-align: left; width:70%;">Product</th>
-                                                <th style="text-align: center; width:30%;">Quantity</th>
+                                                <th style="text-align: center; width: 5%;">#</th>
+                                                <th style="text-align: left; width: 30%;">
+                                                    <div>المنتج</div>
+                                                    <div>Product</div>
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    <div>الكمية</div>
+                                                    <div>Quantity</div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr t-foreach="backorders.mapped('move_ids').filtered(lambda x: x.product_uom_qty)"
                                                 t-as="bo_line">
+                                                <td style="text-align: center;">
+                                                    <span t-esc="bo_line_index + 1"/>
+                                                </td>
                                                 <td>
                                                     <div class="thermal-product-name">
                                                         <span t-field="bo_line.product_id"/>
@@ -473,7 +529,7 @@
 
                                 <!-- Signature -->
                                 <div t-if="o.signature" class="thermal-section" style="text-align: center;">
-                                    <div class="thermal-label" style="margin-bottom: 5px;">Signature</div>
+                                    <div class="thermal-label" style="margin-bottom: 5px;">Signature / التوقيع</div>
                                     <img t-att-src="image_data_uri(o.signature)"
                                          style="max-height: 60px; max-width: 100%;"/>
                                     <div t-if="o.partner_id.name" style="font-size: 10px; margin-top: 3px;">
