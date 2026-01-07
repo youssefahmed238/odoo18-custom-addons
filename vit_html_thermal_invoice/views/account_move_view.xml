@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit the account.move form view to add print thermal invoice button -->
+    <record id="view_move_form_inherit_thermal_invoice" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.thermal.invoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="print_invoice_thermal_report" type="object" string="Print Thermal Invoice"
+                        icon="fa-print" invisible="not using_thermal_printer"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -12,6 +12,10 @@ patch(ReportAction.prototype, {
         const thermalReports = [
             'vit_html_thermal_so.report_sale_order_thermal',
 
+            'vit_html_thermal_invoice.report_invoice_thermal',
+
+            'vit_html_thermal_payment.report_payment_thermal',
+
             'stock_thermal_reports.report_picking_thermal',
             'stock_thermal_reports.report_deliveryslip_thermal',
         ];

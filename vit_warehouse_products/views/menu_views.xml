@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_vit_warehouse_products_root"
+              name="Warehouse Products"
+              web_icon="vit_warehouse_products,static/description/icon.png"/>
+
+    <menuitem id="menu_vit_warehouse_products_dashboard"
+              name="Dashboard"
+              parent="menu_vit_warehouse_products_root"
+              action="action_vit_warehouse_products_dashboard"/>
+
+</odoo>

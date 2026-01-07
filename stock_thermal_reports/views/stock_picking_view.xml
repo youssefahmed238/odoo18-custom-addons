@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit stock picking form view -->
+    <record id="view_picking_form_inherit_thermal_reports" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.thermal.reports</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="print_picking_thermal_report" type="object"
+                    string="Print Picking Operations (Thermal)"/>
+                <button name="print_delivery_thermal_report" type="object"
+                    string="Print Delivery Slip (Thermal)"/>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_payment_thermal" model="ir.actions.report">
+            <field name="name">Thermal Payment Receipt</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">vit_html_thermal_payment.report_payment_thermal</field>
+            <field name="report_file">vit_html_thermal_payment.report_payment_thermal</field>
+            <field name="print_report_name">'Payment_Thermal_Receipt_' + object.name</field>
+        </record>
+
+    </data>
+</odoo>

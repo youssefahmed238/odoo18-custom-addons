@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_warehouse_product_thermal">
+            <t t-set="report_type" t-value="'html'"/>
+            <t t-if="not thermal_width">
+                <t t-set="thermal_width" t-value="user.thermal_size or '80mm'"/>
+            </t>
+
+            <style type="text/css">
+                @page {
+                size: auto;
+                margin: 0 !important;
+                }
+
+                .my_container {
+                width:
+                <t t-esc="thermal_width"/>
+                !important;
+                }
+            </style>
+
+            <t t-if="not docs">
+                <div style="text-align: center; font-size: 14px; margin-top: 20px;">
+                    No data available to display.
+                </div>
+                <div class="rtl-text" style="text-align: center; font-size: 14px; margin-top: 20px;">
+                    لا توجد بيانات لعرضها.
+                </div>
+            </t>
+            <t t-else="">
+                <script type="text/javascript">
+                    window.onload = function () {
+                    window.print();
+                    };
+                </script>
+
+
+                <t t-set="first_item" t-value="docs[0]"/>
+                <link rel="stylesheet" href="/vit_html_thermal_base/static/src/css/thermal_style.css"/>
+
+                <t t-set="products" t-value="first_item.get_warehouse_products(docs)"/>
+
+                <center class="thermal-report-page">
+                    <div class="my_container">
+
+                        <!-- Company Logo -->
+                        <div style="width: 45%; margin: 0 auto;">
+                            <img t-att-src="'data:image/png;base64,' + first_item.company_id.logo.decode()"
+                                 style="width:100%"/>
+                        </div>
+
+                        <div style="font-size: 14px; font-weight: bold; margin-top: 5px;">
+                            <t t-esc="first_item.company_id.name"/>
+                        </div>
+
+                        <!-- Warehouse Title -->
+                        <div class="thermal-section">
+                            <div style="font-size: 14px; font-weight: bold; margin: 5px 0;">
+                                Warehouse:
+                                <span t-esc="first_item.warehouse_id.name"/>
+                            </div>
+                            <div class="rtl-text" style="font-size: 14px; font-weight: bold; margin: 5px 0;">
+                                المستودع:
+                                <span t-esc="first_item.warehouse_id.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Products with Locations -->
+                        <div class="thermal-section" style="border-bottom: none;">
+                            <t t-foreach="products['products']" t-as="product">
+                                <div style="margin-bottom: 10; page-break-inside: avoid;">
+
+                                    <!-- Product Name (English) -->
+                                    <div style="font-size: 12px;
+                                            font-weight: bold;
+                                            margin-bottom: 3px;
+                                            text-align: left;
+                                            padding: 5px;">
+                                        Product:
+                                        <span t-esc="product.with_context(lang='en_US').name"/>
+                                    </div>
+
+                                    <!-- Product Name (Arabic) -->
+                                    <div class="rtl-text"
+                                         style="font-size: 12px;
+                                            font-weight: bold;
+                                            margin-bottom: 8px;
+                                            text-align: right;
+                                            padding: 5px;">
+                                        المنتج:
+                                        <span t-esc="product.with_context(lang='ar_001').name"/>
+                                    </div>
+
+                                    <!-- Locations & Quantities Table -->
+                                    <table class="thermal-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left; width: 60%; border-bottom: 2px solid #000;">
+                                                    Location / الموقع
+                                                </th>
+                                                <th style="text-align: center; width: 40%; border-bottom: 2px solid #000;">
+                                                    Quantity / الكمية
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="total_qty" t-value="0"/>
+                                            <t t-foreach="products[product.id]" t-as="locations_qty">
+                                                <tr>
+                                                    <td style="text-align: left; word-wrap: break-word; white-space: normal; vertical-align: top;">
+                                                        <span class="thermal-product-name"
+                                                              t-esc="locations_qty[0].complete_name"/>
+                                                    </td>
+                                                    <td class="thermal-qty"
+                                                        style="vertical-align: top; font-size: 10px;">
+                                                        <span t-esc="locations_qty[1]"/>
+                                                        <t t-set="total_qty" t-value="total_qty + locations_qty[1]"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <!-- Total Row -->
+                                            <tr style="border-top: 2px solid #000; font-weight: bold;">
+                                                <td style="text-align: left; padding: 5px 2px;">
+                                                    Total / الإجمالي
+                                                </td>
+                                                <td class="thermal-qty" style="font-size: 11px; padding: 5px 2px;">
+                                                    <span t-esc="total_qty"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                        </div>
+
+                        <!-- Generation Timestamp -->
+                        <div style="text-align: center; font-size: 10px; margin-bottom: 5px; border-top: 1px solid black; padding-top: 5px;">
+                            Generated on
+                            <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+                        </div>
+                        <div style="text-align: center; font-size: 10px; margin-bottom: 5px; padding-top: 5px;">
+                            تم الإنشاء في
+                            <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+                        </div>
+                    </div>
+                </center>
+            </t>
+        </template>
+
+    </data>
+</odoo>

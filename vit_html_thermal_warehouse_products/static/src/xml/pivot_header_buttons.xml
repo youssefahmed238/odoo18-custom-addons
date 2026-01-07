@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="vit_html_thermal_warehouse_products.PivotViewButtonsPrint" t-inherit="web.PivotView.Buttons"
+       t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pivot_buttons')]//div" position="after">
+            <div t-if="state.showPrintButton">
+                <button t-on-click="onPrintReportClicked"
+                        data-tooltip="Print PDF"
+                        class="btn btn-secondary"
+                        aria-label="Print PDF">
+                    <i class="fa fa-print"/>
+                    <span> Print Thermal Warehouse Products</span>
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

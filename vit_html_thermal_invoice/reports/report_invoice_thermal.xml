@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_invoice_thermal">
+            <t t-set="report_type" t-value="'html'"/>
+            <t t-if="not thermal_width">
+                <t t-set="thermal_width" t-value="user.thermal_size or '80mm'"/>
+            </t>
+
+            <script type="text/javascript">
+                window.onload = function () {
+                window.print();
+                };
+            </script>
+
+            <style type="text/css">
+                @page {
+                size: auto;
+                margin: 0 !important;
+                }
+
+                .my_container {
+                width:
+                <t t-esc="thermal_width"/>
+                !important;
+                }
+            </style>
+
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <link rel="stylesheet" href="/vit_html_thermal_base/static/src/css/thermal_style.css"/>
+
+                <center class="thermal-report-page">
+                    <div class="my_container">
+
+                        <!-- Company Logo -->
+                        <div style="width: 45%; margin: 0 auto;">
+                            <img t-att-src="'data:image/png;base64,' + o.company_id.logo.decode()"
+                                 style="width:100%"/>
+                        </div>
+
+                        <div style="font-size: 14px; font-weight: bold; margin-top: 5px;">
+                            <t t-esc="o.company_id.name"/>
+                        </div>
+
+                        <!-- Document Title -->
+                        <div class="thermal-section">
+                            <div style="font-size: 16px; font-weight: bold; margin: 10px 0;">
+                                <span t-if="not proforma">
+
+                                </span>
+                                <span t-else="">PROFORMA</span>
+                                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice</span>
+                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note</span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit
+                                    Note
+                                </span>
+                                <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
+                                <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
+                                <span t-if="o.name and o.name != '/'" t-field="o.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Address (if different) -->
+                        <div t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)"
+                             class="thermal-section" style="text-align: left;"
+                             groups="account.group_delivery_invoice_address">
+                            <div class="thermal-label">Shipping Address:</div>
+                            <div t-field="o.partner_shipping_id"
+                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'
+                                 style="font-size: 10px; margin-top: 3px;"/>
+                        </div>
+
+                        <!-- Customer/Partner Address -->
+                        <div class="thermal-section" style="text-align: left;">
+                            <div t-field="o.partner_id"
+                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'
+                                 style="font-size: 10px;"/>
+                            <div t-if="o.partner_id.vat" style="margin-top: 3px; font-size: 10px;">
+                                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                                   t-out="o.company_id.account_fiscal_country_id.vat_label"/>
+                                <t t-else="">Tax ID</t>:
+                                <span t-field="o.partner_id.vat"/>
+                            </div>
+                        </div>
+
+                        <!-- Document Information -->
+                        <div class="thermal-section" style="text-align: left;"
+                             t-if="o.invoice_date or (o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted') or o.delivery_date or o.invoice_origin or o.partner_id.ref or o.ref or o.invoice_incoterm_id">
+
+                            <div class="thermal-row" t-if="o.invoice_date">
+                                <span class="thermal-label">
+                                    <t t-if="o.move_type == 'out_invoice'">Invoice Date:</t>
+                                    <t t-elif="o.move_type == 'out_refund'">Credit Note Date:</t>
+                                    <t t-elif="o.move_type == 'out_receipt'">Receipt Date:</t>
+                                    <t t-else="">Date:</t>
+                                </span>
+                                <span class="thermal-value" t-field="o.invoice_date"/>
+                            </div>
+
+                            <div class="thermal-row"
+                                 t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'">
+                                <span class="thermal-label">Due Date:</span>
+                                <span class="thermal-value" t-field="o.invoice_date_due"/>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.delivery_date">
+                                <span class="thermal-label">Delivery Date:</span>
+                                <span class="thermal-value" t-field="o.delivery_date"/>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.invoice_origin">
+                                <span class="thermal-label">Source:</span>
+                                <span class="thermal-value" t-field="o.invoice_origin"/>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.partner_id.ref">
+                                <span class="thermal-label">Customer Code:</span>
+                                <span class="thermal-value" t-field="o.partner_id.ref"/>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.ref">
+                                <span class="thermal-label">Reference:</span>
+                                <span class="thermal-value" t-field="o.ref"/>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.invoice_incoterm_id">
+                                <span class="thermal-label">Incoterm:</span>
+                                <span class="thermal-value">
+                                    <span t-field="o.invoice_incoterm_id.code"/>
+                                    <t t-if="o.incoterm_location">
+                                        <br/>
+                                        <span t-field="o.incoterm_location"/>
+                                    </t>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Invoice Lines Table -->
+                        <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+                        <t t-set="lines"
+                           t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+                        <div class="thermal-section">
+                            <table class="thermal-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center; width: 5%;">#</th>
+                                        <th style="text-align: left; width: 25%;">Description</th>
+                                        <th style="text-align: center; width: 15%;">Qty</th>
+                                        <th style="text-align: center; width: 15%;">Price</th>
+                                        <th t-if="display_discount" style="text-align: center; width: 10%;">Disc%</th>
+                                        <th style="text-align: center;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="current_section" t-value="None"/>
+                                    <t t-set="current_subtotal" t-value="0"/>
+                                    <t t-set="current_total" t-value="0"/>
+                                    <t t-set="line_sequence" t-value="1"/>
+
+                                    <t t-foreach="lines" t-as="line">
+                                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+                                        <t t-set="current_total" t-value="current_total + line.price_total"/>
+
+                                        <tr t-att-class="'fw-bold' if line.display_type == 'line_section' else 'fst-italic' if line.display_type == 'line_note' else ''">
+
+                                            <!-- Product Line -->
+                                            <t t-if="line.display_type == 'product'">
+                                                <!-- Sequence Column -->
+                                                <td style="text-align: center;">
+                                                    <span t-esc="line_sequence"/>
+                                                    <t t-set="line_sequence" t-value="line_sequence + 1"/>
+                                                </td>
+
+                                                <!-- Product Column -->
+                                                <td style="word-wrap: break-word; white-space: normal;">
+                                                    <span t-if="line.name" t-field="line.name"
+                                                          t-options="{'widget': 'text'}"/>
+                                                </td>
+
+                                                <!-- Quantity Column -->
+                                                <td style="text-align: center;">
+                                                    <span t-field="line.quantity"/>
+                                                    <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                                </td>
+
+                                                <!-- Price Column -->
+                                                <td style="text-align: center; white-space: nowrap; font-size: 9px;">
+                                                    <span t-field="line.price_unit"/>
+                                                </td>
+
+                                                <!-- Discount Column -->
+                                                <td t-if="display_discount"
+                                                    style="text-align: center; white-space: nowrap; font-size: 9px;">
+                                                    <span t-field="line.discount"/>
+                                                </td>
+
+                                                <!-- Subtotal Column -->
+                                                <td style="text-align: center; font-weight: bold; white-space: nowrap; font-size: 9px;">
+                                                    <span t-field="line.price_subtotal"/>
+                                                </td>
+                                            </t>
+
+                                            <!-- Section Line -->
+                                            <t t-elif="line.display_type == 'line_section'">
+                                                <td colspan="99"
+                                                    style="font-weight: bold; padding-top: 5px; word-wrap: break-word; white-space: normal;">
+                                                    <span t-if="line.name" t-field="line.name"
+                                                          t-options="{'widget': 'text'}"/>
+                                                </td>
+                                                <t t-set="current_section" t-value="line"/>
+                                                <t t-set="current_subtotal" t-value="0"/>
+                                            </t>
+
+                                            <!-- Note Line -->
+                                            <t t-elif="line.display_type == 'line_note'">
+                                                <td colspan="99"
+                                                    style="font-style: italic; font-size: 9px; word-wrap: break-word; white-space: normal;">
+                                                    <span t-if="line.name" t-field="line.name"
+                                                          t-options="{'widget': 'text'}"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+
+                                        <!-- Section Subtotal -->
+                                        <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
+                                            <tr style="font-weight: bold; border-top: 1px solid #000;">
+                                                <td colspan="99" style="text-align: right; padding: 5px 2px;">
+                                                    <strong style="margin-right: 10px;">Subtotal</strong>
+                                                    <span t-out="current_subtotal"
+                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                            <t t-set="current_section" t-value="None"/>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Tax Totals -->
+                        <div class="thermal-section" style="text-align: right;">
+                            <t t-if="o.tax_totals">
+                                <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                <t t-set="currency" t-value="o.currency_id"/>
+                                <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
+
+                                <!-- Subtotals -->
+                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                    <div class="thermal-row">
+                                        <span>
+                                            <t t-out="subtotal['name']"/>
+                                        </span>
+                                        <span style="font-weight: bold;">
+                                            <t t-out="subtotal['base_amount_currency']"
+                                               t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </span>
+                                    </div>
+
+                                    <!-- Tax Groups -->
+                                    <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
+                                        <div class="thermal-row" style="font-size: 9px;">
+                                            <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is False">
+                                                <span>
+                                                    <t t-out="tax_group['group_name']"/>
+                                                </span>
+                                                <span>
+                                                    <t t-out="tax_group['tax_amount_currency']"
+                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                </span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="font-size: 8px;">
+                                                    <t t-out="tax_group['group_name']"/>
+                                                    on
+                                                    <t t-out="tax_group['display_base_amount_currency']"
+                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                </span>
+                                                <span>
+                                                    <t t-out="tax_group['tax_amount_currency']"
+                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                </span>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </t>
+
+                                <!-- Cash Rounding -->
+                                <div t-if="'cash_rounding_base_amount_currency' in tax_totals"
+                                     class="thermal-row" style="font-size: 9px;">
+                                    <span>Rounding</span>
+                                    <span>
+                                        <t t-out="tax_totals['cash_rounding_base_amount_currency']"
+                                           t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </span>
+                                </div>
+
+                                <!-- Total -->
+                                <div class="thermal-row"
+                                     style="font-weight: bold; font-size: 12px; border-top: 2px solid #000; padding-top: 5px; margin-top: 5px;">
+                                    <strong>Total</strong>
+                                    <strong>
+                                        <t t-out="tax_totals['total_amount_currency']"
+                                           t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </strong>
+                                </div>
+                            </t>
+                        </div>
+
+                        <!-- Payments (if print_with_payments) -->
+                        <div t-if="print_with_payments and o.payment_state != 'invoicing_legacy'"
+                             class="thermal-section" style="text-align: right; font-size: 10px;">
+                            <t t-set="payments_vals"
+                               t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
+                            <t t-foreach="payments_vals" t-as="payment_vals">
+                                <div t-if="payment_vals['is_exchange'] == 0" style="margin: 3px 0;">
+                                    <span style="font-style: italic;">
+                                        <t t-if="payment_vals['is_refund']">Reversed on</t>
+                                        <t t-else="">Paid on</t>
+                                        <t t-out="payment_vals['date']" t-options='{"widget": "date"}'/>
+                                    </span>
+                                    <span style="margin-left: 10px;">
+                                        <t t-out="payment_vals['amount']"
+                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </span>
+                                </div>
+                            </t>
+                            <div t-if="len(payments_vals) > 0" style="font-weight: bold; margin-top: 5px;">
+                                <span style="margin-right: 10px;">Amount Due</span>
+                                <span t-field="o.amount_residual"/>
+                            </div>
+                        </div>
+
+                        <!-- Amount in Words -->
+                        <div t-if="o.company_id.display_invoice_amount_total_words"
+                             class="thermal-section" style="text-align: center; font-size: 10px;">
+                            <div style="font-weight: bold;">Total amount in words:</div>
+                            <div style="font-style: italic; margin-top: 3px;">
+                                <span t-field="o.amount_total_words"/>
+                            </div>
+                        </div>
+
+                        <!-- Tax Totals in Company Currency -->
+                        <div t-if="o.tax_totals.get('display_in_company_currency')"
+                             class="thermal-section" style="text-align: right; font-size: 10px;">
+                            <t t-set="tax_totals" t-value="o.tax_totals"/>
+                            <t t-set="currency" t-value="o.company_currency_id"/>
+                            <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
+
+                            <div style="font-weight: bold; margin-bottom: 5px;">
+                                Taxes
+                                <span t-field="o.company_currency_id"/>
+                            </div>
+
+                            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                <div style="margin: 2px 0;">
+                                    <span style="margin-right: 10px;">
+                                        <t t-out="subtotal['name']"/>
+                                    </span>
+                                    <span>
+                                        <t t-out="subtotal['base_amount']"
+                                           t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </span>
+                                </div>
+
+                                <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
+                                    <div style="margin: 2px 0; font-size: 9px;">
+                                        <t t-if="same_tax_base or tax_group['display_base_amount'] is None">
+                                            <span>
+                                                <t t-out="tax_group['group_name']"/>
+                                            </span>
+                                            <span style="margin-left: 5px;">
+                                                <t t-out="tax_group['tax_amount']"
+                                                   t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span>
+                                                <t t-out="tax_group['group_name']"/>
+                                                on
+                                                <t t-out="tax_group['display_base_amount']"
+                                                   t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </span>
+                                            <span style="margin-left: 5px;">
+                                                <t t-out="tax_group['tax_amount']"
+                                                   t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                </t>
+                            </t>
+
+                            <div style="font-weight: bold; margin-top: 3px; border-top: 1px solid #000; padding-top: 3px;">
+                                <span style="margin-right: 10px;">Total</span>
+                                <span>
+                                    <t t-out="tax_totals['total_amount']"
+                                       t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Fiscal Position Note -->
+                        <div t-if="not is_html_empty(o.fiscal_position_id.note)"
+                             class="thermal-section" style="text-align: left; font-size: 10px;">
+                            <span t-field="o.fiscal_position_id.note"/>
+                        </div>
+
+                        <!-- Taxes Legal Notes -->
+                        <div t-if="not is_html_empty(o.taxes_legal_notes)"
+                             class="thermal-section" style="text-align: left; font-size: 10px;">
+                            <span t-field="o.taxes_legal_notes"/>
+                        </div>
+
+                        <!-- Payment Terms -->
+                        <div t-if="o.invoice_payment_term_id.note"
+                             class="thermal-section" style="text-align: left; font-size: 10px;">
+                            <span t-field="o.invoice_payment_term_id.note"/>
+                        </div>
+
+                        <!-- Payment Term Details -->
+                        <div t-if="o.invoice_payment_term_id.display_on_invoice and o.payment_term_details and o.show_payment_term_details"
+                             class="thermal-section" style="text-align: left; font-size: 10px;">
+                            <t t-set="payment_term_details" t-value="o.payment_term_details"/>
+
+                            <!-- Early Payment Discount -->
+                            <div t-if="o._is_eligible_for_early_payment_discount(o.currency_id, o.invoice_date)"
+                                 style="margin-bottom: 3px;">
+                                <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                      t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)"/>
+                                due if paid before
+                                <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)"/>
+                            </div>
+
+                            <!-- Installments -->
+                            <t t-if="len(payment_term_details) > 1">
+                                <t t-foreach="payment_term_details" t-as="term">
+                                    <div style="margin: 2px 0;">
+                                        <span t-out="term_index + 1"/>
+                                        - Installment of
+                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                           t-out="term.get('amount')"/>
+                                        due on
+                                        <t t-out="term.get('date')"/>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+
+                        <!-- Payment Communication -->
+                        <div t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference"
+                             class="thermal-section" style="text-align: left; font-size: 10px;">
+                            <div>Payment Communication:
+                                <span style="font-weight: bold;" t-field="o.payment_reference"/>
+                            </div>
+                            <div t-if="o.partner_bank_id" style="margin-top: 2px;">
+                                on this account:
+                                <span style="font-weight: bold;" t-field="o.partner_bank_id"/>
+                            </div>
+                        </div>
+
+                        <!-- QR Code -->
+                        <t t-set="show_qr" t-value="o.display_qr_code and o.amount_residual > 0"/>
+                        <div t-if="not show_qr" class="thermal-section"><!-- QR placeholder --></div>
+                        <div t-else="" class="thermal-section" style="text-align: center;">
+                            <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
+                            <div t-if="qr_code_url">
+                                <img t-att-src="qr_code_url" style="max-width: 100%; height: auto;"/>
+                                <div style="font-size: 9px; font-style: italic; margin-top: 3px;">
+                                    Scan this QR Code with your banking application
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions / Narration -->
+                        <div t-if="not is_html_empty(o.narration)"
+                             class="thermal-section" style="text-align: left; font-size: 10px;">
+                            <span t-field="o.narration"/>
+                        </div>
+
+                    </div>
+                </center>
+            </t>
+        </template>
+
+    </data>
+</odoo>

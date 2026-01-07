@@ -8,7 +8,7 @@
 ========================= */
 @font-face {
     font-family: 'Inconsolata-Regular';
-    src: url('/thermal_invoice_report/static/src/fonts/Inconsolata-Regular.ttf') format('truetype');
+    src: url('vit_html_thermal_base/static/src/fonts/Inconsolata-Regular.ttf') format('truetype');
 }
 
 html, body {
@@ -50,8 +50,37 @@ body {
 .thermal-row {
     display: flex;
     justify-content: space-between;
-    gap: 6px;
-    margin: 2px 0;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 3px 0;
+    font-size: 10px;
+}
+
+.thermal-row.small {
+    font-size: 9px;
+}
+
+.thermal-row.total {
+    font-size: 12px;
+    border-top: 2px solid #000;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+.thermal-row span {
+    word-wrap: break-word;
+}
+
+.thermal-row span:first-child {
+    text-align: left;
+    flex: 1;
+}
+
+.thermal-row span:last-child,
+.thermal-row .right {
+    text-align: right;
+    white-space: nowrap;
+    margin-left: auto;
 }
 
 /* =========================
@@ -81,10 +110,13 @@ body {
     font-weight: bold;
     border-bottom: 2px solid #000;
     padding: 5px 2px;
+    font-size: 9px;
 }
 
 .thermal-table tbody td {
     padding: 4px 2px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .thermal-table tbody tr {
@@ -94,10 +126,11 @@ body {
 .thermal-product-name {
     font-weight: bold;
     word-break: break-word;
+    font-size: 9px;
 }
 
 .thermal-product-desc {
-    font-size: 9px;
+    font-size: 8px;
     color: #666;
 }
 
@@ -115,16 +148,36 @@ body {
 }
 
 /* =========================
-   WARNINGS & NOTES
+   WARNING MESSAGES
 ========================= */
 .thermal-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    padding: 5px;
+    margin: 5px 0;
+    font-size: 9px;
     text-align: center;
-    font-size: 10px;
-    font-weight: bold;
-    margin: 10px 0;
 }
 
+/* =========================
+   NOTES
+========================= */
 .thermal-note {
     font-size: 10px;
-    text-align: left;
+    text-align: justify;
 }
+
+/* =========================
+   RTL SUPPORT FOR ARABIC
+========================= */
+.rtl-text {
+    direction: rtl;
+    text-align: right;
+    unicode-bidi: bidi-override;
+}
+
+.rtl-text span {
+    direction: ltr;
+    unicode-bidi: normal;
+}
+

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_payment_thermal">
+            <t t-set="report_type" t-value="'html'"/>
+            <t t-if="not thermal_width">
+                <t t-set="thermal_width" t-value="user.thermal_size or '80mm'"/>
+            </t>
+
+            <script type="text/javascript">
+                window.onload = function () {
+                window.print();
+                };
+            </script>
+
+            <style type="text/css">
+                @page {
+                size: auto;
+                margin: 0 !important;
+                }
+
+                .my_container {
+                width:
+                <t t-esc="thermal_width"/>
+                !important;
+                }
+            </style>
+
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
+                <link rel="stylesheet" href="/vit_html_thermal_base/static/src/css/thermal_style.css"/>
+
+                <center class="thermal-report-page">
+                    <div class="my_container">
+
+                        <!-- Company Logo -->
+                        <div style="width: 45%; margin: 0 auto;">
+                            <img t-att-src="'data:image/png;base64,' + o.company_id.logo.decode()"
+                                 style="width:100%"/>
+                        </div>
+
+                        <div style="font-size: 14px; font-weight: bold; margin-top: 5px;">
+                            <t t-esc="o.company_id.name"/>
+                        </div>
+
+                        <!-- Document Title -->
+                        <div class="thermal-section">
+                            <div style="font-size: 14; font-weight: bold; margin: 10px 0;">
+                                <span t-field="o.payment_receipt_title"/>:
+                                <span t-field="o.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Payment Information -->
+                        <div class="thermal-section" style="text-align: left;">
+                            <div class="thermal-row" t-if="o.date">
+                                <span class="thermal-label">Payment Date:</span>
+                                <span class="thermal-value" t-field="o.date"/>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.partner_type">
+                                <span class="thermal-label">
+                                    <t t-if="o.partner_type == 'customer'">Customer:</t>
+                                    <t t-else="">Vendor:</t>
+                                </span>
+                                <span class="thermal-value" t-field="o.partner_id"/>
+                            </div>
+
+                            <div class="thermal-row"
+                                 t-if="values['display_payment_method'] and o.payment_method_id">
+                                <span class="thermal-label">Payment Method:</span>
+                                <span class="thermal-value" t-field="o.payment_method_id.name"/>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.amount">
+                                <span class="thermal-label">Payment Amount:</span>
+                                <span class="thermal-value">
+                                    <span t-field="o.amount"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </span>
+                            </div>
+
+                            <div class="thermal-row" t-if="o.memo">
+                                <span class="thermal-label">Memo:</span>
+                                <span class="thermal-value" t-field="o.memo"/>
+                            </div>
+                        </div>
+
+                        <!-- Invoices Table -->
+                        <div t-if="values['display_invoices']" class="thermal-section">
+                            <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
+
+                            <!-- Check if invoices include different currencies -->
+                            <t t-set="otherCurrency" t-value="False"/>
+                            <t t-foreach="invoices" t-as="inv">
+                                <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])"
+                                   t-set="otherCurrency" t-value="True"/>
+                            </t>
+
+                            <div class="thermal-label"
+                                 style="font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 5px;">
+                                Related Invoices
+                            </div>
+
+                            <table class="thermal-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left; width:5%;">#</th>
+                                        <th style="text-align: left; width: 20%;">Date</th>
+                                        <th style="text-align: left; width: 30%;">Number</th>
+                                        <th style="text-align: left; width: 20%;">Ref</th>
+                                        <th t-if="otherCurrency" style="text-align: right; width: 25%;">Amt in Curr</th>
+                                        <th style="text-align: right; width: 25%;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="line_sequence" t-value="1"/>
+
+                                    <t t-foreach="invoices" t-as="inv">
+                                        <!-- Invoice Line -->
+                                        <t t-if="inv.move_type != 'entry'">
+                                            <tr style="font-weight: bold;">
+                                                <td>
+                                                    <t t-esc="line_sequence"/>
+                                                    <t t-set="line_sequence" t-value="line_sequence + 1"/>
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal; vertical-align: top;">
+                                                    <span t-field="inv.invoice_date"/>
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal; vertical-align: top;">
+                                                    <span t-field="inv.name"/>
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal; vertical-align: top; font-size: 9px;">
+                                                    <span t-field="inv.ref"/>
+                                                </td>
+                                                <td t-if="otherCurrency"/>
+                                                <td style="text-align: right; white-space: nowrap; vertical-align: top;">
+                                                    <span t-field="inv.amount_total"/>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Payment/Reversal Lines -->
+                                            <tr t-foreach="inv._get_reconciled_invoices_partials()[0]" t-as="par"
+                                                style="font-weight: bold;">
+                                                <td>
+                                                    <t t-esc="line_sequence"/>
+                                                    <t t-set="line_sequence" t-value="line_sequence + 1"/>
+                                                </td>
+                                                <t t-set="payment" t-value="par[2]"/>
+                                                <td style="word-wrap: break-word; white-space: normal; vertical-align: top;">
+                                                    <span t-field="payment.move_id.date"/>
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal; vertical-align: top;">
+                                                    <span t-field="payment.move_id.name"/>
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal; vertical-align: top; font-size: 8px;">
+                                                    <span t-field="payment.payment_id.memo"/>
+                                                </td>
+
+                                                <t t-set="amountPayment"
+                                                   t-value="-(par[0].debit_amount_currency if par[2].debit > 0 else par[0].credit_amount_currency)"/>
+                                                <t t-set="amountInvoice" t-value="-par[1]"/>
+                                                <t t-set="currencyPayment" t-value="payment.currency_id"/>
+                                                <t t-set="currencyInvoice" t-value="inv.currency_id"/>
+
+                                                <!-- Amount In Currency (if different) -->
+                                                <td t-if="otherCurrency"
+                                                    style="text-align: right; white-space: nowrap; vertical-align: top;">
+                                                    <span t-if="currencyPayment != currencyInvoice"
+                                                          t-out="amountPayment"
+                                                          t-options="{'widget': 'monetary', 'display_currency': currencyPayment}"/>
+                                                </td>
+
+                                                <!-- Amount In Invoice Currency -->
+                                                <td style="text-align: right; white-space: nowrap; vertical-align: top;">
+                                                    <span t-out="amountInvoice"
+                                                          t-options="{'widget': 'monetary', 'display_currency': currencyInvoice}"/>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Balance/Due Amount -->
+                                            <tr style="font-weight: bold; border-top: 1px solid #000;">
+                                                <td>
+                                                    <t t-esc="line_sequence"/>
+                                                    <t t-set="line_sequence" t-value="line_sequence + 1"/>
+                                                </td>
+                                                <td colspan="2" style="word-wrap: break-word; white-space: normal;">
+                                                    Due Amount for
+                                                    <span t-field="inv.name"/>
+                                                </td>
+                                                <td/>
+                                                <td t-if="otherCurrency"/>
+                                                <td style="text-align: right; white-space: nowrap;">
+                                                    <span t-field="inv.amount_residual"/>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Spacing between invoices -->
+                                            <tr t-if="not inv_last" style="height: 5px;">
+                                                <td colspan="99" style="border-bottom: 1px dashed #ccc;"/>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </center>
+            </t>
+        </template>
+
+    </data>
+</odoo>

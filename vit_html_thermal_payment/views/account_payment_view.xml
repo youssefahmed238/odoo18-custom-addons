@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Payment Form View to add Thermal Print Button -->
+    <record id="view_account_payment_form_inherit_thermal_print" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.thermal.print</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="print_payment_thermal_report" type="object" string="Print Thermal Payment"
+                        icon="fa-print" invisible="not using_thermal_printer"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
