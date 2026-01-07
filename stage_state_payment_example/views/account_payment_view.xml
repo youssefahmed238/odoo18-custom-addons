@@ -22,7 +22,30 @@
 
                     <!-- RIGHT: Statusbar -->
                     <div class="o_state_container" style="width: auto; padding-left: 20px;">
-                        <field name="example_state" widget="custom_stage_state" class="o_custom_stage_state"/>
+                        <field name="example_state" widget="custom_stage_state" class="o_custom_stage_state"
+                               options='{
+                                   "icons_map": {
+                                       "draft": "o_status",
+                                       "assembly": "fa fa-fw fa-cogs",
+                                       "collection": "fa fa-fw fa-clipboard",
+                                       "loaded": "fa fa-fw fa-truck",
+                                       "delivered": "fa fa-fw fa-check-circle"
+                                   },
+                                   "color_icons_map": {
+                                       "draft": "",
+                                       "assembly": "text-primary",
+                                       "collection": "text-info",
+                                       "loaded": "text-warning",
+                                       "delivered": "text-success"
+                                   },
+                                   "color_button_map": {
+                                       "draft": "btn-outline-secondary",
+                                       "assembly": "btn-outline-primary",
+                                       "collection": "btn-outline-info",
+                                       "loaded": "btn-outline-warning",
+                                       "delivered": "btn-outline-success"
+                                   },
+                               }'/>
                     </div>
 
                 </div>

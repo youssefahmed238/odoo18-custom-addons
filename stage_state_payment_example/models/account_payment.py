@@ -7,8 +7,8 @@ class AccountPayment(models.Model):
     # Example state field
     example_state = fields.Selection([
         ('draft', "Draft"),
-        ('in_process', "In Process"),
-        ('paid', "Paid"),
-        ('canceled', "Canceled"),
-        ('rejected', "Rejected"),
-    ], string='Example State', default='draft', tracking=True)
+        ('assembly', "Assembly underway"),
+        ('collection', "Collection area"),
+        ('loaded', "Car has been loaded"),
+        ('delivered', "Delivered"),
+    ], string='Example State', default='draft', tracking=True, required=True)
