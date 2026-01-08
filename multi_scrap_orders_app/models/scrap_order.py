@@ -64,6 +64,8 @@ class StockScrapOrders(models.Model):
             for line in record.scrap_line_ids:
                 if line.product_id.type != 'product':
                     line.do_scrap()
+                    continue
+
                 precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 available_qty = sum(self.env['stock.quant']._gather(line.product_id,
                                                                     line.location_id,
@@ -149,6 +151,7 @@ class StockScrapOrdersLine(models.Model):
             move = self.env['stock.move'].create(scrap._prepare_move_values())
             # master: replace context by cancel_backorder
             move.with_context(is_scrap=True)._action_done()
+            print(self.scrap_qty)
             stock_quant_ids = self.env['stock.quant'].search(
                 [('product_id', '=', self.product_id.id), ('location_id', '=', self.location_id.id)])
             stock_quant_ids.reserved_quantity = stock_quant_ids.reserved_quantity - self.scrap_qty
