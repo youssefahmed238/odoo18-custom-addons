@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_scrap_orders_manager,stock.scrap.orders.manager,model_stock_scrap_orders,,1,1,1,1
+access_stock_scrap_orders_line_manager,stock.scrap.orders.line.manager,model_stock_scrap_orders_line,,1,1,1,1
+access_multi_scrap_product_produce,multi.scrap.product.produce,model_multi_scrap_product_produce,,1,1,1,1
+access_multi_scrap_product_produce_line,multi.scrap.product.produce.line,model_multi_scrap_product_produce_line,,1,1,1,1

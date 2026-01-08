@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="inherit_view_picking_form_multi_scrap" model="ir.ui.view">
+            <field name="name">view.stock.picking.inherit.multi.scrap</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_validate']" position="after">
+                    <button name="%(act_multi_scrap_product_produce)d" type="action" string="Multiple Scrap Orders" groups="multi_scrap_orders_app.group_stock_scrap_orders" invisible="picking_type_code == 'incoming' or state != 'done'"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sequence_multi_stock_scrap" model="ir.sequence">
+            <field name="name">Multi Scrap</field>
+            <field name="code">multi.stock.scrap</field>
+            <field name="prefix">MSPO/</field>
+            <field name="padding">5</field>
+        </record>
+
+    </data>
+</odoo>

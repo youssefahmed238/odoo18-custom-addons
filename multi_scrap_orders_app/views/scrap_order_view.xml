@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_scrap_orders_form_view" model="ir.ui.view">
+            <field name="name">stock.scrap.orders.form</field>
+            <field name="model">stock.scrap.orders</field>
+            <field name="arch" type="xml">
+                <form string="Multi Scrap Orders">
+                    <header>
+                        <button name="action_validate" invisible="state != 'draft'" string="Validate Scrap Orders" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    invisible="picking_id == False" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                            <button class="oe_stat_button" name="action_get_stock_move_lines"
+                                    string="Scrap Product Move" type="object"
+                                    invisible="state == 'draft'" icon="fa-bars"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" nolabel="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
+                            </group>
+                            <group>
+                                <field name="origin" />
+                                <field name="date_expected"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Operations">
+                                <field name="scrap_line_ids">
+                                    <list editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="scrap_qty"/>
+                                        <field name="product_uom_id"/>
+                                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="tracking" invisible="1"/>
+                                        <field name="lot_id" readonly="tracking == 'none'" required="tracking != 'none'" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'default_company_id': company_id}" />
+                                        <field name="package_id"/>
+                                        <field name="owner_id"/>
+                                        <field name="move_id" invisible="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_scrap_orders_tree_view" model="ir.ui.view">
+            <field name="name">stock.scrap.orders.tree</field>
+            <field name="model">stock.scrap.orders</field>
+            <field name="arch" type="xml">
+                <list decoration-danger="state == 'draft'">
+                    <field name="name"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="date_expected" string="Expected Date"/>
+                    <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_stock_scrap_orders_filter" model="ir.ui.view">
+            <field name="name">stock.scrap.orders.select</field>
+            <field name="model">stock.scrap.orders</field>
+            <field name="arch" type="xml">
+                <search string="Search Scrap">
+                    <field name="scrap_location_id"/>
+                    <field name="create_date"/>
+                    <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Orders"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]" help="Done Orders"/>
+                    <group expand="0" string="Group By">
+                        <filter name="scrap_name" string="Scrap Orders" domain="[]" context="{'group_by':'name'}"/>
+                        <filter name="status" string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter name="expected_date" string="Expected Date" domain="[]"  context="{'group_by':'date_expected'}"/>
+                        <filter name="scrap_location" string="Scrap Location" domain="[]" context="{'group_by':'scrap_location_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_stock_scrap_orders">
+            <field name="name">Multi Scrap Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.scrap.orders</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="stock_scrap_orders_tree_view"/>
+            <field name="search_view_id" ref="view_stock_scrap_orders_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to multipal scrap orders products.
+              </p><p>
+                Scrapping a product will remove it from your stock. The product will
+                end up in a scrap location that can be used for reporting purpose.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="action_stock_scrap_orders" 
+            name="Multi Scrap Orders"
+            parent="stock.menu_stock_warehouse_mgmt"
+            id="menu_stock_scrap_orders"
+            sequence="115"
+            groups="group_stock_scrap_orders"
+        />
+
+    </data>
+</odoo>
