@@ -11,3 +11,8 @@ class ResUsers(models.Model):
         ('80mm', '3 Inch (80 mm)'),
         ('104mm', '4 Inch (104 mm)'),
     ], string='Printer Size', default='80mm', required=True)
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        """Allow users to modify their own thermal printer settings"""
+        return super().SELF_WRITEABLE_FIELDS + ['using_thermal_printer', 'thermal_size']

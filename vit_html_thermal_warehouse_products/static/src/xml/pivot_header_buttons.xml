@@ -9,7 +9,8 @@
                         data-tooltip="Print PDF"
                         class="btn btn-secondary"
                         aria-label="Print PDF">
-                    <i class="fa fa-print"/>
+                    <img src="/vit_html_thermal_base/static/src/icons/print_thermal.png"
+                         style="width:24px; height:24px; margin-right:5px;"/>
                     <span> Print Thermal Warehouse Products</span>
                 </button>
             </div>

@@ -8,8 +8,12 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="print_order_thermal_report" type="object" string="Print Thermal Order"
-                        icon="fa-print" invisible="not using_thermal_printer"/>
+                <button name="print_order_thermal_report" type="object"
+                        invisible="not using_thermal_printer">
+                    <img src="/vit_html_thermal_base/static/src/icons/print_thermal.png"
+                         style="height:24px; width:24px; margin-right:5px;"/>
+                    <span>Print Thermal Order</span>
+                </button>
             </xpath>
         </field>
     </record>

@@ -8,8 +8,12 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="print_invoice_thermal_report" type="object" string="Print Thermal Invoice"
-                        icon="fa-print" invisible="not using_thermal_printer"/>
+                <button name="print_invoice_thermal_report" type="object"
+                        invisible="not using_thermal_printer">
+                    <img src="/vit_html_thermal_base/static/src/icons/print_thermal.png"
+                         style="height:24px; width:24px; margin-right:5px;"/>
+                    <tspan>Print Thermal Invoice</tspan>
+                </button>
             </xpath>
         </field>
     </record>

@@ -8,8 +8,12 @@
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="print_payment_thermal_report" type="object" string="Print Thermal Payment"
-                        icon="fa-print" invisible="not using_thermal_printer"/>
+                <button name="print_payment_thermal_report" type="object"
+                        invisible="not using_thermal_printer">
+                    <img src="/vit_html_thermal_base/static/src/icons/print_thermal.png"
+                         style="width:24px; height:24px; margin-right:5px;"/>
+                    <span>Print Thermal Payment</span>
+                </button>
             </xpath>
         </field>
     </record>
