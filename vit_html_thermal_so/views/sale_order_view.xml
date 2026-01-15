@@ -10,7 +10,7 @@
             <xpath expr="//header" position="inside">
                 <button name="print_order_thermal_report" type="object"
                         invisible="not using_thermal_printer">
-                    <img src="/vit_html_thermal_base/static/src/icons/print_thermal.png"
+                    <img src="/vit_html_thermal_base/static/src/icons/fa-vit-thermal-g.png"
                          style="height:24px; width:24px; margin-right:5px;"/>
                     <span>Print Thermal Order</span>
                 </button>

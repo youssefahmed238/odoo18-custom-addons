@@ -25,138 +25,266 @@
                 <t t-set="o" t-value="o.with_context(lang=lang)"/>
                 <link rel="stylesheet" href="/vit_html_thermal_base/static/src/css/thermal_style.css"/>
 
-                <center class="thermal-report-page">
+                <center class="thermal-report-page" style="padding-bottom: 20px;">
                     <div class="my_container">
 
                         <!-- Company Logo -->
-                        <div style="width: 45%; margin: 0 auto;">
+                        <div style="width: 45%; margin: 0 auto;margin-top:10px;">
                             <img t-att-src="'data:image/png;base64,' + o.company_id.logo.decode()"
                                  style="width:100%"/>
                         </div>
 
-                        <div style="font-size: 14px; font-weight: bold; margin-top: 5px;">
-                            <t t-esc="o.company_id.name"/>
+                        <!--                        &lt;!&ndash; Title: Simplified Tax Invoice &ndash;&gt;-->
+                        <!--                        <div style="margin-top:10px;">-->
+                        <!--                            فاتورة ضريبية مبسطة-->
+                        <!--                        </div>-->
+
+
+                        <!-- Company Name -->
+                        <div style="margin-top:10px; font-weight: bold;">
+                            <span t-esc="o.company_id.name"/>
+                        </div>
+
+                        <!-- Company Address -->
+                        <div style="margin-top:10px; font-weight: bold;">
+                            <div t-field="o.company_id.partner_id"
+                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                        </div>
+
+                        <!--                        &lt;!&ndash; Invoice Date &ndash;&gt;-->
+                        <!--                        <div style="margin-top:10px;">-->
+                        <!--                            Date :-->
+                        <!--                            <span t-field="o.invoice_date"/>-->
+                        <!--                        </div>-->
+
+                        <!-- VAT Number -->
+                        <div style="margin-top:10px; font-weight: bold;">
+                            VAT Registration No :
+                            <span t-esc="o.company_id.vat"/>
                         </div>
 
                         <!-- Document Title -->
-                        <div class="thermal-section">
-                            <div style="font-size: 16px; font-weight: bold; margin: 10px 0;">
-                                <span t-if="not proforma">
+                        <!--                        <div class="thermal-section">-->
+                        <!--                            <div style="font-size: 16px; font-weight: bold; margin: 10px 0;">-->
+                        <!--                                <span t-if="not proforma">-->
 
-                                </span>
-                                <span t-else="">PROFORMA / مسودة فاتورة</span>
-                                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice / فاتورة
-                                </span>
-                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice / مسودة
-                                    فاتورة
-                                </span>
-                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice /
-                                    فاتورة
-                                    ملغاة
-                                </span>
-                                <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note / إشعار
-                                    دائن
-                                </span>
-                                <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note /
-                                    مسودة
-                                    إشعار دائن
-                                </span>
-                                <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit
-                                    Note / إشعار دائن ملغى
-                                </span>
-                                <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note / إشعار دائن مورد
-                                </span>
-                                <span t-elif="o.move_type == 'in_invoice'">Vendor Bill / فاتورة مورد
-                                </span>
-                                <span t-if="o.name and o.name != '/'" t-field="o.name"/>
-                            </div>
-                        </div>
+                        <!--                                </span>-->
+                        <!--                                <span t-else="">PROFORMA / مسودة فاتورة</span>-->
+                        <!--                                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice / فاتورة-->
+                        <!--                                </span>-->
+                        <!--                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice / مسودة-->
+                        <!--                                    فاتورة-->
+                        <!--                                </span>-->
+                        <!--                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice /-->
+                        <!--                                    فاتورة-->
+                        <!--                                    ملغاة-->
+                        <!--                                </span>-->
+                        <!--                                <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note / إشعار-->
+                        <!--                                    دائن-->
+                        <!--                                </span>-->
+                        <!--                                <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note /-->
+                        <!--                                    مسودة-->
+                        <!--                                    إشعار دائن-->
+                        <!--                                </span>-->
+                        <!--                                <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit-->
+                        <!--                                    Note / إشعار دائن ملغى-->
+                        <!--                                </span>-->
+                        <!--                                <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note / إشعار دائن مورد-->
+                        <!--                                </span>-->
+                        <!--                                <span t-elif="o.move_type == 'in_invoice'">Vendor Bill / فاتورة مورد-->
+                        <!--                                </span>-->
+                        <!--                                <span t-if="o.name and o.name != '/'" t-field="o.name"/>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
 
                         <!-- Shipping Address (if different) -->
-                        <div t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)"
-                             class="thermal-section" style="text-align: left;"
-                             groups="account.group_delivery_invoice_address">
-                            <div class="thermal-label">Shipping Address / عنوان الشحن:</div>
-                            <div t-field="o.partner_shipping_id"
-                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'
-                                 style="font-size: 10px; margin-top: 3px;"/>
-                        </div>
+                        <!--                        <div t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)"-->
+                        <!--                             class="thermal-section" style="text-align: left;"-->
+                        <!--                             groups="account.group_delivery_invoice_address">-->
+                        <!--                            <div class="thermal-label">Shipping Address / عنوان الشحن:</div>-->
+                        <!--                            <div t-field="o.partner_shipping_id"-->
+                        <!--                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'-->
+                        <!--                                 style="font-size: 10px; margin-top: 3px;"/>-->
+                        <!--                        </div>-->
 
                         <!-- Customer/Partner Address -->
-                        <div class="thermal-section" style="text-align: left;">
-                            <div t-field="o.partner_id"
-                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'
-                                 style="font-size: 10px;"/>
-                            <div t-if="o.partner_id.vat" style="margin-top: 3px; font-size: 10px;">
-                                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
-                                   t-out="o.company_id.account_fiscal_country_id.vat_label"/>
-                                <t t-else="">Tax ID / الرقم الضريبي:</t>
-                                <span t-field="o.partner_id.vat"/>
-                            </div>
-                        </div>
+                        <!--                        <div class="thermal-section" style="text-align: left;">-->
+                        <!--                            <div t-field="o.partner_id"-->
+                        <!--                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'-->
+                        <!--                                 style="font-size: 10px;"/>-->
+                        <!--                            <div t-if="o.partner_id.vat" style="margin-top: 3px; font-size: 10px;">-->
+                        <!--                                <t t-if="o.company_id.account_fiscal_country_id.vat_label"-->
+                        <!--                                   t-out="o.company_id.account_fiscal_country_id.vat_label"/>-->
+                        <!--                                <t t-else="">Tax ID / الرقم الضريبي:</t>-->
+                        <!--                                <span t-field="o.partner_id.vat"/>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
 
                         <!-- Document Information -->
                         <div class="thermal-section" style="text-align: left;"
                              t-if="o.invoice_date or (o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted') or o.delivery_date or o.invoice_origin or o.partner_id.ref or o.ref or o.invoice_incoterm_id">
 
-                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.invoice_date">
-                                <span class="thermal-label" style="text-align: left;">
-                                    <t t-if="o.move_type == 'out_invoice'">Invoice Date:</t>
-                                    <t t-elif="o.move_type == 'out_refund'">Credit Note Date:</t>
-                                    <t t-elif="o.move_type == 'out_receipt'">Receipt Date:</t>
-                                    <t t-else="">Date:</t>
-                                </span>
-                                <span class="thermal-value" t-field="o.invoice_date"/>
-                                <span class="thermal-label" style="text-align: right;" t-if="o.invoice_date">
-                                    <t t-if="o.move_type == 'out_invoice'">:تاريخ الفاتورة</t>
-                                    <t t-elif="o.move_type == 'out_refund'">:تاريخ إشعار الدائن</t>
-                                    <t t-elif="o.move_type == 'out_receipt'">:تاريخ الإيصال</t>
-                                    <t t-else="">:التاريخ</t>
-                                </span>
-                            </div>
+                            <!--                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.invoice_date">-->
+                            <!--                                <span class="thermal-label" style="text-align: left;">-->
+                            <!--                                    <t t-if="o.move_type == 'out_invoice'">Invoice Date:</t>-->
+                            <!--                                    <t t-elif="o.move_type == 'out_refund'">Credit Note Date:</t>-->
+                            <!--                                    <t t-elif="o.move_type == 'out_receipt'">Receipt Date:</t>-->
+                            <!--                                    <t t-else="">Date:</t>-->
+                            <!--                                </span>-->
+                            <!--                                <span class="thermal-value" t-field="o.invoice_date"/>-->
+                            <!--                                <span class="thermal-label" style="text-align: right;" t-if="o.invoice_date">-->
+                            <!--                                    <t t-if="o.move_type == 'out_invoice'">:تاريخ الفاتورة</t>-->
+                            <!--                                    <t t-elif="o.move_type == 'out_refund'">:تاريخ إشعار الدائن</t>-->
+                            <!--                                    <t t-elif="o.move_type == 'out_receipt'">:تاريخ الإيصال</t>-->
+                            <!--                                    <t t-else="">:التاريخ</t>-->
+                            <!--                                </span>-->
+                            <!--                            </div>-->
 
-                            <div class="thermal-row" style="margin-bottom:5px;"
-                                 t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'">
-                                <span class="thermal-label" style="text-align: left;">Due Date:</span>
-                                <span class="thermal-value" t-field="o.invoice_date_due"/>
-                                <span class="thermal-label" style="text-align: right;">:تاريخ الاستحقاق</span>
-                            </div>
+                            <!--                            <div class="thermal-row" style="margin-bottom:5px;"-->
+                            <!--                                 t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'">-->
+                            <!--                                <span class="thermal-label" style="text-align: left;">Due Date:</span>-->
+                            <!--                                <span class="thermal-value" t-field="o.invoice_date_due"/>-->
+                            <!--                                <span class="thermal-label" style="text-align: right;">:تاريخ الاستحقاق</span>-->
+                            <!--                            </div>-->
 
-                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.delivery_date">
-                                <span class="thermal-label" style="text-align: left;">Delivery Date:</span>
-                                <span class="thermal-value" t-field="o.delivery_date"/>
-                                <span class="thermal-label" style="text-align: right;">:تاريخ التسليم</span>
-                            </div>
+                            <!--                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.delivery_date">-->
+                            <!--                                <span class="thermal-label" style="text-align: left;">Delivery Date:</span>-->
+                            <!--                                <span class="thermal-value" t-field="o.delivery_date"/>-->
+                            <!--                                <span class="thermal-label" style="text-align: right;">:تاريخ التسليم</span>-->
+                            <!--                            </div>-->
 
-                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.invoice_origin">
-                                <span class="thermal-label" style="text-align: left;">Source:</span>
-                                <span class="thermal-value" t-field="o.invoice_origin"/>
-                                <span class="thermal-label" style="text-align: right;">:المصدر</span>
-                            </div>
+                            <!--                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.invoice_origin">-->
+                            <!--                                <span class="thermal-label" style="text-align: left;">Source:</span>-->
+                            <!--                                <span class="thermal-value" t-field="o.invoice_origin"/>-->
+                            <!--                                <span class="thermal-label" style="text-align: right;">:المصدر</span>-->
+                            <!--                            </div>-->
 
-                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.partner_id.ref">
-                                <span class="thermal-label" style="text-align: left;">Customer Code:</span>
-                                <span class="thermal-value" t-field="o.partner_id.ref"/>
-                                <span class="thermal-label" style="text-align: right;">:كود العميل</span>
-                            </div>
+                            <!--                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.partner_id.ref">-->
+                            <!--                                <span class="thermal-label" style="text-align: left;">Customer Code:</span>-->
+                            <!--                                <span class="thermal-value" t-field="o.partner_id.ref"/>-->
+                            <!--                                <span class="thermal-label" style="text-align: right;">:كود العميل</span>-->
+                            <!--                            </div>-->
 
-                            <div class="thermal-row"  style="margin-bottom:5px;" t-if="o.ref">
-                                <span class="thermal-label" style="text-align: left;">Reference:</span>
-                                <span class="thermal-value" t-field="o.ref"/>
-                                <span class="thermal-label" style="text-align: right;">:المرجع</span>
-                            </div>
+                            <!--                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.ref">-->
+                            <!--                                <span class="thermal-label" style="text-align: left;">Reference:</span>-->
+                            <!--                                <span class="thermal-value" t-field="o.ref"/>-->
+                            <!--                                <span class="thermal-label" style="text-align: right;">:المرجع</span>-->
+                            <!--                            </div>-->
 
-                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.invoice_incoterm_id">
-                                <span class="thermal-label" style="text-align: left;">Incoterm:</span>
-                                <span class="thermal-value">
-                                    <span t-field="o.invoice_incoterm_id.code"/>
-                                    <t t-if="o.incoterm_location">
-                                        <br/>
-                                        <span t-field="o.incoterm_location"/>
-                                    </t>
-                                </span>
-                                <span class="thermal-label" style="text-align: right;">:شروط التجارة الدولية</span>
+                            <!--                            <div class="thermal-row" style="margin-bottom:5px;" t-if="o.invoice_incoterm_id">-->
+                            <!--                                <span class="thermal-label" style="text-align: left;">Incoterm:</span>-->
+                            <!--                                <span class="thermal-value">-->
+                            <!--                                    <span t-field="o.invoice_incoterm_id.code"/>-->
+                            <!--                                    <t t-if="o.incoterm_location">-->
+                            <!--                                        <br/>-->
+                            <!--                                        <span t-field="o.incoterm_location"/>-->
+                            <!--                                    </t>-->
+                            <!--                                </span>-->
+                            <!--                                <span class="thermal-label" style="text-align: right;">:شروط التجارة الدولية</span>-->
+                            <!--                            </div>-->
+                        </div>
+
+
+                        <!--=================================================================================-->
+
+
+                        <table class="thermal-table thermal-label" style="font-weight: normal; w">
+                            <div>
+                                <!--                                <span>Original اساسي</span>-->
+                                <br/>
+                                <span>Tax Invoice فاتورة ضريبية</span>
                             </div>
+                            <br/>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:left;">Customer Invoice:</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.name"/>
+                                    </td>
+                                    <td style="text-align:right;">:رقم الفاتورة</td>
+                                </tr>
+
+                                <tr t-if="o.invoice_date">
+                                    <td style="text-align:left;">Date:</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.invoice_date"/>
+                                    </td>
+                                    <td style="text-align:right;">:التاريخ</td>
+                                </tr>
+
+
+                                <tr t-if="o.partner_id.name">
+                                    <td style="text-align:left;">Customer Name:</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.partner_id.name"/>
+                                    </td>
+                                    <td style="text-align:right;">:اسم العميل</td>
+                                </tr>
+
+                                <tr t-if="o.partner_id.mobile">
+                                    <td style="text-align:left;">Customer Num:</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.partner_id.mobile"/>
+                                    </td>
+                                    <td style="text-align:right;">:رقم العميل</td>
+                                </tr>
+
+                                <tr t-if="o.partner_id.country_id.name">
+                                    <td style="text-align:left;">State :</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.partner_id.country_id.name"/>
+                                    </td>
+                                    <td style="text-align:right;">:الدولة</td>
+                                </tr>
+
+
+                                <tr t-if="o.partner_id.city">
+                                    <td style="text-align:left;">City :</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.partner_id.city"/>
+                                    </td>
+                                    <td style="text-align:right;">:المدينة</td>
+                                </tr>
+
+
+                                <!--                                <tr>-->
+                                <!--                                    <td style="text-align:left;">Main Account Name:</td>-->
+                                <!--                                    <td style="text-align:center;">-->
+                                <!--                                        &lt;!&ndash;                                                <span t-esc="o.amount_total"/>&ndash;&gt;-->
+                                <!--                                    </td>-->
+                                <!--                                    <td style="text-align:right;">:اسم العميل الرئيسي</td>-->
+                                <!--                                </tr>-->
+
+                                <tr t-if="o.partner_id.vat">
+                                    <td style="text-align:left;">Customer Vat:</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.partner_id.vat"/>
+                                    </td>
+                                    <td style="text-align:right;">: الرقم الضريبي</td>
+                                </tr>
+
+                                <tr t-if="o.invoice_user_id.name">
+                                    <td style="text-align:left;">Salesperson:</td>
+                                    <td style="text-align:center;">
+                                        <span t-esc="o.invoice_user_id.name"/>
+                                    </td>
+                                    <td style="text-align:right;">: مندوب المبيعات</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                        <!-- QR Code -->
+                        <div style="margin-top:10px; font-weight: bold;">
+                            <center>
+                                <p>
+                                    <img t-if="o.l10n_sa_qr_code_str"
+                                         style="display:block;"
+                                         t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;humanreadable=1080&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 100, 100)"
+                                         alt="Barcode"/>
+                                </p>
+                                <span>مبيعات Sale</span>
+                            </center>
                         </div>
 
                         <!-- Invoice Lines Table -->
@@ -164,30 +292,30 @@
                         <t t-set="lines"
                            t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
 
+
                         <div class="thermal-section">
-                            <table class="thermal-table">
+                            <table class="thermal-table" style="direction: rtl;text-align: right;">
                                 <thead>
                                     <tr>
-                                        <th style="text-align: center; width: 5%;">#</th>
-                                        <th style="text-align: left; width: 20%;">
-                                            <span>الوصف</span>
-                                            <span>Desc</span>
+                                        <th style="text-align: center; width: 3%;">#</th>
+                                        <th style="text-align: right; width: 20%;">
+                                            <span>الصنف</span>
+                                            <!--                                            <span>Desc</span>-->
                                         </th>
                                         <th style="text-align: center; width: 15%;">
                                             <span>الكمية</span>
-                                            <span>Qty</span>
+                                            <!--                                            <span>Qty</span>-->
                                         </th>
                                         <th style="text-align: center; width: 15%;">
                                             <span>السعر</span>
-                                            <span>Price</span>
+                                            <!--                                            <span>Price</span>-->
                                         </th>
-                                        <th t-if="display_discount" style="text-align: center; width: 12%;">
-                                            <span>الخصم</span>
-                                            <span>Disc%</span>
+                                        <th style="text-align: center; width: 12%;">
+                                            <span>الضريبة</span>
                                         </th>
                                         <th style="text-align: center;">
-                                            <span>المجموع</span>
-                                            <span>Amount</span>
+                                            <span>السعر شامل الضريبة</span>
+                                            <!--                                            <span>Amount</span>-->
                                         </th>
                                     </tr>
                                 </thead>
@@ -228,10 +356,14 @@
                                                     <span t-field="line.price_unit"/>
                                                 </td>
 
-                                                <!-- Discount Column -->
-                                                <td t-if="display_discount"
-                                                    style="text-align: center; white-space: nowrap; font-size: 9px;">
-                                                    <span t-field="line.discount"/>
+                                                <!--                                                &lt;!&ndash; Discount Column &ndash;&gt;-->
+                                                <!--                                                <td t-if="display_discount"-->
+                                                <!--                                                    style="text-align: center; white-space: nowrap; font-size: 9px;">-->
+                                                <!--                                                    <span t-field="line.discount"/>-->
+                                                <!--                                                </td>-->
+                                                <!-- Tax Column -->
+                                                <td style="text-align: center; white-space: nowrap; font-size: 9px;">
+                                                    <span t-esc="'%.2f' % ((line.price_total - line.price_subtotal) / line.quantity if line.quantity else 0)"/>
                                                 </td>
 
                                                 <!-- Subtotal Column -->
@@ -277,74 +409,133 @@
                             </table>
                         </div>
 
+<!--                        &lt;!&ndash; Totals Summary &ndash;&gt;-->
+<!--                        <center>-->
+<!--                            <table class="table thermal-label">-->
+<!--                                <tbody>-->
+<!--                                    <tr>-->
+<!--                                        <td>Untaxed Amount :</td>-->
+
+<!--                                        <td>-->
+<!--                                            <span t-field="o.amount_untaxed"/>-->
+<!--                                        </td>-->
+<!--                                        <td style="text-align: right;">الاجمالي غير شامل الضريبة:</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>Tax :</td>-->
+
+<!--                                        <td style="text-align: right;">-->
+<!--                                            <span t-field="o.amount_tax"/>-->
+<!--                                        </td>-->
+<!--                                        <td style="text-align: right;">الضريبة:</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>Total :</td>-->
+
+<!--                                        <td>-->
+<!--                                            <span t-field="o.amount_total"/>-->
+<!--                                        </td>-->
+<!--                                        <td style="text-align: right;">الاجمالي شامل الضريبة:</td>-->
+<!--                                    </tr>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </center>-->
+                        <center>
+                            <table class="thermal-table thermal-label" style="font-weight: normal;">
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align:left;">Sales (SAR)</td>
+                                        <td style="text-align:center;">
+                                            <span t-esc="o.amount_untaxed"/>
+                                        </td>
+                                        <td style="text-align:right;">صافي المبيعات</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:left;">Total Vat (SAR)</td>
+                                        <td style="text-align:center;">
+                                            <span t-esc="o.amount_tax"/>
+                                        </td>
+                                        <td style="text-align:right;">إجمالي الضريبة</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:left;">Net Invoices (SAR)</td>
+                                        <td style="text-align:center;">
+                                            <span t-esc="o.amount_total"/>
+                                        </td>
+                                        <td style="text-align:right;">الإجمالي شامل الضريبة</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </center>
+
                         <!-- Tax Totals -->
-                        <div class="thermal-section" style="text-align: right;">
-                            <t t-if="o.tax_totals">
-                                <t t-set="tax_totals" t-value="o.tax_totals"/>
-                                <t t-set="currency" t-value="o.currency_id"/>
-                                <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
+                        <!--                        <div class="thermal-section" style="text-align: right;">-->
+                        <!--                            <t t-if="o.tax_totals">-->
+                        <!--                                <t t-set="tax_totals" t-value="o.tax_totals"/>-->
+                        <!--                                <t t-set="currency" t-value="o.currency_id"/>-->
+                        <!--                                <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>-->
 
-                                <!-- Subtotals -->
-                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                                    <div class="thermal-row">
-                                        <span>
-                                            <t t-out="subtotal['name']"/>
-                                        </span>
-                                        <span style="font-weight: bold;">
-                                            <t t-out="subtotal['base_amount_currency']"
-                                               t-options='{"widget": "monetary", "display_currency": currency}'/>
-                                        </span>
-                                    </div>
+                        <!--                                &lt;!&ndash; Subtotals &ndash;&gt;-->
+                        <!--                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">-->
+                        <!--                                    <div class="thermal-row">-->
+                        <!--                                        <span>-->
+                        <!--                                            <t t-out="subtotal['name']"/>-->
+                        <!--                                        </span>-->
+                        <!--                                        <span style="font-weight: bold;">-->
+                        <!--                                            <t t-out="subtotal['base_amount_currency']"-->
+                        <!--                                               t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                        <!--                                        </span>-->
+                        <!--                                    </div>-->
 
-                                    <!-- Tax Groups -->
-                                    <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
-                                        <div class="thermal-row" style="font-size: 9px;">
-                                            <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is False">
-                                                <span>
-                                                    <t t-out="tax_group['group_name']"/>
-                                                </span>
-                                                <span>
-                                                    <t t-out="tax_group['tax_amount_currency']"
-                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>
-                                                </span>
-                                            </t>
-                                            <t t-else="">
-                                                <span style="font-size: 8px;">
-                                                    <t t-out="tax_group['group_name']"/>
-                                                    on / على
-                                                    <t t-out="tax_group['display_base_amount_currency']"
-                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>
-                                                </span>
-                                                <span>
-                                                    <t t-out="tax_group['tax_amount_currency']"
-                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>
-                                                </span>
-                                            </t>
-                                        </div>
-                                    </t>
-                                </t>
+                        <!--                                    &lt;!&ndash; Tax Groups &ndash;&gt;-->
+                        <!--                                    <t t-foreach="subtotal['tax_groups']" t-as="tax_group">-->
+                        <!--                                        <div class="thermal-row" style="font-size: 9px;">-->
+                        <!--                                            <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is False">-->
+                        <!--                                                <span>-->
+                        <!--                                                    <t t-out="tax_group['group_name']"/>-->
+                        <!--                                                </span>-->
+                        <!--                                                <span>-->
+                        <!--                                                    <t t-out="tax_group['tax_amount_currency']"-->
+                        <!--                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                        <!--                                                </span>-->
+                        <!--                                            </t>-->
+                        <!--                                            <t t-else="">-->
+                        <!--                                                <span style="font-size: 8px;">-->
+                        <!--                                                    <t t-out="tax_group['group_name']"/>-->
+                        <!--                                                    on / على-->
+                        <!--                                                    <t t-out="tax_group['display_base_amount_currency']"-->
+                        <!--                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                        <!--                                                </span>-->
+                        <!--                                                <span>-->
+                        <!--                                                    <t t-out="tax_group['tax_amount_currency']"-->
+                        <!--                                                       t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                        <!--                                                </span>-->
+                        <!--                                            </t>-->
+                        <!--                                        </div>-->
+                        <!--                                    </t>-->
+                        <!--                                </t>-->
 
-                                <!-- Cash Rounding -->
-                                <div t-if="'cash_rounding_base_amount_currency' in tax_totals"
-                                     class="thermal-row" style="font-size: 9px;">
-                                    <span>Rounding / التقريب</span>
-                                    <span>
-                                        <t t-out="tax_totals['cash_rounding_base_amount_currency']"
-                                           t-options='{"widget": "monetary", "display_currency": currency}'/>
-                                    </span>
-                                </div>
+                        <!--                                &lt;!&ndash; Cash Rounding &ndash;&gt;-->
+                        <!--                                <div t-if="'cash_rounding_base_amount_currency' in tax_totals"-->
+                        <!--                                     class="thermal-row" style="font-size: 9px;">-->
+                        <!--                                    <span>Rounding / التقريب</span>-->
+                        <!--                                    <span>-->
+                        <!--                                        <t t-out="tax_totals['cash_rounding_base_amount_currency']"-->
+                        <!--                                           t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                        <!--                                    </span>-->
+                        <!--                                </div>-->
 
-                                <!-- Total -->
-                                <div class="thermal-row"
-                                     style="font-weight: bold; font-size: 12px; border-top: 2px solid #000; padding-top: 5px; margin-top: 5px;">
-                                    <strong>Total / المجموع:</strong>
-                                    <strong>
-                                        <t t-out="tax_totals['total_amount_currency']"
-                                           t-options='{"widget": "monetary", "display_currency": currency}'/>
-                                    </strong>
-                                </div>
-                            </t>
-                        </div>
+                        <!--                                &lt;!&ndash; Total &ndash;&gt;-->
+                        <!--                                <div class="thermal-row"-->
+                        <!--                                     style="font-weight: bold; font-size: 12px; border-top: 2px solid #000; padding-top: 5px; margin-top: 5px;">-->
+                        <!--                                    <strong>Total / المجموع:</strong>-->
+                        <!--                                    <strong>-->
+                        <!--                                        <t t-out="tax_totals['total_amount_currency']"-->
+                        <!--                                           t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                        <!--                                    </strong>-->
+                        <!--                                </div>-->
+                        <!--                            </t>-->
+                        <!--                        </div>-->
 
                         <!-- Payments (if print_with_payments) -->
                         <div t-if="print_with_payments and o.payment_state != 'invoicing_legacy'"
@@ -487,27 +678,13 @@
 
                         <!-- Payment Communication -->
                         <div t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference"
-                             class="thermal-section" style="text-align: left; font-size: 10px;">
+                             class="thermal-section text-center" style="font-size: 10px;">
                             <div>Payment Communication / مرجع الدفع:
                                 <span style="font-weight: bold;" t-field="o.payment_reference"/>
                             </div>
                             <div t-if="o.partner_bank_id" style="margin-top: 2px;">
                                 on this account / على هذا الحساب:
                                 <span style="font-weight: bold;" t-field="o.partner_bank_id"/>
-                            </div>
-                        </div>
-
-                        <!-- QR Code -->
-                        <t t-set="show_qr" t-value="o.display_qr_code and o.amount_residual > 0"/>
-                        <div t-if="not show_qr" class="thermal-section"><!-- QR placeholder --></div>
-                        <div t-else="" class="thermal-section" style="text-align: center;">
-                            <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
-                            <div t-if="qr_code_url">
-                                <img t-att-src="qr_code_url" style="max-width: 100%; height: auto;"/>
-                                <div style="font-size: 9px; font-style: italic; margin-top: 3px;">
-                                    Scan this QR Code with your banking application
-                                    امسح رمز الاستجابة السريعة هذا باستخدام تطبيق
-                                </div>
                             </div>
                         </div>
 
