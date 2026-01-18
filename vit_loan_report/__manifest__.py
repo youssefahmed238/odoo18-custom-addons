@@ -1,6 +1,6 @@
 {
     'name': 'VIT Loan Report',
-    'version': '17.0.1.0.0',
+    'version': '1.0',
     'summary': 'Generate loan reports for employees',
     'author': 'vareityIt',
     'category': 'HR',

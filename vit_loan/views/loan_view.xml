@@ -5,7 +5,7 @@
         <field name="model">hr.payslip</field>
         <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='net_wage']" position="after">
+            <xpath expr="//list/field[@name='net_wage']" position="after">
                 <field name="loan_amount" sum="Total"/>
 
             </xpath>
@@ -18,7 +18,7 @@
         <field name="model">hr.salary.attachment</field>
         <field name="inherit_id" ref="hr_payroll.hr_salary_attachment_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='monthly_amount']" position="before">
+            <xpath expr="//list/field[@name='monthly_amount']" position="before">
                 <field name="total_loan"/>
                 <field name="total_remain"/>
             </xpath>

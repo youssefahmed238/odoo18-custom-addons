@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 
+
 class HrPayslip(models.Model):
     _inherit = "hr.payslip"
 
@@ -13,12 +14,10 @@ class HrPayslip(models.Model):
         for payslip in self:
             loan_lines = payslip.input_line_ids.filtered(
                 lambda l: l.input_type_id
-                and l.input_type_id.name
-                and l.input_type_id.name.lower() == 'loan'
+                          and l.input_type_id.name
+                          and l.input_type_id.name.lower() == 'loan'
             )
             payslip.loan_amount = sum(loan_lines.mapped('amount')) if loan_lines else 0.0
-
-
 
 
 class HrSalaryAttachment(models.Model):
@@ -29,7 +28,6 @@ class HrSalaryAttachment(models.Model):
         compute="_compute_total_loan",
         store=True
     )
-
 
     payslip_ids = fields.Many2many(
         "hr.payslip",
@@ -43,7 +41,6 @@ class HrSalaryAttachment(models.Model):
         compute="_compute_remaining_amount",
         store=True
     )
-
 
     @api.depends("employee_ids")
     def _compute_total_loan(self):
