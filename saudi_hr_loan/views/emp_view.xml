@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="contract_inherit_form_view_tree" model="ir.ui.view">
+            <field name="name">contract.inherit.form.view.tree</field>
+            <field name="model">hr.contract.history</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_history_view_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="import">"1"</attribute>
+                    <attribute name="create">true</attribute>
+                </xpath>
+                <xpath expr="//tree/field[@name='name']" position="after">
+<!--                    <field name="struct_id"/>-->
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <!-- <record id="hr_employee_view_filter_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.view.search.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="employee_code" />
+                    <filter string="Employee Code" name="employee_code" domain="[('employee_code', '=', True)]"/>
+                </xpath>
+            </field>
+        </record> -->
+
+<!-- 
+        <record id="hr_employee_view_extend" model="ir.ui.view">
+            <field name="name">hr.employee.view.extend</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="employee_code"/>
+                </field>
+            </field>
+        </record> -->
+
+
+        <!-- <record id="hr_employee_view_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
+
+                <xpath expr="//group" position="before">
+
+                    <div>
+                        <h2 class="d-flex flex-row">
+                            <field name="employee_code" placeholder="Employee Code" nolabel="1" required="1"
+                                   colspan="6"/>
+                        </h2>
+                        <br/>
+                        <h2 class="o_row">
+                            <field name="name" placeholder="Employee Name" required="True"/>
+                        </h2>
+                        <br/>
+                        <h2 class="d-flex flex-row">
+                            <field name="employee_short_name" placeholder="Employee Short Name"/>
+
+                        </h2>
+                        <br/>
+                        <h2 class="d-flex o_row">
+                            <field name="employee_name_en" placeholder="Employee Name In English"/>
+                        </h2>
+
+                        <br/>
+                        <h2>
+                            <field name="job_title" placeholder="Job Position"/>
+                        </h2>
+                        <br/>
+                        <field name="category_ids" widget="many2many_tags"
+                               options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"
+                               groups="hr.group_hr_manager"/>
+                        <br/>
+                    </div>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>

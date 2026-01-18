@@ -1,0 +1,121 @@
+<odoo>
+    <!-- Loan Report Template -->
+    <template id="loan_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Arial', sans-serif; color: #333;">
+
+                    <!-- ====== Employee Information ====== -->
+                    <h4 style="color:#003366; background-color:#f0f6ff; padding:6px; border-left:4px solid #003366;">
+                        Employee Information
+                    </h4>
+                    <table class="table table-sm table-bordered" style="width:100%; border-collapse: collapse; border: 1px solid #ccc; font-size:13px;">
+                        <tr style="background-color:#f9f9f9;">
+                            <td><strong>Employee Name:</strong></td>
+                            <td><span t-field="o.employee_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Location:</strong></td>
+                            <td><span t-field="o.employee_id.private_street"/></td>
+                        </tr>
+                        <tr style="background-color:#f9f9f9;">
+                            <td><strong>Department:</strong></td>
+                            <td><span t-field="o.employee_id.department_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Manager:</strong></td>
+                            <td><span t-field="o.employee_id.parent_id.name"/></td>
+                        </tr>
+                        <tr style="background-color:#f9f9f9;">
+                            <td><strong>Job Position:</strong></td>
+                            <td><span t-field="o.employee_id.job_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Request Date:</strong></td>
+                            <td><span t-field="o.request_date"/></td>
+                        </tr>
+                    </table>
+
+
+                        <!-- ====== Loan Details ====== -->
+                        <h4 style="color:#003366; background-color:#f0f6ff; padding:6px; border-left:4px solid #003366;">
+                            Loan Details
+                        </h4>
+                        <table class="table table-sm table-bordered" style="width:100%; border-collapse: collapse; border: 1px solid #ccc; font-size:13px;">
+                            <tr style="background-color:#f9f9f9;">
+                                <td><strong>Loan Amount:</strong></td>
+                                <td><span t-field="o.loan_amount"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Amount Paid:</strong></td>
+                                <td><span t-field="o.amount_paid"/></td>
+                            </tr>
+                            <tr style="background-color:#f9f9f9;">
+                                <td><strong>Remaining Amount:</strong></td>
+                                <td><span t-field="o.amount_to_pay"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Loan Terms:</strong></td>
+                                <td><span t-field="o.duration"/></td>
+                            </tr>
+                            <tr style="background-color:#f9f9f9;">
+                                <td><strong>Start Date:</strong></td>
+                                <td><span t-field="o.start_date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>End Date:</strong></td>
+                                <td><span t-field="o.due_date"/></td>
+                            </tr>
+                        </table>
+                                        <!-- ====== Installments ====== -->
+                <h4 style="color:#003366; background-color:#f0f6ff; padding:6px; border-left:4px solid #003366;">
+                    Installments
+                </h4>
+                <table class="table table-sm table-bordered" style="width:100%; border-collapse: collapse; border: 1px solid #ccc; font-size:13px;">
+                    <thead style="background-color:#f9f9f9;">
+                        <tr>
+                            <th>Operation</th>
+                            <th>Payslip</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="o.installment_lines" t-as="line">
+                            <tr>
+                                <td><span t-field="line.operation_id"/></td>
+                                <td><span t-field="line.payslip_id"/></td>
+                                <td><span t-field="line.date"/></td>
+                                <td style="text-align:right;"><span t-field="line.amount"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color:#f0f6ff;">
+                            <td colspan="3" style="text-align:right;"><strong>Total:</strong></td>
+                            <td style="text-align:right;"><span t-esc="sum(line.amount for line in o.installment_lines)"/></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- PDF Report Action -->
+    <record id="action_loan_report" model="ir.actions.report">
+        <field name="name">Loan Report</field>
+        <field name="model">hr.loan</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">vit_loan_report.loan_report_template</field>
+        <field name="report_file">vit_loan_report.loan_report_template</field>
+        <field name="print_report_name">'Loan_Report_%s' % (object.employee_id.name)</field>
+        <field name="binding_model_id" ref="saudi_hr_loan.model_hr_loan"/>
+        <field name="binding_type">action</field>
+    </record>
+</odoo>

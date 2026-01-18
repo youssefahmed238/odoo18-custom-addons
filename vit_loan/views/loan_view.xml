@@ -1,0 +1,28 @@
+<odoo>
+    <!-- Payslip Tree View -->
+    <record id="view_payslip_tree_inherit_loan" model="ir.ui.view">
+        <field name="name">hr.payslip.tree.inherit.loan</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='net_wage']" position="after">
+                <field name="loan_amount" sum="Total"/>
+
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Salary Attachment Tree View -->
+    <record id="view_salary_attachment_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.tree.inherit.loan</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_attachment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='monthly_amount']" position="before">
+                <field name="total_loan"/>
+                <field name="total_remain"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

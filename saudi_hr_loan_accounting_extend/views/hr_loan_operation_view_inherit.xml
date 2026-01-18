@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <record id="hr_loan_operation_form_inherit" model="ir.ui.view">
+        <field name="name">HR Loan Operation Form Inherit</field>
+        <field name="model">hr.loan.operation</field>
+        <field name="inherit_id" ref="saudi_hr_loan.view_hr_loan_operation_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/button[@name='refuse_loan_operation']" position="attributes">
+                <attribute name="invisible">state not in ('open','confirm')</attribute>
+            </xpath>
+
+            <xpath expr="//header/button[@name='set_to_draft']" position="attributes">
+                <attribute name="invisible">state not in ('refuse','cancel','done','approve')</attribute>
+            </xpath>
+
+            <xpath expr="//sheet/group[3]" position="after">
+                <group name="accounting_group" string="Accounting Group" invisible="payment_type != 'journal_entry'" >
+                    <group>
+                        <field name="account_journal" required="payment_type == 'journal_entry'"/>
+                    </group>
+                    <group>
+                        <field name="installment_account" required="payment_type == 'journal_entry'"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <div name="button_box">
+                    <button class="oe_stat_button"
+                            type="object"
+                            icon="fa-usd"
+                            invisible="state not in ('approve','done')"
+                            name="action_get_loan_operation_journal_entry">
+                        <span class="o_stat_text">Loan Operation Entry</span>
+                    </button>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

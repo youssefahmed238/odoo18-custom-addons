@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <record id="hr_loan_form_inherit" model="ir.ui.view">
+        <field name="name">HR Loan Form Inherit</field>
+        <field name="model">hr.loan</field>
+        <field name="inherit_id" ref="saudi_hr_loan.view_hr_loan_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/button[@name='refuse_loan']" position="attributes">
+                <attribute name="invisible">state not in ('open','confirm')</attribute>
+            </xpath>
+
+            <xpath expr="//header/button[@name='set_to_draft']" position="attributes">
+                <attribute name="invisible">state not in ('refuse','cancel','done')</attribute>
+            </xpath>
+
+            <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        type="object"
+                        icon="fa-usd"
+                        invisible="state not in ('approve','done')"
+                        name="action_get_loan_journal_entrie">
+                    <span class="o_stat_text">Loan Journal Entrie</span>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook/page[3]" position="after">
+                <page string="Accounting">
+
+                    <group name="accounting_info"  col="4">
+                        <field name="apply_accounting"/>
+                        <field name="account_journal" invisible="not apply_accounting"/>
+                        <field name="installment_account" invisible="not apply_accounting"/>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
