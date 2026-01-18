@@ -4,13 +4,13 @@
         <field name="name">hr.loan.operation.tree</field>
         <field name="model">hr.loan.operation</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="loan_operation_type"/>
                 <field name="effective_date"/>
                 <field name="state"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -147,7 +147,7 @@
     <record model="ir.actions.act_window" id="action_loan_operation">
         <field name="name">Loan Operations</field>
         <field name="res_model">hr.loan.operation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_my_loan_operation_type':1}</field>
     </record>
 

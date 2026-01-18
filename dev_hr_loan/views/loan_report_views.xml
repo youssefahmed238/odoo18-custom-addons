@@ -4,10 +4,10 @@
         <field name="name">installment.analytic.line.view.tree</field>
         <field name="model">installment.analytic.line.view</field>
         <field name="arch" type="xml">
-            <tree string="Loan Analysis" create="false" edit="false">
+            <list string="Loan Analysis" create="false" edit="false">
                 <field name="name"/>
                 <field name="employee_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -15,7 +15,7 @@
     <record model="ir.actions.act_window" id="action_loan_report">
         <field name="name">Loan Analysis</field>
         <field name="res_model">installment.analytic.line.view</field>
-        <field name="view_mode">tree,pivot</field>
+        <field name="view_mode">list,pivot</field>
         <field name="view_id" ref="installment_analytic_line_view_tree"/>
         <field name="help" type="html">
             <p>

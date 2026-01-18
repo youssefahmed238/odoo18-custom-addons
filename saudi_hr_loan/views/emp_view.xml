@@ -7,11 +7,11 @@
             <field name="model">hr.contract.history</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_history_view_list"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <attribute name="import">"1"</attribute>
                     <attribute name="create">true</attribute>
                 </xpath>
-                <xpath expr="//tree/field[@name='name']" position="after">
+                <xpath expr="//list/field[@name='name']" position="after">
 <!--                    <field name="struct_id"/>-->
                 </xpath>
             </field>

@@ -11,7 +11,6 @@
 	        id="menu_loan_dashboard_id"
 	        name="Dashboard"
 	        parent="dev_hr_loan.menu_main_employee_loan" sequence="0"
-	        action="dev_hr_loan.dev_loan_dashboard_action" 
-	         />
+	        action="dev_hr_loan.dev_loan_dashboard_action"/>
     </data>
 </odoo>

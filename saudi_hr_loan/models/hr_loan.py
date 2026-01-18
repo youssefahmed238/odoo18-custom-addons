@@ -281,7 +281,7 @@ class HrLoan(models.Model):
             'name': _('Loan Operation Request'),
             'res_model': 'hr.loan.operation',
             'view_mode': 'from',
-            'views': [(tree_view.id, 'tree'), (form_view.id, 'form')],
+            'views': [(tree_view.id, 'list'), (form_view.id, 'form')],
             'domain': [('id', 'in', loan_operation_ids.ids)],
             # 'res_id': loan_operation_ids.ids,
             'context': {'group_by': 'loan_operation_type', 'default_employee_id': self.employee_id.id,

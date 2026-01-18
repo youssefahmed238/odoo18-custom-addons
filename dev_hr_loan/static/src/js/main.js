@@ -1,26 +1,27 @@
 /** @odoo-module */
 import { registry } from '@web/core/registry';
-const { Component, onWillStart, onMounted, useState, useRef } = owl
+import { Component, onWillStart, onMounted, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { jsonrpc } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
+import { rpc } from "@web/core/network/rpc";
+import { ensureJQuery } from "@web/core/ensure_jquery";
 
 export class loanDashboard extends Component {
      setup() {
         this.action = useService("action");
         this.orm = useService("orm");
-        this.rpc = this.env.services.rpc
         this.state = useState({
             rowsPerPage: 5,
             currentPage:1,
             totalrows: 0
         })
-        onMounted(this.onMounted);
-        onWillStart(this.onWillStart)
+        onMounted(() => this.onMounted());
+        onWillStart(() => this.onWillStart());
     }
 
      async onWillStart() {
+        await ensureJQuery();
         await this.getCardData()
         await this.getGreetings()
         await loadJS("https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js")
@@ -76,7 +77,7 @@ export class loanDashboard extends Component {
     }
 
      render_filter() {
-        jsonrpc('/hr/loan/all_filter').then(function (data) {
+        rpc('/hr/loan/all_filter').then(function (data) {
             var users = data[0]
             var employees=data[1]
             var loan_types=data[2]
@@ -103,7 +104,7 @@ export class loanDashboard extends Component {
         this.Hr_loan_Chart();
         this.render_loan_list_data(this.state.rowsPerPage, this.state.currentPage);
         var self = this;
-        jsonrpc('/loan/filter-apply', {
+        rpc('/loan/filter-apply', {
             'data': {
                 'user': users_selection,
                 'hr':hr_selection,
@@ -134,7 +135,7 @@ export class loanDashboard extends Component {
         var loan_type_selection = $('#loan_type_selection').val();
         var duration_selection = $('#duration_selection').val();
 		var self = this;
-		await jsonrpc("/paid/loan/chart/data", {
+		await rpc("/paid/loan/chart/data", {
         'data':
             {
                 'user': users_selection,
@@ -167,9 +168,9 @@ export class loanDashboard extends Component {
                                 type: 'ir.actions.act_window',
                                 res_model: 'installment.line',
                                 domain: [["id", "in", clickedValue]],
-                                view_mode: 'tree,form',
+                                view_mode: 'list,form',
                                 views: [
-                                    [false, 'tree'],
+                                    [false, 'list'],
                                     [false, 'form']
                                 ],
                                 target: 'current'
@@ -202,7 +203,7 @@ export class loanDashboard extends Component {
         var duration_selection = $('#duration_selection').val();
 //        var loan_type_chart_selection=$('#loan_type_chart_selection').val();
         var self = this;
-        await jsonrpc("/loan/type/chart/data",{
+        await rpc("/loan/type/chart/data",{
         'data':
             {
                 'user': users_selection,
@@ -236,9 +237,9 @@ export class loanDashboard extends Component {
                                 type: 'ir.actions.act_window',
                                 res_model: 'employee.loan',
                                 domain: [["id", "in", clickedValue]],
-                                view_mode: 'tree,form',
+                                view_mode: 'list,form',
                                 views: [
-                                    [false, 'tree'],
+                                    [false, 'list'],
                                     [false, 'form']
                                 ],
                                 target: 'current'
@@ -259,7 +260,7 @@ export class loanDashboard extends Component {
         var duration_selection = $('#duration_selection').val();
 //        var loan_type_chart_selection=$('#loan_type_chart_selection').val();
         var self = this;
-        await jsonrpc("/hr/loan/chart/data",{
+        await rpc("/hr/loan/chart/data",{
         'data':
             {
                 'user': users_selection,
@@ -291,9 +292,9 @@ export class loanDashboard extends Component {
                                 type: 'ir.actions.act_window',
                                 res_model: 'employee.loan',
                                 domain: [["id", "in", clickedValue]],
-                                view_mode: 'tree,form',
+                                view_mode: 'list,form',
                                 views: [
-                                    [false, 'tree'],
+                                    [false, 'list'],
                                     [false, 'form']
                                 ],
                                 target: 'current'
@@ -313,7 +314,7 @@ export class loanDashboard extends Component {
         var loan_type_selection = $('#loan_type_selection').val();
         var duration_selection = $('#duration_selection').val();
         var self = this;
-        var def2 = await jsonrpc("/loan/list/data",{
+        var def2 = await rpc("/loan/list/data",{
         'data':
             {
                 'user': users_selection,
@@ -389,9 +390,9 @@ export class loanDashboard extends Component {
                     type: 'ir.actions.act_window',
                     res_model: 'employee.loan',
                     domain: [["id", "=", id]],
-                    view_mode: 'tree,form',
+                    view_mode: 'list,form',
                     views: [
-                        [false, 'tree'],
+                        [false, 'list'],
                         [false, 'form']
                     ],
                     target: 'current'
@@ -464,9 +465,9 @@ export class loanDashboard extends Component {
         type: 'ir.actions.act_window',
         res_model: 'employee.loan',
         domain: domain,
-        view_mode: 'tree,form',
+        view_mode: 'list,form',
         views: [
-            [false, 'tree'],
+            [false, 'list'],
             [false, 'form']
         ],
         target: 'current'
@@ -475,7 +476,7 @@ export class loanDashboard extends Component {
 
      async getCardData(){
             var self = this;
-            var def1 = jsonrpc('/get/hr/loan/data').then(function (data) {
+            var def1 = rpc('/get/hr/loan/data').then(function (data) {
                 self.draft_lst = data['draft_lst'],
                     self.submit_request_lst = data['submit_request_lst'],
                     self.department_approve_lst = data['department_approve_lst'],
@@ -485,7 +486,7 @@ export class loanDashboard extends Component {
                     self.user_name = data['user_name']
                 self.user_img = data['user_img']
             });
-            return $.when(def1);
+            return def1;
      }
 }
 
