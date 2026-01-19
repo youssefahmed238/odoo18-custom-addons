@@ -25,10 +25,6 @@ patch(ReportAction.prototype, {
     onIframeLoaded(ev) {
         super.onIframeLoaded(ev);
 
-        console.log("Iframe loaded for report:", this.thermalReports);
-        console.log("Current report name:", this.props.report_name);
-        console.log("Is thermal report:", this.props.report_name && this.thermalReports.includes(this.props.report_name));
-
         if (this.props.report_name && this.thermalReports.includes(this.props.report_name)) {
             this.print().then(() => {
                 console.log("Print command executed for thermal report.");
@@ -43,15 +39,15 @@ patch(ReportAction.prototype, {
      */
     async print() {
         if (this.props.report_name && this.thermalReports.includes(this.props.report_name)) {
-            this.iframe.el.contentWindow.focus();
-            this.iframe.el.contentWindow.print();
-
-            this.iframe.el.contentWindow.onafterprint = () => {
-                const backButton = document.querySelector('.o_back_button a');
-                if (backButton) {
-                    window.location.href = backButton.href;
-                }
-            }
+            // this.iframe.el.contentWindow.focus();
+            // this.iframe.el.contentWindow.print();
+            //
+            // this.iframe.el.contentWindow.onafterprint = () => {
+            //     const backButton = document.querySelector('.o_back_button a');
+            //     if (backButton) {
+            //         window.location.href = backButton.href;
+            //     }
+            // }
         } else {
             super.print();
         }
