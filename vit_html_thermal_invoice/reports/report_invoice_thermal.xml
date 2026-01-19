@@ -34,12 +34,6 @@
                                  style="width:100%"/>
                         </div>
 
-                        <!--                        &lt;!&ndash; Title: Simplified Tax Invoice &ndash;&gt;-->
-                        <!--                        <div style="margin-top:10px;">-->
-                        <!--                            فاتورة ضريبية مبسطة-->
-                        <!--                        </div>-->
-
-
                         <!-- Company Name -->
                         <div style="margin-top:10px; font-weight: bold;">
                             <span t-esc="o.company_id.name"/>
@@ -50,12 +44,6 @@
                             <div t-field="o.company_id.partner_id"
                                  t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
                         </div>
-
-                        <!--                        &lt;!&ndash; Invoice Date &ndash;&gt;-->
-                        <!--                        <div style="margin-top:10px;">-->
-                        <!--                            Date :-->
-                        <!--                            <span t-field="o.invoice_date"/>-->
-                        <!--                        </div>-->
 
                         <!-- VAT Number -->
                         <div style="margin-top:10px; font-weight: bold;">
