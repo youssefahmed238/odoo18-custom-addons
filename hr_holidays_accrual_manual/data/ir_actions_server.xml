@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Create server action for update accrual on selected allocations manual -->
+        <record id="server_action_update_selected_accrual_manualy" model="ir.actions.server">
+            <field name="name">Update Accrual</field>
+            <field name="model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+            <field name="binding_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+            <field name="state">code</field>
+            <field name="code">records._update_accrual_manual()</field>
+            <field name="binding_type">action</field>
+        </record>
+
+    </data>
+</odoo>
