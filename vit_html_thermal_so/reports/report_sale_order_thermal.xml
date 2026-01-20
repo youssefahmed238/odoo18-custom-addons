@@ -33,117 +33,213 @@
                                  style="width:100%"/>
                         </div>
 
-                        <div style="font-size: 14px; font-weight: bold;">
-                            <t t-esc="o.company_id.name"/>
-                        </div>
-
-                        <!-- Document Title -->
                         <div class="thermal-section">
-                            <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
-                            <div style="font-size: 16px; font-weight: bold; margin: 10px 0;">
-                                <span t-if="is_proforma">Pro-Forma Invoice # / الفاتورة الأولية # </span>
-                                <span t-elif="o.state in ['draft','sent']">Quotation # / عرض السعر # </span>
-                                <span t-else="">Order # / طلب الشراء # </span>
-                                <span t-field="o.name"/>
+                            <!-- Company Name -->
+                            <div style="margin-top:10px; font-weight: bold;">
+                                <span t-esc="o.company_id.name"/>
+                            </div>
+
+                            <!-- Company Address -->
+                            <div style="margin-top:10px; font-weight: bold;">
+                                <div t-field="o.company_id.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                            </div>
+
+                            <!-- VAT Number -->
+                            <div style="margin-top:10px; font-weight: bold;">
+                                VAT Registration No :
+                                <span t-esc="o.company_id.vat"/>
                             </div>
                         </div>
 
-                        <!-- Customer Address -->
-                        <div class="thermal-section" style="text-align: left;">
-                            <div t-field="o.partner_id"
-                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                            <p t-if="o.partner_id.vat" style="margin-top: 3px;">
-                                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
-                                   t-out="o.company_id.account_fiscal_country_id.vat_label"/>
-                                <t t-else="">Tax ID / الرقم الضريبي: </t>
-                                <span t-field="o.partner_id.vat"/>
-                            </p>
-                        </div>
+                        <div class="thermal-section">
+                            <table class="thermal-table">
+                                <tbody>
+                                    <t t-if="o.name">
+                                        <tr>
+                                            <t t-set="is_proforma"
+                                               t-value="env.context.get('proforma', False) or is_pro_forma"/>
 
-                        <!-- Additional Addresses (Invoice/Shipping) -->
-                        <div t-if="o.partner_shipping_id == o.partner_invoice_id and o.partner_invoice_id != o.partner_id or o.partner_shipping_id != o.partner_invoice_id"
-                             class="thermal-section" style="text-align: left;">
+                                            <td style="text-align:left;font-weight: bold;">
+                                                <t t-if="is_proforma">Pro-Forma Invoice No:</t>
+                                                <t t-if="o.state in ['draft', 'sent']">Quotation No:</t>
+                                                <t t-else="">Order No:</t>
+                                            </td>
+                                            <td style="text-align:center;font-weight: bold;">
+                                                <span t-esc="o.name"/>
+                                            </td>
+                                            <td style="text-align:right;font-weight: bold;">
+                                                <t t-if="is_proforma">:رقم الفاتورة الأولية</t>
+                                                <t t-if="o.state in ['draft', 'sent']">:رقم عرض السعر</t>
+                                                <t t-else="">:رقم الطلب</t>
+                                            </td>
+                                        </tr>
+                                    </t>
 
-                            <div class="thermal-label">
-                                <t t-if="o.partner_shipping_id == o.partner_invoice_id">
-                                    Invoicing and Shipping Address / عنوان الفوترة والشحن
-                                </t>
-                                <t t-else="">
-                                    Invoicing Address / عنوان الفوترة
-                                </t>
-                            </div>
-                            <div t-field="o.partner_invoice_id"
-                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'
-                                 style="font-size: 10px; margin-top: 3px;"/>
+                                    <t t-if="o.date_order">
+                                        <tr>
+                                            <td style="text-align:left; font-weight: bold;">
+                                                <t t-if="is_proforma">Issued Date:</t>
+                                                <t t-elif="o.state in ['draft', 'sent']">Quotation Date:</t>
+                                                <t t-else="">Order Date:</t>
+                                            </td>
+                                            <td style="text-align:center;font-weight: bold;">
+                                                <div t-field="o.date_order"
+                                                     t-options="{&quot;widget&quot;: &quot;date&quot;}">
+                                                    2023-12-31
+                                                </div>
+                                            </td>
+                                            <td style="text-align:right; font-weight: bold;">
+                                                <t t-if="is_proforma">:تاريخ الإصدار</t>
+                                                <t t-elif="o.state in ['draft', 'sent']">:تاريخ عرض السعر</t>
+                                                <t t-else="">: تاريخ الطلب</t>
+                                            </td>
+                                        </tr>
+                                    </t>
 
-                            <div t-if="o.partner_shipping_id != o.partner_invoice_id"
-                                 style="margin-top: 8px;">
-                                <div class="thermal-label">Shipping Address / عنوان الشحن</div>
-                                <div t-field="o.partner_shipping_id"
-                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'
-                                     style="font-size: 10px; margin-top: 3px;"/>
-                            </div>
-                        </div>
+                                    <t t-if="o.validity_date and o.state in ['draft', 'sent']">
+                                        <tr>
+                                            <td style="text-align:left; font-weight: bold;">Expiration:</td>
+                                            <td style="text-align:center;font-weight: bold;">
+                                                <div t-field="o.validity_date"
+                                                     t-options="{&quot;widget&quot;: &quot;date&quot;}">
+                                                    2023-12-31
+                                                </div>
+                                            </td>
+                                            <td style="text-align:right; font-weight: bold;">:تاريخ الانتهاء</td>
+                                        </tr>
+                                    </t>
 
-                        <!-- Document Information -->
-                        <div class="thermal-section" style="margin-bottom: 5px;">
-                            <div class="thermal-row" t-if="o.client_order_ref">
-                                <span class="thermal-label" style="text-align: left;">Your Reference:</span>
-                                <span class="thermal-value" t-field="o.client_order_ref"/>
-                                <span class="thermal-label" style="text-align: right;">مرجعكم:</span>
-                            </div>
-                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.date_order">
-                                <span class="thermal-label" style="text-align: left;">
-                                    <t t-if="is_proforma">Issued Date:</t>
-                                    <t t-elif="o.state in ['draft', 'sent']">Quotation Date:</t>
-                                    <t t-else="">Order Date:</t>
-                                </span>
-                                <span class="thermal-value" t-field="o.date_order" t-options='{"widget": "date"}'/>
-                                <span class="thermal-label" style="text-align: right;">
-                                    <t t-if="is_proforma">:تاريخ الإصدار</t>
-                                    <t t-elif="o.state in ['draft', 'sent']">:تاريخ عرض السعر</t>
-                                    <t t-else="">:  تاريخ الطلب</t>
-                                </span>
-                            </div>
-                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.validity_date and o.state in ['draft', 'sent']">
-                                <span class="thermal-label" style="text-align: left;">Expiration:</span>
-                                <span class="thermal-value" t-field="o.validity_date"/>
-                                <span class="thermal-label" style="text-align: right;">:تاريخ الانتهاء</span>
-                            </div>
-                            <div class="thermal-row" style="margin-bottom: 5px;" t-if="o.user_id.name">
-                                <span class="thermal-label" style="text-align: left;">Salesperson:</span>
-                                <span class="thermal-value" t-field="o.user_id"/>
-                                <span class="thermal-label" style="text-align: right;">:مندوب المبيعات</span>
-                            </div>
+                                    <t t-if="o.partner_id.name">
+                                        <tr>
+                                            <td style="text-align:left;width:25%;font-weight: bold;">Customer Name:</td>
+                                            <td style="text-align:center;font-weight: bold;">
+                                                <span t-esc="o.partner_id.name"/>
+                                            </td>
+                                            <td style="text-align:right;width:25%;font-weight: bold;">:اسم العميل
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <t t-if="o.partner_id.contact_address">
+                                        <tr>
+                                            <td style="text-align:left;font-weight: bold;">Customer Address:</td>
+                                            <td style="text-align:center;font-weight: bold;">
+                                                <span t-esc="o.partner_id.contact_address"/>
+                                            </td>
+                                            <td style="text-align:right;font-weight: bold;">:عنوان العميل</td>
+                                        </tr>
+                                    </t>
+
+                                    <t t-if="o.partner_id.phone">
+                                        <tr>
+                                            <td style="text-align:left;font-weight: bold;">Tel No:</td>
+                                            <td style="text-align:center;font-weight: bold;">
+                                                <span t-esc="o.partner_id.phone"/>
+                                            </td>
+                                            <td style="text-align:right;font-weight: bold;">:رقم هاتف العميل</td>
+                                        </tr>
+                                    </t>
+
+                                    <!--                                    <t t-if="o.partner_shipping_id == o.partner_invoice_id and o.partner_invoice_id != o.partner_id or o.partner_shipping_id != o.partner_invoice_id">-->
+                                    <!--                                        <tr>-->
+                                    <!--                                            <td style="text-align:left; font-weight: bold;">-->
+                                    <!--                                                <t t-if="o.partner_shipping_id == o.partner_invoice_id">-->
+                                    <!--                                                    Invoicing and Shipping Address:-->
+                                    <!--                                                </t>-->
+                                    <!--                                                <t t-else="">-->
+                                    <!--                                                    Invoicing Address:-->
+                                    <!--                                                </t>-->
+                                    <!--                                            </td>-->
+
+                                    <!--                                            <td style="text-align:center; font-weight: bold;">-->
+                                    <!--                                                <div t-field="o.partner_invoice_id"-->
+                                    <!--                                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>-->
+                                    <!--                                            </td>-->
+
+                                    <!--                                            <td style="text-align:right; font-weight: bold;">-->
+                                    <!--                                                <t t-if="o.partner_shipping_id == o.partner_invoice_id">-->
+                                    <!--                                                    :عنوان الفوترة والشحن-->
+                                    <!--                                                </t>-->
+                                    <!--                                                <t t-else="">-->
+                                    <!--                                                    :عنوان الفوترة-->
+                                    <!--                                                </t>-->
+                                    <!--                                            </td>-->
+                                    <!--                                        </tr>-->
+
+                                    <!--                                        <t t-if="o.partner_shipping_id != o.partner_invoice_id">-->
+                                    <!--                                            <tr>-->
+                                    <!--                                                <td style="text-align:left; font-weight: bold;">-->
+                                    <!--                                                    Shipping Address:-->
+                                    <!--                                                </td>-->
+
+                                    <!--                                                <td style="text-align:center; font-weight: bold;">-->
+                                    <!--                                                    <div t-field="o.partner_shipping_id"-->
+                                    <!--                                                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>-->
+                                    <!--                                                </td>-->
+
+                                    <!--                                                <td style="text-align:right; font-weight: bold;">-->
+                                    <!--                                                    :عنوان الشحن-->
+                                    <!--                                                </td>-->
+                                    <!--                                            </tr>-->
+                                    <!--                                        </t>-->
+                                    <!--                                    </t>-->
+
+                                    <t t-if="o.client_order_ref">
+                                        <tr>
+                                            <td style="text-align:left; font-weight: bold;">
+                                                Your Reference:
+                                            </td>
+
+                                            <td style="text-align:center; font-weight: bold;">
+                                                <span t-field="o.client_order_ref"/>
+                                            </td>
+
+                                            <td style="text-align:right; font-weight: bold;">
+                                                :مرجعكم
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <t t-if="o.user_id.name">
+                                        <tr>
+                                            <td style="text-align:left;width:25%;font-weight: bold;">Salesperson:</td>
+                                            <td style="text-align:center;font-weight: bold;">
+                                                <span t-esc="o.user_id.name"/>
+                                            </td>
+                                            <td style="text-align:right;width:25%;font-weight: bold;">:المندوب</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
                         </div>
 
                         <!-- Order Lines Table -->
                         <t t-set="lines_to_report" t-value="o._get_order_lines_to_report()"/>
                         <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
+                        <t t-set="display_taxes" t-value="any(l.price_tax for l in lines_to_report)"/>
 
                         <div class="thermal-section">
                             <table class="thermal-table">
                                 <thead>
                                     <tr>
                                         <th style="text-align: center; width: 3%;">#</th>
-                                        <th style="text-align: left; width: 20%">
-                                            <span>الوصف</span>
+                                        <th style="text-align: left; width: 30%">
                                             <span>Desc</span>
                                         </th>
-                                        <th style="text-align: center; width: 10%">
-                                            <span>الكمية</span>
+                                        <th style="text-align: center; width: 15%">
                                             <span>Qty</span>
                                         </th>
                                         <th style="text-align: center; width: 20%">
-                                            <span>السعر</span>
                                             <span>Price</span>
                                         </th>
-                                        <th t-if="display_discount" style="text-align: center; width: 20%">
-                                            <span>الخصم %</span>
-                                            <span>Disc %</span>
-                                        </th>
+                                        <!--                                        <th t-if="display_discount" style="text-align: center; width: 20%">-->
+                                        <!--                                            <span>Disc %</span>-->
+                                        <!--                                        </th>-->
+                                        <!--                                        <th t-if="display_taxes" style="text-align: center; width: 20%">-->
+                                        <!--                                            <span>Tax</span>-->
+                                        <!--                                        </th>-->
                                         <th style="text-align: center;">
-                                            <span>الإجمالي</span>
                                             <span>Total</span>
                                         </th>
                                     </tr>
@@ -173,9 +269,9 @@
                                                 <td style="text-align: center; white-space: nowrap;">
                                                     <span t-field="line.price_unit"/>
                                                 </td>
-                                                <td t-if="display_discount" style="text-align: center;">
-                                                    <span t-field="line.discount"/>
-                                                </td>
+                                                <!--                                                <td t-if="display_discount" style="text-align: center;">-->
+                                                <!--                                                    <span t-field="line.discount"/>-->
+                                                <!--                                                </td>-->
                                                 <td t-if="not line.is_downpayment"
                                                     style="text-align: center; font-weight: bold; overflow-wrap: anywhere;">
                                                     <span t-field="line.price_subtotal"/>
@@ -209,7 +305,8 @@
                                             <t t-set="current_section" t-value="None"/>
                                             <tr style="font-weight: bold; border-top: 1px solid #000;">
                                                 <td colspan="99" style="text-align: right; padding: 5px 2px;">
-                                                    <strong style="margin-right: 10px;">Subtotal / المجموع الفرعي:</strong>
+                                                    <strong style="margin-right: 10px;">Subtotal / المجموع الفرعي:
+                                                    </strong>
                                                     <span t-out="current_subtotal"
                                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                                 </td>
@@ -224,15 +321,20 @@
                         <div class="thermal-section" style="text-align: right;">
                             <t t-set="tax_totals" t-value="o.tax_totals"/>
                             <t t-set="currency" t-value="o.currency_id"/>
+                            <t t-set="total_discount"
+                               t-value="sum((l.price_unit * l.product_uom_qty) * (l.discount / 100.0)
+                                            for l in o.order_line if not l.display_type and not l.is_downpayment)"/>
 
                             <t t-call="vit_html_thermal_so.document_tax_totals_thermal"/>
                         </div>
 
                         <!-- Optional Products (Options) -->
                         <div t-if="o.sale_order_option_ids and o.state in ['draft', 'sent']" class="thermal-section">
-                            <t t-set="has_option_discount" t-value="any(option.discount != 0.0 for option in o.sale_order_option_ids)"/>
+                            <t t-set="has_option_discount"
+                               t-value="any(option.discount != 0.0 for option in o.sale_order_option_ids)"/>
 
-                            <div class="thermal-label" style="font-size: 14px; font-weight: bold; text-align: left; margin-bottom: 5px;">
+                            <div class="thermal-label"
+                                 style="font-size: 14px; font-weight: bold; text-align: left; margin-bottom: 5px;">
                                 Optional Products
                             </div>
 
@@ -282,7 +384,7 @@
 
                         <!-- Signature -->
                         <div t-if="o.signature" class="thermal-section" style="text-align: center;">
-                            <div class="thermal-label">Signature / التوقيع</div>
+                            <div class="thermal-label">Signature</div>
                             <div style="margin: 5px 0;">
                                 <img t-att-src="image_data_uri(o.signature)" style="max-height: 3cm; max-width: 6cm;"/>
                             </div>
@@ -325,6 +427,17 @@
         <template id="document_tax_totals_thermal">
             <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
 
+            <!-- Total Discount -->
+            <t>
+                <div class="thermal-row small">
+                    <span>Discount:</span>
+                    <span class="right">
+                        <t t-out="total_discount"
+                           t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </span>
+                </div>
+            </t>
+
             <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                 <div class="thermal-row">
                     <span>
@@ -351,7 +464,7 @@
 
             <!-- Total Amount -->
             <div class="thermal-row total">
-                <strong>Total / المجموع:</strong>
+                <strong>Total:</strong>
                 <strong class="right">
                     <t t-out="tax_totals['total_amount_currency']"
                        t-options='{"widget": "monetary", "display_currency": currency}'/>

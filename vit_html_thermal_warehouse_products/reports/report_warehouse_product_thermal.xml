@@ -51,8 +51,21 @@
                                  style="width:100%"/>
                         </div>
 
-                        <div style="font-size: 14px; font-weight: bold; margin-top: 5px;">
-                            <t t-esc="first_item.company_id.name"/>
+                        <!-- Company Name -->
+                        <div style="margin-top:10px; font-weight: bold;">
+                            <span t-esc="first_item.company_id.name"/>
+                        </div>
+
+                        <!-- Company Address -->
+                        <div style="margin-top:10px; font-weight: bold;">
+                            <div t-field="first_item.company_id.partner_id"
+                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                        </div>
+
+                        <!-- VAT Number -->
+                        <div style="margin-top:10px; font-weight: bold;">
+                            VAT Registration No :
+                            <span t-esc="first_item.company_id.vat"/>
                         </div>
 
                         <!-- Warehouse Title -->
@@ -75,77 +88,88 @@
 
                         <!-- Products with Locations -->
                         <div class="thermal-section" style="border-bottom: none;">
-                            <t t-foreach="products['products']" t-as="product">
-                                <div style="margin-bottom: 10; page-break-inside: avoid;">
+                            <div style="margin-bottom: 10; page-break-inside: avoid;">
 
-                                    <!-- Locations & Quantities Table -->
-                                    <table class="thermal-table">
-                                        <thead>
-                                            <tr style="font-weight: bold;">
-                                                <th style="text-align: left; width: 25%; font-size: 12px;">
-                                                    Product:
-                                                </th>
-                                                <th style="font-size: 12px; text-align: center">
-                                                    <div>
-                                                        <span t-esc="product.with_context(lang='en_US').name"/>
-                                                    </div>
-                                                    <div>
-                                                        <span t-esc="product.with_context(lang='ar_001').name"/>
-                                                    </div>
-                                                </th>
-                                                <th style="text-align: right; width: 20%; font-size: 12px;">
-                                                    :المنتج
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th style="text-align: left; width: 60%;">
-                                                    <div>Location</div>
-                                                    <div>الموقع</div>
-                                                </th>
-                                                <th>
-
-                                                </th>
-                                                <th style="text-align: center; width: 40%">
-                                                    <div>Quantity</div>
-                                                    <div>الكمية</div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-set="total_qty" t-value="0"/>
+                                <!-- Locations & Quantities Table -->
+                                <table class="thermal-table">
+                                    <thead>
+                                        <!--                                            <tr style="font-weight: bold;">-->
+                                        <!--                                                <th style="text-align: left; width: 25%; font-size: 12px;">-->
+                                        <!--                                                    Product:-->
+                                        <!--                                                </th>-->
+                                        <!--                                                <th style="font-size: 12px; text-align: center">-->
+                                        <!--                                                    <div>-->
+                                        <!--                                                        <span t-esc="product.with_context(lang='en_US').name"/>-->
+                                        <!--                                                    </div>-->
+                                        <!--                                                    <div>-->
+                                        <!--                                                        <span t-esc="product.with_context(lang='ar_001').name"/>-->
+                                        <!--                                                    </div>-->
+                                        <!--                                                </th>-->
+                                        <!--                                                <th style="text-align: right; width: 20%; font-size: 12px;">-->
+                                        <!--                                                    :المنتج-->
+                                        <!--                                                </th>-->
+                                        <!--                                            </tr>-->
+                                        <tr>
+                                            <th style="text-align: center; width: 10%;">#</th>
+                                            <th style="width: 30%; text-align: left;">
+                                                <div>Product</div>
+                                                <div>المنتج</div>
+                                            </th>
+                                            <th style="text-align: left; width: 30%;">
+                                                <div>Location</div>
+                                                <div>الموقع</div>
+                                            </th>
+                                            <th style="text-align: center;">
+                                                <div>Quantity</div>
+                                                <div>الكمية</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="seq" t-value="1"/>
+                                        <!--                                            <t t-set="total_qty" t-value="0"/>-->
+                                        <t t-foreach="products['products']" t-as="product">
                                             <t t-foreach="products[product.id]" t-as="locations_qty">
                                                 <tr>
-                                                    <td style="text-align: left; word-wrap: break-word; white-space: normal; vertical-align: top;">
+                                                    <td style="text-align: center;">
+                                                        <span t-esc="seq"/>
+                                                        <t t-set="seq" t-value="seq + 1"/>
+                                                    </td>
+                                                    <td style="text-align: left; word-wrap: break-word; white-space: normal; font-weight: bold;">
+                                                        <div>
+                                                            <span t-esc="product.with_context(lang='en_US').name"/>
+                                                        </div>
+                                                        <!--                                                        <div>-->
+                                                        <!--                                                            <span t-esc="product.with_context(lang='ar_001').name"/>-->
+                                                        <!--                                                        </div>-->
+                                                    </td>
+                                                    <td style="text-align: left; word-wrap: break-word; white-space: normal; font-weight: normal;">
                                                         <span class="thermal-product-name"
                                                               t-esc="locations_qty[0].complete_name"/>
                                                     </td>
-                                                    <td>
-
-                                                    </td>
-                                                    <td class="thermal-qty"
-                                                        style="vertical-align: top; font-size: 10px;">
+                                                    <td class="thermal-qty" style="font-weight: normal;">
                                                         <span t-esc="locations_qty[1]"/>
-                                                        <t t-set="total_qty" t-value="total_qty + locations_qty[1]"/>
+                                                        <!--                                                        <t t-set="total_qty" t-value="total_qty + locations_qty[1]"/>-->
                                                     </td>
                                                 </tr>
                                             </t>
-                                            <!-- Total Row -->
-                                            <tr style="border-top: 2px solid #000; font-weight: bold;">
-                                                <td style="text-align: left; padding: 5px 2px;">
-                                                    <div>Total</div>
-                                                    <div>الإجمالي</div>
-                                                </td>
-                                                <td>
+                                        </t>
+                                        <!-- Total Row -->
+                                        <!--                                            <tr style="border-top: 2px solid #000; font-weight: bold;">-->
+                                        <!--                                                <td style="text-align: left; padding: 5px 2px;">-->
+                                        <!--                                                    <div>Total</div>-->
+                                        <!--                                                    <div>الإجمالي</div>-->
+                                        <!--                                                </td>-->
+                                        <!--                                                <td>-->
 
-                                                </td>
-                                                <td class="thermal-qty" style="font-size: 11px; padding: 5px 2px;">
-                                                    <span t-esc="total_qty"/>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </t>
+                                        <!--                                                </td>-->
+                                        <!--                                                <td class="thermal-qty" style="font-size: 11px; padding: 5px 2px;">-->
+                                        <!--                                                    <span t-esc="total_qty"/>-->
+                                        <!--                                                </td>-->
+                                        <!--                                            </tr>-->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         <!-- Generation Timestamp -->
