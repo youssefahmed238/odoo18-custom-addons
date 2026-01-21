@@ -27,3 +27,26 @@ class HolidaysAllocation(models.Model):
             valid_allocations._process_accrual_plans()
 
         print(valid_allocations)
+
+        #     message = _("Successfully update %s accrual allocation(s).") % len(valid_allocations)
+        #     return {
+        #         'type': 'ir.actions.client',
+        #         'tag': 'display_notification',
+        #         'params': {
+        #             'title': _('Success'),
+        #             'message': message,
+        #             'type': 'success',
+        #             'sticky': False,
+        #         }
+        #     }
+        # else:
+        #     return {
+        #         'type': 'ir.actions.client',
+        #         'tag': 'display_notification',
+        #         'params': {
+        #             'title': _('Information'),
+        #             'message': _('No allocations found to update.'),
+        #             'type': 'info',
+        #             'sticky': False,
+        #         }
+        #     }
